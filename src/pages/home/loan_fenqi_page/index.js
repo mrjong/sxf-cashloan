@@ -156,16 +156,10 @@ export default class loan_fenqi_page extends PureComponent {
 					);
 				} else {
 					this.props.toast.info(res.message);
-					// setTimeout(() => {
-					// 	this.props.history.push('/home/home');
-					// }, 2000);
 				}
 			})
 			.catch(() => {
 				this.props.toast.info('系统开小差,请稍后重试');
-				// setTimeout(() => {
-				// 	this.props.history.push('/home/home');
-				// }, 2000);
 			});
 	};
 
@@ -284,7 +278,7 @@ export default class loan_fenqi_page extends PureComponent {
 						FXBZ_contract
 					},
 					() => {
-						this.requestLoanPlan();
+						this.requestLoanPlan(true);
 						this.queryCouponCount();
 					}
 				);
@@ -295,7 +289,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	// 借款试算
-	requestLoanPlan = (riskGuaranteeClickFlag) => {
+	requestLoanPlan = (riskGuaranteeFlag) => {
 		const { loanMoney, protocolList = [], isJoinInsurancePlan } = this.state;
 		// 试算传参
 		let params = {
@@ -303,7 +297,7 @@ export default class loan_fenqi_page extends PureComponent {
 			prodType: '11',
 			repayType: '0',
 			prodId: protocolList[0] && protocolList[0].prodId,
-			riskGuarantee: riskGuaranteeClickFlag || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee: riskGuaranteeFlag || isJoinInsurancePlan ? '1' : '0'
 		};
 		const { couponData } = this.props;
 		// 不使用优惠券,不传coupId,
@@ -524,8 +518,10 @@ export default class loan_fenqi_page extends PureComponent {
 			checkBox1,
 			productList,
 			isShowTipModal,
+			showInsuranceModal,
 			insurancePlanText,
 			isJoinInsurancePlan,
+			insuranceModalChecked,
 			productListCopy
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
@@ -548,8 +544,10 @@ export default class loan_fenqi_page extends PureComponent {
 			checkBox1,
 			productList,
 			isShowTipModal,
+			showInsuranceModal,
 			insurancePlanText,
 			isJoinInsurancePlan,
+			insuranceModalChecked,
 			productListCopy
 		});
 	};
@@ -967,6 +965,7 @@ export default class loan_fenqi_page extends PureComponent {
 			showInsuranceModal,
 			isJoinInsurancePlan,
 			insurancePlanText,
+			insuranceModalChecked,
 			FXBZ_contract = []
 		} = this.state;
 
@@ -1228,13 +1227,24 @@ export default class loan_fenqi_page extends PureComponent {
 						this.closeInsuranceModal();
 					}}
 					data={repayPlanInfo.perds}
-					history={this.props.history}
 					toast={this.props.toast}
 					guaranteeCompany={repayPlanInfo.guaranteeCompany}
+					isChecked={insuranceModalChecked}
 					contact={FXBZ_contract[0]}
+					handlePlanClick={() => {
+						this.storeTempData();
+						buriedPointEvent(home.riskGuaranteeModalPlanClick);
+						this.props.history.push('/home/insurance_introduce_page');
+					}}
 					handleContractClick={(e) => {
 						e.stopPropagation();
 						this.readContract(FXBZ_contract[0]);
+					}}
+					toggleCheckbox={() => {
+						buriedPointEvent(home.riskGuaranteeModalChecked);
+						this.setState({
+							insuranceModalChecked: !this.state.insuranceModalChecked
+						});
 					}}
 				/>
 

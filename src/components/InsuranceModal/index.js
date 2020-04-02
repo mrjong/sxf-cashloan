@@ -1,8 +1,6 @@
 import React from 'react';
 import { Modal, Icon, NoticeBar } from 'antd-mobile';
 import { StepBar, ButtonCustom, CheckRadio } from 'components';
-import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 
 export default class InsuranceModal extends React.PureComponent {
@@ -12,14 +10,7 @@ export default class InsuranceModal extends React.PureComponent {
 			isChecked: false
 		};
 	}
-	toggleCheckbox = () => {
-		buriedPointEvent(home.riskGuaranteeModalChecked);
-		this.setState({
-			isChecked: !this.state.isChecked
-		});
-	};
 	render() {
-		const { isChecked } = this.state;
 		const {
 			data = [],
 			visible,
@@ -27,7 +18,10 @@ export default class InsuranceModal extends React.PureComponent {
 			onButtonClick,
 			guaranteeCompany,
 			handleContractClick,
-			contact = {}
+			handlePlanClick,
+			contact = {},
+			isChecked,
+			toggleCheckbox
 		} = this.props;
 		const stepData =
 			data &&
@@ -44,13 +38,7 @@ export default class InsuranceModal extends React.PureComponent {
 				<div className={styles.modalInner}>
 					<h3 className={styles.title}>风险保障计划</h3>
 					<p className={styles.subTitle}>还款时授权担保机构扣款保障金</p>
-					<a
-						className={styles.link_bar}
-						onClick={() => {
-							buriedPointEvent(home.riskGuaranteeModalPlanClick);
-							this.props.history.push('/home/insurance_introduce_page');
-						}}
-					>
+					<a className={styles.link_bar} onClick={handlePlanClick}>
 						<span>什么是风险保障计划?</span>
 						<Icon type="right" className={styles.link_bar_close} />
 					</a>
@@ -80,7 +68,7 @@ export default class InsuranceModal extends React.PureComponent {
 							授权并参与
 						</ButtonCustom>
 					</div>
-					<div className={styles.protocolWrap} onClick={this.toggleCheckbox}>
+					<div className={styles.protocolWrap} onClick={toggleCheckbox}>
 						<CheckRadio isSelect={isChecked} />
 						<span>我已认真阅读，点击确认表示同意</span>
 						<span className={styles.protocolLink} onClick={handleContractClick}>
