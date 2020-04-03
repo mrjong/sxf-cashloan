@@ -19,7 +19,6 @@ import { domListen } from 'utils/domListen';
 import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal, InsuranceModal } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
-import qs from 'qs';
 import {
 	loan_queryLoanApplInfo,
 	loan_loanPlan,
@@ -137,12 +136,12 @@ export default class confirm_agency_page extends PureComponent {
 			checkBox1: false,
 			isJoinInsurancePlan: false, // 是否加入风险保障计划
 			insurancePlanText: '',
-			showInsuranceModal: false // 是否展示保险弹窗
+			showInsuranceModal: false, // 是否展示保险弹窗
+			isRiskGuaranteeProd: false // 产品是否配置了风险保障金
 		};
 	}
 
 	componentWillMount() {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.props.toast.loading('加载中...', 10);
 		const { withholdCardData, confirmAgencyInfo } = this.props;
 		this.checkBtnAble();
@@ -157,9 +156,6 @@ export default class confirm_agency_page extends PureComponent {
 			this.recoveryPageData(confirmAgencyInfo);
 		} else {
 			this.requestGetRepaymentDateList();
-		}
-		if (queryData.showInsuranceModal) {
-			this.handleInsuranceModal();
 		}
 	}
 
@@ -329,6 +325,7 @@ export default class confirm_agency_page extends PureComponent {
 						{
 							contractData: result.data && result.data.contracts,
 							disabledBtn: false,
+							isRiskGuaranteeProd: result.data.riskGuarantee === '1', //是否是风险保障金产品
 							FXBZ_contract
 						},
 						() => {
@@ -464,7 +461,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 获取确认代还信息
 	requestGetRepayInfo = (riskGuaranteeFlag) => {
-		let { contractData, lendersDate, cardBillAmt, isJoinInsurancePlan } = this.state;
+		let { contractData, lendersDate, cardBillAmt, isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		const { couponData, authId } = this.props;
 		let params = {
 			prodId: contractData[0] && contractData[0].prodId,
@@ -472,7 +469,7 @@ export default class confirm_agency_page extends PureComponent {
 			repayType: lendersDate.value,
 			loanAmt: cardBillAmt,
 			prodType: '01',
-			riskGuarantee: riskGuaranteeFlag || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
 		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
@@ -678,8 +675,8 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	handleButtonClick = () => {
-		const { checkBox1, repayInfo, insurancePlanText } = this.state;
-		if (!insurancePlanText) {
+		const { checkBox1, repayInfo, insurancePlanText, isRiskGuaranteeProd } = this.state;
+		if (isRiskGuaranteeProd && !insurancePlanText) {
 			this.props.toast.info('请选择是否参与风险保障计划');
 			return;
 		}
@@ -839,14 +836,14 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 选择指定联系人
 	handleClickChooseContact = () => {
-		const { isBtnAble, repayInfo, isJoinInsurancePlan } = this.state;
+		const { isBtnAble, repayInfo, isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		this.cacheDataHandler();
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
 		this.calculationNum();
 		// 未参加风险保障计划
-		if (!isJoinInsurancePlan) {
+		if (isRiskGuaranteeProd && !isJoinInsurancePlan) {
 			this.setState(
 				{
 					isShowTipModal: false
@@ -859,7 +856,8 @@ export default class confirm_agency_page extends PureComponent {
 			return;
 		}
 		this.props.history.push(
-			`/home/add_contact_page?contactsLength=${(repayInfo.contacts && repayInfo.contacts.length) || 0}`
+			`/home/add_contact_page?contactsLength=${(repayInfo.contacts && repayInfo.contacts.length) ||
+				0}&isRiskGuaranteeProd=${isRiskGuaranteeProd ? '1' : '0'}`
 		);
 	};
 	/**
@@ -1022,7 +1020,8 @@ export default class confirm_agency_page extends PureComponent {
 			showInsuranceModal,
 			FXBZ_contract = [],
 			insuranceModalChecked,
-			availableCoupNum
+			availableCoupNum,
+			isRiskGuaranteeProd
 		} = this.state;
 
 		return (
@@ -1155,23 +1154,26 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 							</ul>
 							<ul className={style.pannel}>
-								<li className={style.listItem} onClick={this.handleInsuranceModal}>
-									<div className={style.labelBox}>
-										<label>风险保障计划</label>
-										<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
-									</div>
-									<span
-										className={[
-											style.listValue,
-											style.hasArrow,
-											store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
-											!isJoinInsurancePlan && style.greyText
-										].join(' ')}
-									>
-										{insurancePlanText || '请选择'}
-									</span>
-									<Icon type="right" className={style.icon} />
-								</li>
+								{isRiskGuaranteeProd && (
+									<li className={style.listItem} onClick={this.handleInsuranceModal}>
+										<div className={style.labelBox}>
+											<label>风险保障计划</label>
+											<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
+										</div>
+										<span
+											className={[
+												style.listValue,
+												style.hasArrow,
+												store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
+												!isJoinInsurancePlan && style.greyText
+											].join(' ')}
+										>
+											{insurancePlanText || '请选择'}
+										</span>
+										<Icon type="right" className={style.icon} />
+									</li>
+								)}
+
 								<li
 									className={
 										repayInfo2 && showInterestTotal ? `${style.listItem} ${style.listItem3}` : style.listItem
@@ -1271,7 +1273,10 @@ export default class confirm_agency_page extends PureComponent {
 									: () => {}
 							}
 							type={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && checkBox1 && insurancePlanText
+								this.props.form.getFieldProps('cardBillAmt') &&
+								!disabledBtn &&
+								checkBox1 &&
+								(isRiskGuaranteeProd ? insurancePlanText : true)
 									? 'yellow'
 									: 'default'
 							}

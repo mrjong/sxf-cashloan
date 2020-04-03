@@ -79,7 +79,8 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowDetail: false, // 是否展示产品列表
 			productListCopy: [],
 			insurancePlanText: '',
-			showInsuranceModal: false
+			showInsuranceModal: false,
+			isRiskGuaranteeProd: false // 产品是否配置了风险保障金
 		};
 	}
 
@@ -275,6 +276,7 @@ export default class loan_fenqi_page extends PureComponent {
 				this.setState(
 					{
 						protocolList: result.data && result.data.contracts,
+						isRiskGuaranteeProd: result.data.riskGuarantee === '1', //是否是风险保障金产品
 						FXBZ_contract
 					},
 					() => {
@@ -290,14 +292,14 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 借款试算
 	requestLoanPlan = (riskGuaranteeFlag) => {
-		const { loanMoney, protocolList = [], isJoinInsurancePlan } = this.state;
+		const { loanMoney, protocolList = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		// 试算传参
 		let params = {
 			loanAmt: loanMoney,
 			prodType: '11',
 			repayType: '0',
 			prodId: protocolList[0] && protocolList[0].prodId,
-			riskGuarantee: riskGuaranteeFlag || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
 		};
 		const { couponData } = this.props;
 		// 不使用优惠券,不传coupId,
@@ -572,9 +574,15 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//验证信息是否填写完整
 	validateFn = () => {
-		const { loanMoney, loanDate, loanUsage, insurancePlanText } = this.state;
-		// if (loanMoney && loanDate && loanDate.prodCount && loanUsage && repayCardNo && resaveCardNo) {
-		if ((loanMoney && loanDate && loanDate.prodCount && loanUsage, insurancePlanText)) {
+		const { loanMoney, loanDate, loanUsage, insurancePlanText, checkBox1, isRiskGuaranteeProd } = this.state;
+		if (
+			loanMoney &&
+			loanDate &&
+			loanDate.prodCount &&
+			loanUsage &&
+			(isRiskGuaranteeProd ? insurancePlanText : true) &&
+			checkBox1
+		) {
 			return true;
 		}
 		return false;
@@ -582,7 +590,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//借款申请提交
 	loanApplySubmit = () => {
-		const { loanMoney, loanDate, loanUsage, checkBox1, insurancePlanText } = this.state;
+		const { loanMoney, loanDate, loanUsage, checkBox1, insurancePlanText, isRiskGuaranteeProd } = this.state;
 		if (!loanMoney) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -595,7 +603,7 @@ export default class loan_fenqi_page extends PureComponent {
 			this.props.toast.info('请选择借款用途');
 			return;
 		}
-		if (!insurancePlanText) {
+		if (isRiskGuaranteeProd && !insurancePlanText) {
 			this.props.toast.info('请选择是否参与风险保障计划');
 			return;
 		}
@@ -664,8 +672,17 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	submitHandler = () => {
+		const {
+			isJoinInsurancePlan,
+			isRiskGuaranteeProd,
+			loanMoney,
+			repayCardNo,
+			resaveCardNo,
+			loanUsage,
+			protocolList
+		} = this.state;
 		// 未参加风险保障计划
-		if (!this.state.isJoinInsurancePlan) {
+		if (isRiskGuaranteeProd && !isJoinInsurancePlan) {
 			this.setState(
 				{
 					isShowTipModal: false
@@ -678,10 +695,6 @@ export default class loan_fenqi_page extends PureComponent {
 			return;
 		}
 		const { couponData } = this.props;
-		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
-
-		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList } = this.state;
-
 		let couponId = '';
 		if (couponData && couponData.coupId) {
 			if (couponData.coupId !== 'null') {
@@ -700,7 +713,7 @@ export default class loan_fenqi_page extends PureComponent {
 			coupId: couponId, //优惠劵id
 			loanUsage: loanUsage.usageCd, //借款用途
 			prodType: '11',
-			riskGuarantee: '1' //参与风险保障计划
+			riskGuarantee: isRiskGuaranteeProd ? '1' : '0' //参与风险保障计划
 		};
 
 		this.props.$fetch
@@ -966,7 +979,8 @@ export default class loan_fenqi_page extends PureComponent {
 			isJoinInsurancePlan,
 			insurancePlanText,
 			insuranceModalChecked,
-			FXBZ_contract = []
+			FXBZ_contract = [],
+			isRiskGuaranteeProd
 		} = this.state;
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
@@ -1073,23 +1087,25 @@ export default class loan_fenqi_page extends PureComponent {
 						) : null}
 					</ul>
 					<ul className={style.pannel}>
-						<li className={style.listItem} onClick={this.handleInsuranceModal}>
-							<div className={style.labelBox}>
-								<label>风险保障计划</label>
-								<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
-							</div>
-							<span
-								className={[
-									style.listValue,
-									style.hasArrow,
-									store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
-									!isJoinInsurancePlan && style.greyText
-								].join(' ')}
-							>
-								{insurancePlanText || '请选择'}
-							</span>
-							<Icon type="right" className={style.icon} />
-						</li>
+						{isRiskGuaranteeProd && (
+							<li className={style.listItem} onClick={this.handleInsuranceModal}>
+								<div className={style.labelBox}>
+									<label>风险保障计划</label>
+									<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
+								</div>
+								<span
+									className={[
+										style.listValue,
+										style.hasArrow,
+										store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
+										!isJoinInsurancePlan && style.greyText
+									].join(' ')}
+								>
+									{insurancePlanText || '请选择'}
+								</span>
+								<Icon type="right" className={style.icon} />
+							</li>
+						)}
 						<li className={style.listItem}>
 							<label>还款计划</label>
 							<span>
@@ -1167,10 +1183,7 @@ export default class loan_fenqi_page extends PureComponent {
 					) : null}
 				</div>
 				<div className={style.buttonWrap}>
-					<ButtonCustom
-						onClick={this.loanApplySubmit}
-						type={this.validateFn() && checkBox1 ? 'yellow' : 'default'}
-					>
+					<ButtonCustom onClick={this.loanApplySubmit} type={this.validateFn() ? 'yellow' : 'default'}>
 						签约借款
 					</ButtonCustom>
 				</div>
@@ -1214,6 +1227,7 @@ export default class loan_fenqi_page extends PureComponent {
 					history={this.props.history}
 					isJoinInsurancePlan={isJoinInsurancePlan}
 					goPage={() => {
+						this.storeTempData();
 						this.props.history.push('/home/payment_notes');
 					}}
 				/>

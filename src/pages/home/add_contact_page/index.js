@@ -154,7 +154,7 @@ export default class add_contact_page extends PureComponent {
 			loanAmt: cardBillAmt, // 签约金额
 			prodType: '01',
 			contacts: selectedList,
-			riskGuarantee: '1' //参与风险保障计划
+			riskGuarantee: queryData.isRiskGuaranteeProd
 		};
 		timerOut = setTimeout(() => {
 			this.setState(
