@@ -1023,7 +1023,6 @@ export default class loan_fenqi_page extends PureComponent {
 							protocolList={this.state.protocolList}
 							clickRadio={this.checkAgreement}
 							clickProtocol={this.readContract}
-							offsetH="0"
 						/>
 					) : null}
 				</div>
