@@ -153,59 +153,6 @@
 			margin-top: -25px;
 			// margin-bottom: 5px;
 		}
-		.insureLeft {
-			display: flex;
-			align-items: center;
-			.insureIco {
-				display: block;
-				width: 52px;
-				height: 52px;
-				background: url('../../../assets/images/home/insure_ico.png') no-repeat center;
-				background-size: 100%;
-				margin-right: 15px;
-			}
-			.insureTipsCont {
-				font-size: 26px;
-				color: #868e9e;
-				line-height: 37px;
-				.insureTipsTit {
-					display: flex;
-					align-items: center;
-					font-size: 30px;
-					color: #121c32;
-					line-height: 42px;
-					margin-bottom: 7px;
-				}
-				.insureTips {
-					display: block;
-					width: 24px;
-					height: 24px;
-					background: url('../../../assets/images/home/tip_ico.png') no-repeat center;
-					background-size: 100%;
-					margin-left: 10px;
-				}
-			}
-		}
-		.insureRight {
-			display: flex;
-			align-items: center;
-			font-size: 30px;
-			font-family: PingFangSC-Medium;
-			font-weight: 500;
-			color: #121c32;
-			line-height: 42px;
-			.unCheckIco {
-				display: block;
-				width: 34px;
-				height: 34px;
-				background: url('../../../assets/images/home/unChecked_ico.png') no-repeat center;
-				background-size: 100%;
-				margin-left: 16px;
-			}
-			.checkIco {
-				background-image: url('../../../assets/images/home/checked_ico.png');
-			}
-		}
   }
 
 	.greyText {
