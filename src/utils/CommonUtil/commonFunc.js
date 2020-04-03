@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 18:32:22
+ * @LastEditTime: 2020-04-03 14:10:20
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -11,6 +11,7 @@ import { specialClearState } from 'reduxes/actions/specialActions';
 import { setUserInfoAction, staticClearState } from 'reduxes/actions/staticActions';
 import { base64Decode } from './toolUtil';
 import storeRedux from 'reduxes';
+import { closeCurrentWebView } from 'utils/publicApi';
 import { isMPOS, getH5Channel, setH5Channel } from 'utils/common';
 import Cookie from 'js-cookie';
 import { isWXOpen } from 'utils';
@@ -206,14 +207,6 @@ export const logoutApp = () => {
 	);
 };
 
-//关闭view
-export const closeCurrentWebView = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
-			console.log(response);
-		});
-	});
-};
 let state = false;
 
 export const logoutAppHandler = (that) => {

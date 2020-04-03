@@ -1,10 +1,42 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 10:48:39
+ * @LastEditTime: 2020-04-03 14:09:59
  */
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
+import { Toast } from 'antd-mobile';
 import { auth_saveAppOrContactInfo } from 'fetch/api';
+/**
+ * @description: 比较版本
+ * @param {type}
+ * @return:
+ */
+function compare(a, b) {
+	if (a === b) {
+		return 0;
+	}
+	var a_components = a.split('.');
+	var b_components = b.split('.');
+	var len = Math.min(a_components.length, b_components.length);
+	for (var i = 0; i < len; i++) {
+		if (parseInt(a_components[i]) > parseInt(b_components[i])) {
+			return 1;
+		}
+
+		if (parseInt(a_components[i]) < parseInt(b_components[i])) {
+			return -1;
+		}
+	}
+
+	if (a_components.length > b_components.length) {
+		return 1;
+	}
+
+	if (a_components.length < b_components.length) {
+		return -1;
+	}
+	return 0;
+}
 //获取MPOS地理位置
 const getLocation = () => {
 	window.setupWebViewJavascriptBridge((bridge) => {
@@ -80,4 +112,33 @@ const mposShare = ({ $props, shareData }) => {
 		);
 	});
 };
-export { getLocation, getAppsList, getContactsList, mposShare };
+//关闭view
+const closeCurrentWebView = () => {
+	window.setupWebViewJavascriptBridge((bridge) => {
+		bridge.callHandler('closeCurrentWebView', '', function(response) {
+			console.log(response);
+		});
+	});
+};
+const getAppVersion = () => {
+	let status = false;
+	Toast.info('getAppVersion调用');
+	// mpos IOS
+	if (window.webkit && window.webkit.messageHandlers && window.webkit.getAppVersion) {
+		window.webkit.messageHandlers.getAppVersion.postMessage(
+			JSON.stringify({
+				callbakcId: (data) => {
+					Toast.info(JSON.stringify(data));
+					status = compare(data.appVersion, '4.0.1') > 0;
+				}
+			})
+		);
+	} else {
+		Toast.info('小于版本');
+		status = false;
+	}
+	return status;
+};
+getAppVersion();
+
+export { getLocation, getAppsList, getContactsList, mposShare, closeCurrentWebView };
