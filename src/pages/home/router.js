@@ -138,7 +138,7 @@ export default [
 		path: '/home/pre_add_contact_page',
 		zhName: 'ysxbclxr',
 		title: '补充联系人',
-		component: () => import('pages/home/add_contact_page')
+		component: () => import('pages/home/pre_add_contact_page')
 	},
 	{
 		path: '/home/insurance_introduce_page',
