@@ -112,7 +112,7 @@ export default class pre_loan_page extends PureComponent {
 		}
 	}
 	componentWillUnmount() {
-		store.setHrefFlag(true);
+		// store.setHrefFlag(true);
 	}
 
 	//处理数据反显
