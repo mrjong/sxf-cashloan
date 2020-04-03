@@ -1,16 +1,17 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-03 14:09:59
+ * @LastEditTime: 2020-04-03 18:37:34
  */
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
-import { auth_saveAppOrContactInfo } from 'fetch/api';
+// import { getDeviceType } from 'utils';
 /**
  * @description: 比较版本
  * @param {type}
  * @return:
  */
+let status = false;
+
 function compare(a, b) {
 	if (a === b) {
 		return 0;
@@ -37,108 +38,131 @@ function compare(a, b) {
 	}
 	return 0;
 }
-//获取MPOS地理位置
+/**
+ * @description: 获取mposapp的版本号
+ * @param {type}
+ * @return:
+ */
+const getAppVersion = () => {
+	if (window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'getAppVersion',
+				(jsonRsp) => {
+					Toast.info(JSON.stringify(compare(jsonRsp.appVersion, '4.0.1') > 0));
+					status = compare(jsonRsp.appVersion, '4.0.1') > 0;
+				},
+				{}
+			);
+	} else {
+		status = false;
+	}
+};
+
+/**
+ * @description: 获取MPOS地理位置
+ * @param {type}
+ * @return:
+ */
 const getLocation = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge &&
-			bridge.callHandler('getLocation', '', function(response) {
-				var jsonRsp = null;
-				if (typeof response === 'string') {
-					jsonRsp = JSON.parse(response);
-				} else {
-					jsonRsp = response;
-				}
-				if (jsonRsp.STATUS === '01') {
-					const location = jsonRsp.longitude + ',' + jsonRsp.latitude;
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'GetLocationHandler',
+				(jsonRsp) => {
+					//   data : {
+					//     cityCode = 010;
+					//     cityName = "北京市";
+					//      country = "中国";
+					//      countyCode = 110107;
+					//      countyName = "石景山区";
+					//      detailAddress = "实兴大街";
+					//     latiTude = "39.937574";
+					//     longAddress = "北京市石景山区实兴大街靠近西山汇";
+					//     longiTude = "116.192053";
+					//     province = "北京市";
+					// }
+					const location = jsonRsp.longiTude + ',' + jsonRsp.latiTude;
 					store.setPosition(location);
+				},
+				{}
+			);
+	} else {
+		// 老方法
+		window.setupWebViewJavascriptBridge((bridge) => {
+			bridge &&
+				bridge.callHandler('getLocation', '', function(response) {
+					var jsonRsp = null;
+					if (typeof response === 'string') {
+						jsonRsp = JSON.parse(response);
+					} else {
+						jsonRsp = response;
+					}
+					if (jsonRsp.STATUS === '01') {
+						const location = jsonRsp.longitude + ',' + jsonRsp.latitude;
+						store.setPosition(location);
+					}
+				});
+		});
+	}
+};
+
+/**
+ * @description: 分享
+ * @param {type} 0001代表微信、0002代表朋友圈、0003代表QQ、0004代表QQ空间
+ * @return: 可传多个 entry: '0001,0002,0003,0004',
+ * 我们需要参数：{"title":"","description":"","url":"","iconUrl":""}
+ */
+const mposShare = ({ shareData }) => {
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'customShare',
+				() => {
+					Toast.info('分享成功');
+				},
+				{
+					entry: shareData.entry,
+					title: shareData.title,
+					hint: shareData.desc,
+					shareUrl: shareData.link,
+					shareImgUrl: shareData.imgUrl
 				}
-			});
-	});
-};
-//获取用户app列表
-const getAppsList = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('getAppsList', '', function(response) {
-			var responseData = null;
-			if (typeof response === 'string') {
-				responseData = JSON.parse(response);
-			} else {
-				responseData = response;
-			}
-			if (responseData.STATUS === '01') {
-				console.log(responseData.appsList);
-				fetch
-					.post(auth_saveAppOrContactInfo, {
-						type: '1',
-						appList: responseData.appsList
-					})
-					.then(() => {}, () => {});
-			}
+			);
+	} else {
+		window.setupWebViewJavascriptBridge((bridge) => {
+			bridge.callHandler(
+				'mposShare',
+				{
+					title: shareData.title,
+					description: shareData.desc,
+					url: shareData.link,
+					iconUrl: shareData.imgUrl
+				},
+				function() {
+					Toast.info('分享成功');
+				}
+			);
 		});
-	});
-};
-
-//获取用户MPOS列表
-const getContactsList = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('getContactsList', '', function(response) {
-			var responseData = null;
-			if (typeof response === 'string') {
-				responseData = JSON.parse(response);
-			} else {
-				responseData = response;
-			}
-			if (responseData.STATUS === '01') {
-				fetch
-					.post(auth_saveAppOrContactInfo, {
-						type: '2',
-						contactList: responseData.contactsList
-					})
-					.then(() => {}, () => {});
-			}
-		});
-	});
-};
-
-// 我们需要参数：{"title":"","description":"","url":"","iconUrl":""}
-const mposShare = ({ $props, shareData }) => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler(
-			'mposShare',
-			{ title: shareData.title, description: shareData.desc, url: shareData.link, iconUrl: shareData.imgUrl },
-			function() {
-				$props.toast.info('分享成功');
-			}
-		);
-	});
+	}
 };
 //关闭view
 const closeCurrentWebView = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
-			console.log(response);
-		});
-	});
-};
-const getAppVersion = () => {
-	let status = false;
-	Toast.info('getAppVersion调用');
-	// mpos IOS
-	if (window.webkit && window.webkit.messageHandlers && window.webkit.getAppVersion) {
-		window.webkit.messageHandlers.getAppVersion.postMessage(
-			JSON.stringify({
-				callbakcId: (data) => {
-					Toast.info(JSON.stringify(data));
-					status = compare(data.appVersion, '4.0.1') > 0;
-				}
-			})
-		);
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'closeCurrentWebview',
+				() => {
+					console.log('mpos关闭成功');
+				},
+				{}
+			);
 	} else {
-		Toast.info('小于版本');
-		status = false;
+		window.setupWebViewJavascriptBridge((bridge) => {
+			bridge.callHandler('closeCurrentWebView', '', function(response) {
+				console.log(response);
+			});
+		});
 	}
-	return status;
 };
-getAppVersion();
-
-export { getLocation, getAppsList, getContactsList, mposShare, closeCurrentWebView };
+export { getAppVersion, getLocation, mposShare, closeCurrentWebView };

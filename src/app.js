@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:18:28
+ * @LastEditTime: 2020-04-03 18:35:58
  */
 /*eslint-disable*/
 import React from 'react';
@@ -10,6 +10,8 @@ import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
+import { initJSBridge } from './utils/jsBridge';
+import {getAppVersion} from './utils/publicApi'
 import { initAnalytics, initSxfData } from './utils/analytins';
 import { isMPOS } from 'utils/common';
 import { isWXOpen } from 'utils';
@@ -46,6 +48,8 @@ var sa = require('sa-sdk-javascript/sensorsdata.min.js');
 if (!window.sa) {
 	window.sa = sa;
 }
+initJSBridge();
+getAppVersion();
 isMPOS();
 fetchInit();
 initAnalytics();

@@ -379,7 +379,6 @@ export default class wenjuan_page extends PureComponent {
 		if (isMPOS()) {
 			// mpos
 			mposShare({
-				$props: this.props,
 				shareData: this.state.shareData
 			});
 		} else if (isWXOpen()) {

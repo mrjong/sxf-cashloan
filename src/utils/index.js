@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 13:31:43
+ * @LastEditTime: 2020-04-03 14:50:04
  */
 /*eslint-disable */
 import React from 'react';
@@ -11,7 +11,6 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
-import { getAppsList, getContactsList } from 'utils/publicApi';
 import { signup_log, abt_mpos, abt_baseInfo } from 'fetch/api';
 import storeRedux from '../reduxes';
 // 退出的api
