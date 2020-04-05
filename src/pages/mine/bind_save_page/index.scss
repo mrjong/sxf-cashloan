@@ -1,14 +1,32 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .bindSavePage {
-  padding-bottom: 300px;
+	padding-bottom: 300px;
+
+	/* stylelint-disable */
+	::-webkit-input-placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
+	:-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
+	::-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
+	::placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
 }
 .header {
 	margin: 0 10px 50px 50px;
 	color: #121c32;
 	font-size: 46px;
 	font-family: 'PingFangSC-Semibold';
-  font-weight: 600;
-  padding-top: 50px;
+	font-weight: 600;
+	padding-top: 50px;
 }
 .support_type {
 	display: inline-block;
@@ -17,8 +35,8 @@
 	color: $colorBlue;
 }
 
-.confirm_btn_box{
-  padding: 0 40px 20px 40px;
+.confirm_btn_box {
+	padding: 0 40px 20px 40px;
 }
 .time_container {
 	position: relative;
@@ -27,10 +45,10 @@
 		background-color: #fff;
 		color: $colorBlue;
 		min-height: 60px;
-    line-height: 60px;
+		line-height: 60px;
 
 		border-radius: 0.1rem;
-		border: none
+		border: none;
 	}
 	.count_btn {
 		position: absolute;
@@ -54,11 +72,11 @@
 	margin-top: 30px;
 }
 .buttonWrap {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
 }
 :global {
 	.bind_save_page_listBox {
@@ -96,29 +114,32 @@
 		.am-list-item .am-input-control input {
 			color: #121c32;
 			font-weight: normal;
-      font-size: 28px;
-    }
-    .am-list-item.am-input-focus .am-input-clear {
-      width: 30px;
-      height: 30px;
-      background-size: 28px auto;
-      margin-left: 10px;
-      background-color: #CDD0D8;
-    }
-    .am-list-item .am-input-control input::-webkit-input-placeholder{
-      color:#B2B6BF;
-    }
-    .am-list-item .am-input-control input::-moz-placeholder{   /* Mozilla Firefox 19+ */
-        color:#B2B6BF;
-    }
-    .am-list-item .am-input-control input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
-        color:#B2B6BF;
-    }
-    .am-list-item .am-input-control input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
-        color:#B2B6BF;
-    }
+			font-size: 28px;
+		}
+		.am-list-item.am-input-focus .am-input-clear {
+			width: 30px;
+			height: 30px;
+			background-size: 28px auto;
+			margin-left: 10px;
+			background-color: #cdd0d8;
+		}
+		.am-list-item .am-input-control input::-webkit-input-placeholder {
+			color: #b2b6bf;
+		}
+		.am-list-item .am-input-control input::-moz-placeholder {
+			/* Mozilla Firefox 19+ */
+			color: #b2b6bf;
+		}
+		.am-list-item .am-input-control input:-moz-placeholder {
+			/* Mozilla Firefox 4 to 18 */
+			color: #b2b6bf;
+		}
+		.am-list-item .am-input-control input:-ms-input-placeholder {
+			/* Internet Explorer 10-11 */
+			color: #b2b6bf;
+		}
 		.sms .am-list-item .am-input-control input {
 			padding-right: 228px;
-    }
+		}
 	}
 }

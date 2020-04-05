@@ -1,5 +1,22 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .fenqi_page {
+	/* stylelint-disable */
+	::-webkit-input-placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
+	:-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
+	::-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
+	::placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
 	.scrollWrap {
 		padding-bottom: 160px;
 	}
@@ -223,23 +240,6 @@
 	right: 0;
 	top: 32px;
 	animation: shake 0.8s linear;
-}
-/* stylelint-disable */
-::-webkit-input-placeholder {
-	color: #b2b6bf;
-	font-size: 56px;
-}
-:-ms-input-placeholder {
-	color: #b2b6bf;
-	font-size: 56px;
-}
-::-ms-input-placeholder {
-	color: #b2b6bf;
-	font-size: 56px;
-}
-::placeholder {
-	color: #b2b6bf;
-	font-size: 56px;
 }
 
 @keyframes shake {
