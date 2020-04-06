@@ -91,7 +91,7 @@ export const initJSBridge = (mock = false) => {
 						callbackId: thisCallbackId
 					});
 				} else {
-					throw Error('未知移动设备！');
+					// throw Error('未知移动设备！');
 				}
 			}
 		},
@@ -147,7 +147,7 @@ export const initJSBridge = (mock = false) => {
 						data: result
 					});
 				} else {
-					throw Error('未知移动设备！');
+					// throw Error('未知移动设备！');
 				}
 			}
 		},
