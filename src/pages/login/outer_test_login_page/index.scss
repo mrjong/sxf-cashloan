@@ -1,10 +1,32 @@
-@import '../../../assets/styles/scss/base/fn';
-
 .page_container {
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	height: 100%;
 	background: #fff;
+	:global {
+		.am-list-item .am-input-label.am-input-label-5 {
+			width: auto;
+			margin-right: 22px;
+		}
+	}
+	/* stylelint-disable */
+	input::-webkit-input-placeholder {
+		color: #868f9e;
+		font-size: 32px;
+	}
+	input::-ms-input-placeholder {
+		color: #868f9e;
+		font-size: 32px;
+	}
+	input::-ms-input-placeholder {
+		color: #868f9e;
+		font-size: 32px;
+	}
+	input::placeholder {
+		color: #868f9e;
+		font-size: 32px;
+	}
+
 	.top_container {
 		display: flex;
 		flex-direction: column;
@@ -37,18 +59,37 @@
 		background-color: #fff;
 		opacity: 0.8;
 		margin: 0 auto;
+		font-size: 24px;
+		color: #282506;
+		padding-left: 8px;
+		box-sizing: border-box;
+		overflow: hidden;
+		.carousel_item {
+			display: flex;
+			align-items: center;
+			height: 50px;
+		}
+		.avatar_img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			margin-right: 25px;
+		}
+
+		.user_time {
+			margin-left: 120px;
+		}
 	}
-	.banner {
-		width: 100%;
-		display: block;
+	.input_icon {
+		width: 42px;
+		height: 50px;
+		background-size: contain;
+		background-repeat: no-repeat;
 	}
+
 	.content {
 		margin-top: 74px;
 		padding: 0 40px;
-	}
-	input::placeholder {
-		color: #868f9e;
-		font-size: 32px;
 	}
 
 	.smsBox {
@@ -74,30 +115,22 @@
 		text-align: center;
 		font-size: 32px;
 		border-radius: 50px;
+		color: #c9cdd5;
+		background-color: #f0f3f9;
+	}
+	.smsCode2 {
 		color: #121b33;
 		background-color: #ffd210;
 	}
-	.smsCode2 {
-		color: #c9cdd5;
-	}
 	.sureBtn {
-		display: block;
-		height: 96px;
-		line-height: 96px;
-		background: #fec933;
-		border-radius: 44px;
-		font-size: 30px;
-		font-weight: bold;
-		font-family: 'PingFang SC';
+		margin-top: 30px;
+		font-size: 32px;
+		background-color: #f0f3f9;
 		color: #fff;
-		margin: 34px auto 10px;
-		span {
-			display: inline-block;
-			width: 100%;
-		}
-		&.dis {
-			opacity: 0.5;
-		}
+	}
+	.activeBtn {
+		background-color: #ffd210;
+		color: #121c32;
 	}
 	.agreement_container {
 		display: flex;
@@ -113,6 +146,7 @@
 	.box_container {
 		display: flex;
 		margin: 70px 30px;
+		height: 250px;
 		.box_img {
 			width: 33%;
 		}
@@ -121,8 +155,9 @@
 	.sub_title {
 		margin: 0 auto;
 		width: 548px;
-    height: 50px;
-    display: block;
+		height: 50px;
+		display: block;
+		padding-left: 60px;
 	}
 
 	.step_container {
@@ -131,8 +166,8 @@
 
 		.step_item {
 			display: flex;
-      flex-direction: column;
-      align-items: center;
+			flex-direction: column;
+			align-items: center;
 			font-size: 30px;
 			color: #121b33;
 		}
@@ -144,8 +179,8 @@
 		.arrow {
 			display: block;
 			width: 58px;
-      height: 12px;
-      margin: 36px 45px;
+			height: 12px;
+			margin: 36px 25px;
 		}
 	}
 
@@ -155,62 +190,28 @@
 		text-align: center;
 		margin: 0 120px;
 	}
-
-	:global {
-		.am-list-item .am-input-control input {
-			font-size: 29px;
-			width: 100%;
-			line-height: 1.4;
-			display: inline-block;
-			text-align: left;
-			-moz-box-sizing: border-box;
-			box-sizing: border-box;
-			font-family: PingFang-SC-Regular;
-			padding: 0.16rem 0;
-			color: #121c32;
-			font-weight: bold;
-		}
-
-		.am-list-item .am-input-control input:disabled {
-			background-color: transparent;
-			color: #bbb;
-		}
-	}
 }
 
 .loginModalContainer {
 	position: relative;
-	padding-top: 87px;
+	padding-top: 90px;
 	.loginModalBg {
 		display: block;
 		width: 100%;
 	}
 	.loginModalBtn {
 		position: absolute;
+		bottom: 0px;
 		left: 50%;
 		transform: translate(-50%, 0);
-		bottom: 20px;
-		width: 422px;
-		height: 112px;
-	}
-	.tipsCont {
-		position: absolute;
-		left: 50%;
-		transform: translate(-50%, 0);
-		bottom: 185px;
-		font-size: 26px;
-		color: #f6521f;
-		line-height: 100%;
-		span {
-			font-weight: 600;
-		}
+		height: 350px;
 	}
 	.closeIcoStyle {
 		position: absolute;
+		top: 0;
 		right: 42px;
 		width: 25px;
 		height: 26px;
-		top: 0;
 	}
 }
 

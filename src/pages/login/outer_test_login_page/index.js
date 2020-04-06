@@ -6,7 +6,7 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem, Modal } from 'antd-mobile';
+import { Toast, InputItem, Modal, Carousel } from 'antd-mobile';
 import ImageCode from 'components/ImageCode';
 import { ButtonCustom, CheckRadio } from 'components';
 import Cookie from 'js-cookie';
@@ -57,10 +57,66 @@ import step_01 from './img/step_01.png';
 import step_02 from './img/step_02.png';
 import step_03 from './img/step_03.png';
 import arrow from './img/arrow.png';
+import login_phone from './img/login_phone.png';
+import login_sms from './img/login_sms.png';
+import modal_bg from './img/modal_bg.png';
+import modal_btn from './img/modal_btn.png';
+import close_ico from './img/close_ico.png';
 
 let timmer;
 let modalTimer = null;
 let entryPageTime = '';
+
+const rewardList = [
+	{
+		user: '用户176********成功借款18000元',
+		time: '刚刚'
+	},
+	{
+		user: '用户138********成功借款9800元',
+		time: '刚刚'
+	},
+	{
+		user: '用户185********成功借款13500元',
+		time: '刚刚'
+	},
+	{
+		user: '用户150********成功借款5500元',
+		time: '1分钟前'
+	},
+	{
+		user: '用户136********成功借款19000元',
+		time: '1分钟前'
+	},
+	{
+		user: '用户188********成功借款23000元',
+		time: '1分钟前'
+	},
+	{
+		user: '用户176********成功借款16000元',
+		time: '2分钟前'
+	},
+	{
+		user: '用户156********成功借款8000元',
+		time: '2分钟前'
+	},
+	{
+		user: '用户133********成功借款17600元',
+		time: '2分钟前'
+	},
+	{
+		user: '用户150********成功借款8500元',
+		time: '3分钟前'
+	},
+	{
+		user: '用户189********成功借款7500元',
+		time: '3分钟前'
+	},
+	{
+		user: '用户155********成功借款8500元',
+		time: '3分钟前'
+	}
+];
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -80,7 +136,7 @@ export default class login_common_page extends PureComponent {
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
-			isChecked: false, // 是否勾选协议
+			isChecked: true, // 是否勾选协议
 			inputFocus: false,
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
@@ -100,10 +156,10 @@ export default class login_common_page extends PureComponent {
 		this.setState({
 			queryData
 		});
-		document.title = '携手权威征信机构，让信用有价值';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		// 移除cookie
 		logoutClearData();
+		document.title = '还到';
 
 		store.setHistoryRouter(window.location.pathname);
 
@@ -396,7 +452,7 @@ export default class login_common_page extends PureComponent {
 		timmer = setInterval(() => {
 			this.setState(
 				{
-					timers: countDownTime-- + '"'
+					timers: countDownTime-- + 's'
 				},
 				() => {
 					if (countDownTime === -1) {
@@ -483,6 +539,15 @@ export default class login_common_page extends PureComponent {
 		);
 	};
 
+	//	校验必填项 按钮是否可以点击
+	validateFn = () => {
+		const formData = this.props.form.getFieldsValue();
+		if (formData.phoneValue && formData.smsCd && this.state.isChecked) {
+			return true;
+		}
+		return false;
+	};
+
 	render() {
 		/* eslint-disable */
 		const {
@@ -492,13 +557,28 @@ export default class login_common_page extends PureComponent {
 			yOffset,
 			bigImageH,
 			disabledInput,
-			showDownloadModal
+			showDownloadModal,
+			isChecked
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.page_container}>
 				<div className={styles.top_container}>
-					<div className={styles.top_carousel}></div>
+					<div className={styles.top_carousel}>
+						<Carousel vertical autoplay dots={false} autoplayInterval={3000} infinite>
+							{rewardList.map((item, idx) => (
+								<div className={styles.carousel_item} key={idx}>
+									<img
+										src={require(`./img/avatar_${idx + 1}.png`)}
+										alt="avatar"
+										className={styles.avatar_img}
+									/>
+									<span>{item.user}</span>
+									<span className={styles.user_time}>{item.time}</span>
+								</div>
+							))}
+						</Carousel>
+					</div>
 					<img src={logo} alt="logo" className={styles.top_logo} />
 					<img src={top_title} alt="top_title" className={styles.top_title} />
 					<img src={top_money} alt="top_money" className={styles.top_money} />
@@ -507,6 +587,7 @@ export default class login_common_page extends PureComponent {
 					<InputItem
 						disabled={disabledInput}
 						id="inputPhone"
+						clear
 						maxLength="13"
 						type="phone"
 						data-sxf-props={JSON.stringify({
@@ -528,11 +609,19 @@ export default class login_common_page extends PureComponent {
 							});
 							handleInputBlur();
 						}}
-					/>
+					>
+						<div
+							style={{
+								backgroundImage: `url(${login_phone})`
+							}}
+							className={styles.input_icon}
+						/>
+					</InputItem>
 					<div className={styles.smsBox}>
 						<InputItem
 							id="inputCode"
 							type="number"
+							clear
 							maxLength="6"
 							data-sxf-props={JSON.stringify({
 								type: 'input',
@@ -550,10 +639,17 @@ export default class login_common_page extends PureComponent {
 								});
 								handleInputBlur();
 							}}
-						/>
+						>
+							<div
+								style={{
+									backgroundImage: `url(${login_sms})`
+								}}
+								className={styles.input_icon}
+							/>
+						</InputItem>
 						<div
 							className={
-								this.state.timers.indexOf('s') === -1
+								this.state.timers.indexOf('s') > 0
 									? styles.smsCode
 									: [styles.smsCode, styles.smsCode2].join(' ')
 							}
@@ -566,17 +662,12 @@ export default class login_common_page extends PureComponent {
 					</div>
 					<ButtonCustom
 						onClick={this.goLogin}
-						// loading={!totalAmt || disabled}
-						className={true ? [styles.sureBtn].join(' ') : [styles.sureBtn, styles.dis].join(' ')}
+						className={[styles.sureBtn, this.validateFn() && styles.activeBtn].join(' ')}
 					>
 						立即申请
 					</ButtonCustom>
-					<div className={styles.agreement_container}>
-						<CheckRadio isSelect={true} />
-						{/* <i
-						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
-						onClick={this.checkAgreement}
-					/> */}
+					<div className={styles.agreement_container} onClick={this.checkAgreement}>
+						<CheckRadio isSelect={isChecked} />
 						<div>
 							阅读并接受
 							<span
@@ -658,19 +749,19 @@ export default class login_common_page extends PureComponent {
 					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
 						<div className={styles.loginModalContainer}>
 							{/* 大图 */}
-							{/* <img className={styles.loginModalBg} src={loginModalBg} alt="背景" /> */}
+							<img className={styles.loginModalBg} src={modal_bg} alt="背景" />
 							{/* 按钮 */}
-							{/* <img
+							<img
 								className={styles.loginModalBtn}
-								src={loginModalBtn}
+								src={modal_btn}
 								onClick={() => {
 									buriedPointEvent(daicao.modalBtnClick);
 									this.downloadApp();
 								}}
 								alt="按钮"
-							/> */}
+							/>
 							{/* 关闭 */}
-							{/* <img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" /> */}
+							<img className={styles.closeIcoStyle} src={close_ico} onClick={this.closeModal} alt="关闭" />
 						</div>
 					</Modal>
 				)}
