@@ -41,8 +41,8 @@ export default class StepBar extends Component {
 											<span>
 												{item.perdPrcpAmt > 0 && <span>本金{item.perdPrcpAmt}</span>}
 												{item.perdItrtAmt > 0 && <span>+利息{item.perdItrtAmt}</span>}
+												{item.perdMngAmt > 0 && <span>+服务费{item.perdMngAmt}</span>}
 												{item.riskGuaranteeAmt > 0 && <span>+风险保证金{item.riskGuaranteeAmt}</span>}
-												{/* {item.perdMngAmt && <span>+服务费{item.perdMngAmt}</span>} */}
 											</span>
 										) : null}
 									</div>

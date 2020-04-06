@@ -44,13 +44,12 @@ export default class RepayPlanModal extends React.PureComponent {
 		const data2 =
 			data &&
 			data.map((item) => {
-				let { perdPrcpAmt, perdItrtAmt, perdNum, perdPrcpAndIntr, riskGuaranteeAmt } = item;
+				let { perdPrcpAmt, perdItrtAmt, perdNum, perdPrcpAndIntr } = item;
 				return {
 					perdNum,
 					perdTotalMoney: perdPrcpAndIntr,
 					perdPrcpAmt,
-					perdItrtAmt,
-					riskGuaranteeAmt: isJoinInsurancePlan ? riskGuaranteeAmt : 0
+					perdItrtAmt
 				};
 			});
 		const sidebar = (
