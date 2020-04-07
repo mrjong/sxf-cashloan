@@ -3,28 +3,37 @@
 	-webkit-overflow-scrolling: touch;
 	height: 100%;
 	background: #fff;
+	position: relative;
 	:global {
 		.am-list-item .am-input-label.am-input-label-5 {
 			width: auto;
 			margin-right: 22px;
-		}
+    }
+    .am-list-item .am-input-control input {
+      font-size: 32px;
+      color: #121B33;
+    }
 	}
 	/* stylelint-disable */
 	input::-webkit-input-placeholder {
-		color: #868f9e;
-		font-size: 32px;
+		color: #868f9e !important;
+    font-size: 32px;
+    padding-top: 6px;
 	}
 	input::-ms-input-placeholder {
-		color: #868f9e;
-		font-size: 32px;
+		color: #868f9e !important;
+    font-size: 32px;
+    padding-top: 6px;
 	}
 	input::-ms-input-placeholder {
-		color: #868f9e;
-		font-size: 32px;
+		color: #868f9e !important;
+    font-size: 32px;
+    padding-top: 6px;
 	}
 	input::placeholder {
-		color: #868f9e;
-		font-size: 32px;
+		color: #868f9e !important;
+    font-size: 32px;
+    padding-top: 6px;
 	}
 
 	.top_container {
@@ -102,7 +111,7 @@
 		border: none;
 		border-radius: 50px;
 		background-color: #f0f3f9;
-		height: 100px;
+    height: 100px;
 	}
 	.smsCodeInput {
 		width: 420px;
@@ -145,7 +154,7 @@
 
 	.box_container {
 		display: flex;
-		margin: 70px 30px;
+		margin: 70px 30px 80px 30px;
 		height: 250px;
 		.box_img {
 			width: 33%;
@@ -162,7 +171,7 @@
 
 	.step_container {
 		display: flex;
-		margin: 65px 70px;
+		margin: 65px 70px 80px 70px;
 
 		.step_item {
 			display: flex;
@@ -182,6 +191,22 @@
 			height: 12px;
 			margin: 36px 25px;
 		}
+	}
+
+	.adorn_1 {
+		position: absolute;
+		left: 0;
+    bottom: 23%;
+    width: 70px;
+    height: 248px;
+	}
+
+	.adorn_2 {
+		position: absolute;
+		right: 0;
+    bottom: 12%;
+    width: 144px;
+    height: 128px;
 	}
 
 	.footer_copyright {

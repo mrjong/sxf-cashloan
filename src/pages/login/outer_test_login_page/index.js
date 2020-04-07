@@ -62,6 +62,8 @@ import login_sms from './img/login_sms.png';
 import modal_bg from './img/modal_bg.png';
 import modal_btn from './img/modal_btn.png';
 import close_ico from './img/close_ico.png';
+import adorn_1 from './img/adorn_1.png';
+import adorn_2 from './img/adorn_2.png';
 
 let timmer;
 let modalTimer = null;
@@ -722,6 +724,9 @@ export default class login_common_page extends PureComponent {
 						<span>获得额度</span>
 					</div>
 				</div>
+
+				<img src={adorn_1} alt="adorn_1" className={styles.adorn_1} />
+				<img src={adorn_2} alt="adorn_2" className={styles.adorn_2} />
 
 				<div className={styles.footer_copyright}>
 					<p>客服电话：400-088-7626</p>
