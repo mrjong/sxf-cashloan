@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-03 18:37:34
+ * @LastEditTime: 2020-04-07 10:07:04
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -49,12 +49,13 @@ const getAppVersion = () => {
 			window.JSBridge.invoke(
 				'getAppVersion',
 				(jsonRsp) => {
-					Toast.info(JSON.stringify(compare(jsonRsp.appVersion, '4.0.1') > 0));
+					Toast.info(JSON.stringify(jsonRsp.appVersion));
 					status = compare(jsonRsp.appVersion, '4.0.1') > 0;
 				},
 				{}
 			);
 	} else {
+		Toast.info('旧的');
 		status = false;
 	}
 };
@@ -82,6 +83,7 @@ const getLocation = () => {
 					//     longiTude = "116.192053";
 					//     province = "北京市";
 					// }
+					Toast.info('新的' + JSON.stringify(jsonRsp));
 					const location = jsonRsp.longiTude + ',' + jsonRsp.latiTude;
 					store.setPosition(location);
 				},
@@ -99,6 +101,7 @@ const getLocation = () => {
 						jsonRsp = response;
 					}
 					if (jsonRsp.STATUS === '01') {
+						Toast.info('旧的' + JSON.stringify(jsonRsp));
 						const location = jsonRsp.longitude + ',' + jsonRsp.latitude;
 						store.setPosition(location);
 					}
@@ -115,6 +118,7 @@ const getLocation = () => {
  */
 const mposShare = ({ shareData }) => {
 	if (status && window.JSBridge) {
+		Toast.info('新的');
 		window.JSBridge &&
 			window.JSBridge.invoke(
 				'customShare',
@@ -130,6 +134,7 @@ const mposShare = ({ shareData }) => {
 				}
 			);
 	} else {
+		Toast.info('旧的');
 		window.setupWebViewJavascriptBridge((bridge) => {
 			bridge.callHandler(
 				'mposShare',
@@ -149,20 +154,26 @@ const mposShare = ({ shareData }) => {
 //关闭view
 const closeCurrentWebView = () => {
 	if (status && window.JSBridge) {
-		window.JSBridge &&
-			window.JSBridge.invoke(
-				'closeCurrentWebview',
-				() => {
-					console.log('mpos关闭成功');
-				},
-				{}
-			);
+		Toast.info('新的');
+		setTimeout(() => {
+			window.JSBridge &&
+				window.JSBridge.invoke(
+					'closeCurrentWebview',
+					() => {
+						console.log('mpos关闭成功');
+					},
+					{}
+				);
+		}, 2000);
 	} else {
-		window.setupWebViewJavascriptBridge((bridge) => {
-			bridge.callHandler('closeCurrentWebView', '', function(response) {
-				console.log(response);
+		Toast.info('旧的');
+		setTimeout(() => {
+			window.setupWebViewJavascriptBridge((bridge) => {
+				bridge.callHandler('closeCurrentWebView', '', function(response) {
+					console.log(response);
+				});
 			});
-		});
+		}, 2000);
 	}
 };
 export { getAppVersion, getLocation, mposShare, closeCurrentWebView };
