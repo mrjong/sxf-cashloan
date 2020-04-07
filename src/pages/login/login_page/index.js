@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-07 09:52:40
+ * @LastEditTime: 2020-04-07 09:54:49
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -12,7 +12,6 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { TFDLogin } from 'utils/getTongFuDun';
-import SXFButton from 'components/ButtonCustom';
 
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import {
@@ -24,7 +23,6 @@ import {
 	queryUsrSCOpenId,
 	recordContract
 } from 'utils';
-import { getLocation, mposShare, getAppVersion, closeCurrentWebView } from 'utils/publicApi';
 
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
@@ -135,26 +133,6 @@ export default class login_page extends PureComponent {
 		pageView();
 		entryPageTime = new Date();
 	}
-	downloadClick1 = () => {
-		getLocation();
-	};
-	downloadClick4 = () => {
-		getAppVersion();
-	};
-	downloadClick2 = () => {
-		mposShare({
-			shareData: {
-				entry: '0001,0002,0003,0004',
-				title: 'shareData.title',
-				desc: 'shareData.desc',
-				link: 'http://172.16.42.216:3200/inviteNewUsers/register/ddHgN6Zj7%2FSydAJz%2BkTv5Q%3D%3D',
-				imgUrl: 'http://172.16.42.216:3200/static/img/inviteNewUser/shareIcon.png'
-			}
-		});
-	};
-	downloadClick3 = () => {
-		closeCurrentWebView();
-	};
 	componentWillUnmount() {
 		window.removeEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
@@ -681,18 +659,6 @@ export default class login_page extends PureComponent {
 								</span>
 							</div>
 						</div>
-						<SXFButton className={styles.smart_button} onClick={this.downloadClick1}>
-							获取当前位置
-						</SXFButton>
-						<SXFButton className={styles.smart_button} onClick={this.downloadClick2}>
-							分享
-						</SXFButton>
-						<SXFButton className={styles.smart_button} onClick={this.downloadClick4}>
-							获取版本号
-						</SXFButton>
-						<SXFButton className={styles.smart_button} onClick={this.downloadClick3}>
-							关闭mpos
-						</SXFButton>
 						<p className={styles.bottom_tip}>温馨提示：如您是老用户，请前往还到app操作并还款</p>
 					</div>
 				</div>
