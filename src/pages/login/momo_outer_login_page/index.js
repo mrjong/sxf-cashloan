@@ -576,7 +576,7 @@ export default class momo_outer_login_page extends PureComponent {
 						},
 						{
 							label: '用户隐私权政策',
-							url: 'privacy_agreement_page'
+							url: 'user_privacy_page'
 						}
 					]}
 					clickRadio={this.checkAgreement}
