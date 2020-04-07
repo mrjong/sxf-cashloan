@@ -24,7 +24,7 @@ export default class StepBar extends Component {
 									<span className={style.circle_dot}></span>
 									{riskGuarantee && (
 										<span className={style.step_title1}>
-											<i>风险保证金 </i>
+											<i>风险保障金 </i>
 											<i className={style.value}>{item.riskGuaranteeAmt}</i>
 										</span>
 									)}
@@ -42,7 +42,7 @@ export default class StepBar extends Component {
 												{item.perdPrcpAmt > 0 && <span>本金{item.perdPrcpAmt}</span>}
 												{item.perdItrtAmt > 0 && <span>+利息{item.perdItrtAmt}</span>}
 												{item.perdMngAmt > 0 && <span>+服务费{item.perdMngAmt}</span>}
-												{item.riskGuaranteeAmt > 0 && <span>+风险保证金{item.riskGuaranteeAmt}</span>}
+												{item.riskGuaranteeAmt > 0 && <span>+风险保障金{item.riskGuaranteeAmt}</span>}
 											</span>
 										) : null}
 									</div>
