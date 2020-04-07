@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 16:06:00
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-04-07 14:46:10
  */
 export default [
 	{
@@ -128,5 +128,11 @@ export default [
 		zhName: 'hkmxjh',
 		title: '还款免息计划',
 		component: () => import('pages/activity/fudai_page')
+	},
+	{
+		path: '/activity/shareQrCode_page',
+		zhName: 'mposewmbc',
+		title: 'mpos二维码保存',
+		component: () => import('pages/activity/shareQrCode_page')
 	}
 ];

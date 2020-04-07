@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-07 10:07:04
+ * @LastEditTime: 2020-04-07 16:20:50
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -50,7 +50,7 @@ const getAppVersion = () => {
 				'getAppVersion',
 				(jsonRsp) => {
 					Toast.info(JSON.stringify(jsonRsp.appVersion));
-					status = compare(jsonRsp.appVersion, '4.0.1') > 0;
+					status = compare(jsonRsp.appVersion, '4.0.1') >= 0;
 				},
 				{}
 			);
@@ -109,21 +109,80 @@ const getLocation = () => {
 		});
 	}
 };
-
+/**
+ * @description: 二维码分享-跳转一个新页面
+ * @param {type}
+ * @return:
+ */
+const openNewNativeQRWebView = (type, shareData, callBack) => {
+	window.JSBridge &&
+		window.JSBridge.invoke(
+			'openNewNativeQRWebView',
+			() => {
+				callBack();
+			},
+			{
+				content: shareData.link,
+				url: shareData.qrCodeUrl // 新开二维码页面
+			}
+		);
+};
+/**
+ * @description: 将页面保存为图片
+ * @param {type} 0001 保存成功  0000 保存失败
+ * @return:
+ */
+const nativeSaveWebView2Png = (callBack) => {
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'nativeSaveWebView2Png',
+				(res) => {
+					if (res.result === '0001') {
+						callBack(true);
+					} else {
+						callBack(false);
+					}
+				},
+				{} // 这个空也不能去掉
+			);
+	}
+};
+/**
+ * @description: 获取二维码跳转链接
+ * @param {type}
+ * @return:
+ */
+const nativeGetQRCodeContent = (callBack) => {
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'nativeGetQRCodeContent',
+				(res) => {
+					callBack(res.content);
+				},
+				{} // 这个空也不能去掉
+			);
+	}
+};
 /**
  * @description: 分享
- * @param {type} 0001代表微信、0002代表朋友圈、0003代表QQ、0004代表QQ空间
+ * @param {type} 0001代表微信、0002代表朋友圈、0003代表QQ、0004代表QQ空间,0005 二维码分享,0006 复制链接
  * @return: 可传多个 entry: '0001,0002,0003,0004',
- * 我们需要参数：{"title":"","description":"","url":"","iconUrl":""}
+ * 我们需要参数：{"title":"","description":"","url":"","iconUrl":"",}
  */
-const mposShare = ({ shareData }) => {
+const mposShare = ({ shareData, callBack }) => {
 	if (status && window.JSBridge) {
 		Toast.info('新的');
 		window.JSBridge &&
 			window.JSBridge.invoke(
-				'customShare',
-				() => {
-					Toast.info('分享成功');
+				'nativeWebShare',
+				(res) => {
+					if (res && res.type && res.type === 'QR_CODE') {
+						openNewNativeQRWebView(res.type, shareData, callBack);
+					} else {
+						callBack();
+					}
 				},
 				{
 					entry: shareData.entry,
@@ -176,4 +235,11 @@ const closeCurrentWebView = () => {
 		}, 2000);
 	}
 };
-export { getAppVersion, getLocation, mposShare, closeCurrentWebView };
+export {
+	getAppVersion,
+	getLocation,
+	mposShare,
+	closeCurrentWebView,
+	nativeSaveWebView2Png,
+	nativeGetQRCodeContent
+};
