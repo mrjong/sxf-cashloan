@@ -180,34 +180,8 @@
 		}
 	}
 	.agreement {
-		display: flex;
-		color: #8e8d7b;
-		font-size: 24px;
 		margin-top: 20px;
-		text-align: left;
 		line-height: 38px;
-
-		span {
-			color: #414a53;
-		}
-
-		.checked {
-			display: block;
-			width: 30px;
-			height: 30px;
-			margin-right: 10px;
-			background-size: 100%;
-			background-repeat: no-repeat;
-			background-image: url('../../../assets/images/home/checked_ico.png');
-			margin-top: 5px;
-		}
-
-		.nochecked {
-			background-image: url('../../../assets/images/home/unChecked_ico.png');
-		}
-		.agreementCont {
-			flex: 1;
-		}
 	}
 
 	:global {

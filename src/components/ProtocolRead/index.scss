@@ -1,0 +1,41 @@
+.protocolReadWrap {
+  display: flex;
+  .checkRadioWrap {
+    cursor: pointer;
+    padding-left: 5px;
+    padding-right: 10px;
+    font-size: 0;
+    .checkRadio {
+      height: 32px;
+      width: 32px;
+      margin: 5px;
+      border-radius: 100%;
+    }
+  }
+  .listWrap {
+    flex: 1;
+    text-align: justify;
+    font-size: 0;
+    line-height: 1.8;
+    .protocolTip {
+      cursor: pointer;
+      position: relative;
+      // z-index: 5;
+      display: inline-block;
+      line-height: 1;
+      font-size: 24px;
+      color: #868e9e;
+      padding-bottom: 8px;
+    }
+    .listItem {
+      cursor: pointer;
+      font-size: 24px;
+      color: #121c32;
+      font-weight: 500;
+    }
+    .protocolTipLast {
+      font-size: 24px;
+      color: #868e9e;
+    }
+  }
+}
