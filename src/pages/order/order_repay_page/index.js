@@ -325,12 +325,12 @@ export default class order_repay_page extends PureComponent {
 
 	//处理每期账单明细部分勾选事件回调
 	handleFeesClick = (item, type) => {
-		const { panelList, repayPerds, overdueDays } = this.state;
+		const { actPanelListDatas, repayPerds, overdueDays } = this.state;
 		let canClick = false;
 		if (item.perdNum === 1) {
 			canClick = true;
 		} else {
-			const prevPerd = panelList.filter((v) => item.perdNum - 1 === v.perdNum);
+			const prevPerd = actPanelListDatas.filter((v) => item.perdNum - 1 === v.perdNum);
 			canClick = prevPerd[0].perdSts === '4';
 		}
 
@@ -379,14 +379,10 @@ export default class order_repay_page extends PureComponent {
 
 	// 更新账单明细勾选态,并动态计算金额
 	updateFeesCheckedStatus = (item) => {
-		// const allNoChecked = item.feesStatus.every((v) => !v);
 		const hasOneChecked = item.feesStatus.some((v) => v);
 		const { panelList, actPanelListDatas } = this.state;
 		for (let i = 0; i < panelList.length; i++) {
 			if (item.perdNum === panelList[i].perdNum) {
-				// if (allNoChecked) {
-				// 	item.isChecked = false;
-				// }
 				item.isChecked = hasOneChecked;
 				panelList[i] = item;
 			}
