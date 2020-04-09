@@ -167,6 +167,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	componentWillUnmount() {
 		store.removeConfirmAgencyBackHome();
+		store.removeRiskGuaranteeModalShow();
 	}
 
 	// 拦截发放优惠券
@@ -1281,8 +1282,9 @@ export default class confirm_agency_page extends PureComponent {
 									: 'default'
 							}
 						>
-							确定签约
+							申请借款
 						</ButtonCustom>
+						<span className={style.bottomTip}>当借款由持牌机构放款，年化综合息费率不超36%</span>
 					</div>
 
 					{isShowTipModal ? (

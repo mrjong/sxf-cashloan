@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Icon, Drawer } from 'antd-mobile';
+import { Modal, Icon, Drawer, NoticeBar } from 'antd-mobile';
 import style from './index.scss';
 import { StepBar } from 'components';
 
@@ -14,9 +14,6 @@ export default class RepayPlanModal extends React.PureComponent {
 	render() {
 		const { openDrawer } = this.state;
 		const { visible, onClose, data, loanMoney, goPage, isJoinInsurancePlan } = this.props;
-		// let totalMoney = 0,
-		// 	totalPrincipal = 0;
-		// periods = data && data.length;
 		const data1 =
 			data &&
 			data.map((item) => {
@@ -29,8 +26,6 @@ export default class RepayPlanModal extends React.PureComponent {
 					perdDeductAmt,
 					riskGuaranteeAmt
 				} = item;
-				// totalMoney = totalMoney + Number(perdTotAmt); //总金额
-				// totalPrincipal = totalPrincipal + Number(perdPrcpAmt); //总本金
 				return {
 					perdNum,
 					perdTotalMoney: perdTotAmt,
@@ -101,6 +96,19 @@ export default class RepayPlanModal extends React.PureComponent {
 						<StepBar data={data2} />
 					</div>
 				</div>
+				<div className={style.fix_bottom}>
+					<NoticeBar
+						marqueeProps={{
+							loop: true,
+							leading: 1000,
+							trailing: 1000,
+							style: { color: '#C9CDD5', fontSize: '0.22rem' }
+						}}
+						icon={null}
+					>
+						出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准
+					</NoticeBar>
+				</div>
 			</div>
 		);
 
@@ -152,24 +160,6 @@ export default class RepayPlanModal extends React.PureComponent {
 						</div>
 					</div>
 				</Drawer>
-				{/* <div className={style.fix_bottom}>
-					<NoticeBar
-						marqueeProps={{
-							loop: true,
-							leading: 1000,
-							trailing: 1000,
-							style: { color: '#C9CDD5', fontSize: '0.22rem' }
-						}}
-						icon={null}
-					>
-						{this.state.openDrawer
-							? '出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准'
-							: `本平台仅收取服务费，利息由实际出借人收取，综合成本不超过${(
-									((totalMoney - totalPrincipal) / totalPrincipal / periods) *
-									12
-							  ).toFixed(2) * 100}%/年`}
-					</NoticeBar>
-				</div> */}
 			</Modal>
 		);
 	}

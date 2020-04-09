@@ -17,7 +17,8 @@
 }
 
 .drawer_wrap {
-	background-color: #fff;
+  background-color: #fff;
+  position: relative;
 }
 
 .modalTitle {
@@ -103,7 +104,7 @@
 .fix_bottom {
 	position: absolute;
 	left: 0;
-	bottom: 0;
+	bottom: 140px;
 	width: 100%;
 	z-index: 100;
 }
