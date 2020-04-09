@@ -143,17 +143,16 @@ export default class wx_middle_page extends Component {
 	}
 	// 跳转路由判断
 	jumpRouter = (NoLoginUrl) => {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		// 登陆的token
 		let jumpUrl = store.getJumpUrl();
 		let URL = '';
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
-			URL = query.jumpUrl ? NoLoginUrl + `?jumpUrl=${query.jumpUrl}` : NoLoginUrl;
+			URL = jumpUrl ? NoLoginUrl + `?jumpUrl=${jumpUrl}` : NoLoginUrl;
 			// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
 			if (window.globalConfig && window.globalConfig.wxTest) {
-				if (query.jumpUrl) {
+				if (jumpUrl) {
 					this.props.history.replace(URL + '&wxTestFrom=wx_middle_page');
 				} else {
 					this.props.history.replace(URL + '?wxTestFrom=wx_middle_page');
