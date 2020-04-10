@@ -16,7 +16,7 @@ import { getFirstError, handleInputBlur, getDeviceType } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
-import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal, InsuranceModal } from 'components';
+import { RepayPlanModal, ButtonCustom, ProtocolSmsModal, ProtocolRead, InsuranceModal } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
 import {
@@ -1245,25 +1245,16 @@ export default class confirm_agency_page extends PureComponent {
 									)}
 								</li>
 							</ul>
-							<div className={style.protocolBox}>
-								{contractData.length > 0 && (
-									<p className={style.protocolLink} onClick={this.checkAgreement}>
-										<CheckRadio isSelect={checkBox1} />
-										点击“确定签约”，表示同意
-										{contractData.map((item, idx) => (
-											<em
-												onClick={(e) => {
-													e.stopPropagation();
-													this.readContract(item);
-												}}
-												key={idx}
-											>
-												《{item.contractMdlName}》
-											</em>
-										))}
-									</p>
-								)}
-							</div>
+
+							{contractData.length > 0 ? (
+								<ProtocolRead
+									tip="点击“确定签约”，表示同意"
+									isSelect={checkBox1}
+									protocolList={contractData}
+									clickRadio={this.checkAgreement}
+									clickProtocol={this.readContract}
+								/>
+							) : null}
 						</div>
 					</div>
 					<div className={style.buttonWrap}>

@@ -25,7 +25,7 @@ import {
 	AsyncCascadePicker,
 	ButtonCustom,
 	FixedTopTip,
-	CheckRadio
+	ProtocolRead
 } from 'components';
 import {
 	contact_relationship_click,
@@ -647,33 +647,26 @@ export default class pre_add_contact_page extends PureComponent {
 						</div>
 					</div>
 
-					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<CheckRadio isSelect={selectFlag} />
-						点击按钮即视为同意
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract({
+					<div className={style.protocolBox}>
+						<ProtocolRead
+							tip="点击按钮即视为同意"
+							isSelect={selectFlag}
+							protocolList={[
+								{
+									label: '个人信息授权书',
 									pId: grxxsqsRiskBury.key,
 									jumpUrl: 'personal_auth_page'
-								});
-							}}
-							className={style.link}
-						>
-							《个人信息授权书》
-						</em>
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract({
+								},
+								{
+									label: '用户隐私权政策',
 									pId: yhysqzcRiskBury.key,
 									jumpUrl: 'user_privacy_page'
-								});
-							}}
-							className={style.link}
-						>
-							《用户隐私权政策》
-						</em>
+								}
+							]}
+							clickRadio={this.selectProtocol}
+							clickProtocol={this.readContract}
+							offsetH="0"
+						/>
 					</div>
 				</div>
 				<div className={style.sureBtnWrap}>

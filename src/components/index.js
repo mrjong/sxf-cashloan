@@ -30,6 +30,7 @@ import CouponModal from './CouponModal';
 import IframeProtocol from './IframeProtocol';
 import InsuranceModal from './InsuranceModal';
 import TipConfirmModal from './TipConfirmModal';
+import ProtocolRead from './ProtocolRead';
 
 export {
 	FooterBar,
@@ -59,5 +60,6 @@ export {
 	CouponModal,
 	IframeProtocol,
 	InsuranceModal,
-	TipConfirmModal
+	TipConfirmModal,
+	ProtocolRead
 };

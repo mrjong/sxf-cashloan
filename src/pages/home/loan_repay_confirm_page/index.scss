@@ -66,7 +66,8 @@
 	background: rgba(255, 255, 255, 1);
 	border-radius: 10px;
 	box-sizing: border-box;
-	padding: 30px 30px 10px;
+  // padding: 30px 30px 10px;
+  padding: 30px 30px 0;
 	margin-top: 20px;
 
 	.top {
@@ -76,11 +77,11 @@
 		align-items: center;
 		height: 100px;
 		margin-top: 20px;
-		&::after {
-			@include setBottomLine(#f0f1f5);
-			left: -30px;
-			width: calc(100% + 60px);
-		}
+		// &::after {
+		// 	@include setBottomLine(#f0f1f5);
+		// 	left: -30px;
+		// 	width: calc(100% + 60px);
+		// }
 	}
 
 	.billMoney {

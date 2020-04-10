@@ -38,6 +38,7 @@ import { login, wxTest } from 'utils/analytinsType';
 import { domListen } from 'utils/domListen';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
+import { ProtocolRead } from 'components';
 import { setBackGround } from 'utils/background';
 import hegui_bg from './img/hegui_bg.png';
 import login_bg1 from './img/login_bg1.png';
@@ -428,10 +429,10 @@ export default class login_page extends PureComponent {
 	};
 	/**华丽的分割线 */
 	// 跳转协议
-	go = (url) => {
+	go = (item) => {
 		store.setLoginBack(true);
 		this.props.setIframeProtocolShow({
-			url
+			url: item.url
 		});
 	};
 
@@ -635,29 +636,25 @@ export default class login_page extends PureComponent {
 								<span>立即申请</span>
 							</div>
 						</div>
-						<div className={styles.agreement}>
-							<i
-								className={this.state.isChecked ? styles.checked : `${styles.checked} ${styles.nochecked}`}
-								onClick={this.checkAgreement}
-							/>
-							<div className={styles.agreementCont}>
-								阅读并接受
-								<span
-									onClick={() => {
-										this.go('register_agreement_page');
-									}}
-								>
-									《用户注册协议》
-								</span>
-								<span
-									onClick={() => {
-										this.go('user_privacy_page');
-									}}
-								>
-									《用户隐私权政策》
-								</span>
-							</div>
-						</div>
+						<ProtocolRead
+							className={styles.agreement}
+							tip="阅读并接受"
+							isSelect={this.state.isChecked}
+							protocolList={[
+								{
+									label: '用户注册协议',
+									url: 'register_agreement_page'
+								},
+								{
+									label: '用户隐私权政策',
+									url: 'user_privacy_page'
+								}
+							]}
+							clickRadio={this.checkAgreement}
+							clickProtocol={this.go}
+							offsetH="0"
+							radioActiveBg="#4c7afd"
+						/>
 						<p className={styles.bottom_tip}>温馨提示：如您是老用户，请前往还到app操作并还款</p>
 					</div>
 				</div>

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:18:55
+ * @LastEditTime: 2020-03-27 16:04:11
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -165,11 +165,11 @@ export default class credit_list_page extends PureComponent {
 							<span className={[styles.leftTextTop, isDisable ? styles.isDisable : ''].join(' ')}>
 								{item.bankName}(<span className={styles.leftTextTopNum}>{item.lastNo}</span>)
 							</span>
-							<span className={[styles.leftTextBottom, isDisable ? styles.isDisable : ''].join(' ')}>
-								{!cardBillSts
-									? '需更新账单'
-									: (item.cardBillAmt && `信用卡剩余应还${item.cardBillAmt.toFixed(2)}`) || '----.--'}
-							</span>
+							{!cardBillSts ? (
+								<span className={[styles.leftTextBottom, isDisable ? styles.isDisable : ''].join(' ')}>
+									需更新账单
+								</span>
+							) : null}
 						</div>
 					</div>
 					{tipText ? (

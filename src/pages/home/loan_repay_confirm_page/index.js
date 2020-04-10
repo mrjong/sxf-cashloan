@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 16:36:38
+ * @LastEditTime: 2020-03-27 15:39:36
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -378,7 +378,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					//最低还款
 					this.calcLoanMoney(minApplAmt);
 				} else {
-					this.calcLoanMoney(maxApplAmt);
+					// this.calcLoanMoney(maxApplAmt);
 				}
 			}
 		);
@@ -418,24 +418,24 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 	render() {
 		const { usrIndexInfo = {}, selectedLoanDate, perdRateList, showTimeoutPayModal } = this.state;
-		const { cardBillAmt, bankNo, bankName, cardBillSts, minApplAmt, maxApplAmt, lastNo } = usrIndexInfo;
+		const { bankNo, bankName, minApplAmt, maxApplAmt, lastNo } = usrIndexInfo;
 
 		const { getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 
-		let cardBillAmtData = '';
-		if (cardBillSts === '02' || cardBillSts === '00') {
-			cardBillAmtData = '待更新';
-		} else if (cardBillAmt && Number(cardBillAmt) > 0) {
-			// 优先取剩余应还，否则去账单金额
-			cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
-		} else if (!cardBillAmt && cardBillAmt !== 0) {
-			cardBillAmtData = '----.--';
-		} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
-			cardBillAmtData = '已结清';
-		} else {
-			cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
-		}
+		// let cardBillAmtData = '';
+		// if (cardBillSts === '02' || cardBillSts === '00') {
+		// 	cardBillAmtData = '待更新';
+		// } else if (cardBillAmt && Number(cardBillAmt) > 0) {
+		// 	// 优先取剩余应还，否则去账单金额
+		// 	cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+		// } else if (!cardBillAmt && cardBillAmt !== 0) {
+		// 	cardBillAmtData = '----.--';
+		// } else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
+		// 	cardBillAmtData = '已结清';
+		// } else {
+		// 	cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+		// }
 
 		let placeholderText = `可申请 ${usrIndexInfo.minApplAmt || ''}~${usrIndexInfo.maxApplAmt || ''}`;
 		let repayMoney = this.props.form.getFieldValue('loanMoney');
@@ -464,7 +464,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<span className={style.lastNo}>({!lastNo ? '****' : lastNo.slice(-4)})</span>
 							</div>
 						</div>
-						<div className={style.center}>
+						{/* <div className={style.center}>
 							<strong className={style.billMoney}>
 								{(isNaN(cardBillAmtData) && <span style={{ fontSize: '.6rem' }}>{cardBillAmtData}</span>) ||
 									cardBillAmtData}
@@ -477,7 +477,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<span className={style.name}>还款日：{usrIndexInfo.cardRepayDt || '----/--/--'}</span>
 								</div>
 							</div>
-						</div>
+						</div> */}
 					</div>
 
 					<div className={[style.bankCard, style.heightMoney, 'modal_l_r2'].join(' ')}>
@@ -518,7 +518,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										return;
 									}
 									this.props.form.setFieldsValue({
-										loanMoney: v ? v : maxApplAmt ? maxApplAmt : ''
+										loanMoney: v ? v : ''
 									});
 								}}
 							/>

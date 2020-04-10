@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-27 16:29:24
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import style from './index.scss';
@@ -46,7 +51,7 @@ export default class carouselHome extends React.Component {
 		const showData = {
 			title: '还到-新手版',
 			bankNo: '',
-			subtitle: '最高可申请还款金(元)',
+			subtitle: '借款高至(元)',
 			money: '50000.00',
 			desc: '还款日：8888/88/88',
 			btnText: !isMPOS() && btnText ? btnText : '去申请', // mpos中展示文案不同

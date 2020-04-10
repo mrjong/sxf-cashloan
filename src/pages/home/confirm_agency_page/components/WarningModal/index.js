@@ -8,7 +8,7 @@ import { Modal } from 'antd-mobile';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import styles from './index.scss';
-import { ButtonCustom, CheckRadio } from 'components';
+import { ButtonCustom, ProtocolRead } from 'components';
 import { connect } from 'react-redux';
 import { setProtocolSelFlagAction, setIframeProtocolShow } from 'reduxes/actions/commonActions';
 
@@ -146,26 +146,27 @@ export default class WarningModal extends React.PureComponent {
 
 					<div className={styles.fixedBottomWrap}>
 						{/* 底部合同 */}
-						<div className={styles.agreement} onClick={this.checkAgreement}>
-							<CheckRadio isSelect={protocolSelFlag} />
-							您已悉知并同意
-							<span
-								onClick={(e) => {
-									e.stopPropagation();
-									this.go({ url: 'credit_query_page', pId: 'grxyxxcxsqs' });
-								}}
-							>
-								《个人信用信息查询授权书》
-							</span>
-							<span
-								onClick={(e) => {
-									e.stopPropagation();
-									this.go({ url: 'overdue_effect_page', pId: 'grxyyqyxgzs' });
-								}}
-							>
-								《个人信用逾期影响告知书》
-							</span>
-							<span>及以上内容</span>
+						<div className={styles.agreement}>
+							<ProtocolRead
+								tip="您已悉知并同意"
+								tipLast="及以上内容"
+								isSelect={protocolSelFlag}
+								protocolList={[
+									{
+										label: '个人信用信息查询授权书',
+										url: 'credit_query_page',
+										pId: 'grxyxxcxsqs'
+									},
+									{
+										label: '个人信用逾期影响告知书',
+										url: 'overdue_effect_page',
+										pId: 'grxyyqyxgzs'
+									}
+								]}
+								clickRadio={this.checkAgreement}
+								clickProtocol={this.go}
+								offsetH="0"
+							/>
 						</div>
 
 						{/* 继续申请借款按钮 */}

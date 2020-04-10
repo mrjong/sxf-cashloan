@@ -151,28 +151,10 @@
 			color: #121c32;
 			right: -12px;
 			top: 50%;
-			margin-top: -27px;
+			margin-top: -25px;
+			// margin-bottom: 5px;
 		}
-	}
-	.protocolBox {
-		margin-top: -10px;
-		padding: 0 50px;
-		.insureDesc {
-			font-size: 24px;
-			color: #c9cdd5;
-			line-height: 33px;
-			margin-bottom: 40px;
-		}
-	}
-	.protocolLink {
-		font-size: 24px;
-		color: #868e9e;
-		margin: 24px 0 24px;
-		text-align: justify;
-		em {
-			color: #121c32;
-		}
-	}
+  }
 
 	.greyText {
 		color: #b2b6bf;
@@ -183,9 +165,10 @@
 	}
 
 	.buttonWrap {
-		width: 100%;
-		padding: 16px 40px 0 40px;
-		position: fixed;
+    width: 100%;
+    padding: 16px 40px 0 40px;
+    position: fixed;
+    z-index: 10;
 		bottom: 0;
 		left: 0;
 		box-sizing: border-box;

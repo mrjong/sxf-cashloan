@@ -37,6 +37,8 @@ import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+import { ProtocolRead } from 'components';
+
 import {
 	passport_loginBySms,
 	passport_createImg,
@@ -373,10 +375,10 @@ export default class momo_outer_login_page extends PureComponent {
 	};
 
 	// 跳转协议
-	go = (url) => {
+	go = (item) => {
 		store.setLoginBack(true);
 		this.props.setIframeProtocolShow({
-			url
+			url: item.url
 		});
 	};
 
@@ -576,36 +578,30 @@ export default class momo_outer_login_page extends PureComponent {
 						</p>
 					</li>
 				</ul>
-				<div className={styles.agreement}>
-					<i
-						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
-						onClick={this.checkAgreement}
-					/>
-					<div className={styles.agreementCont}>
-						阅读并接受
-						<span
-							onClick={() => {
-								this.go('personal_credit_page');
-							}}
-						>
-							《信用风险告知书》
-						</span>
-						<span
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
-						>
-							《用户注册协议》
-						</span>
-						<span
-							onClick={() => {
-								this.go('user_privacy_page');
-							}}
-						>
-							《用户隐私权政策》
-						</span>
-					</div>
-				</div>
+
+				<ProtocolRead
+					className={styles.agreement}
+					tip="阅读并接受"
+					isSelect={this.state.isChecked}
+					protocolList={[
+						{
+							label: '信用风险告知书',
+							url: 'personal_credit_page'
+						},
+						{
+							label: '用户注册协议',
+							url: 'register_agreement_page'
+						},
+						{
+							label: '用户隐私权政策',
+							url: 'user_privacy_page'
+						}
+					]}
+					clickRadio={this.checkAgreement}
+					clickProtocol={this.go}
+					offsetH="0"
+				/>
+
 				<p className={styles.tipsText}>贷款有风险，借款需谨慎；请根据个人能力合理贷款，理性消费，避免逾期</p>
 				<p className={styles.tipsText}>贷款额度、放款时间以实际审核批准结果为准</p>
 				<p className={styles.tipsText}>Copyright &copy;2019 All Rights Reserved</p>

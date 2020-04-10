@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Modal, InputItem, Icon } from 'antd-mobile';
-import { ButtonCustom, RepayPlanModal, CheckRadio, ProtocolSmsModal } from 'components';
+import { ButtonCustom, RepayPlanModal, ProtocolSmsModal, ProtocolRead } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { preLoan, home, loan_fenqi } from 'utils/analytinsType';
@@ -112,7 +112,7 @@ export default class pre_loan_page extends PureComponent {
 		}
 	}
 	componentWillUnmount() {
-		store.setHrefFlag(true);
+		// store.setHrefFlag(true);
 	}
 
 	//处理数据反显
@@ -227,7 +227,6 @@ export default class pre_loan_page extends PureComponent {
 		// 找出prodCount最大对象所在的索引
 		let maxItem = null;
 		let indexOfMax = 0;
-		console.log(loanDate, 'aw');
 		if (loanDate) {
 			maxItem = loanDate;
 		} else {
@@ -641,6 +640,8 @@ export default class pre_loan_page extends PureComponent {
 	};
 
 	submitHandler = () => {
+		// 关闭弹框,防止补实名和人脸的弹框盖在上面
+		this.handleCloseTipModal('isShowTipModal');
 		this.props.toast.loading('', 10);
 		this.storeTempData();
 		const { couponData } = this.props;
@@ -1042,10 +1043,15 @@ export default class pre_loan_page extends PureComponent {
 					replayPlanLength &&
 					protocolList &&
 					protocolList.length ? (
-						<p className={style.protocolLink} onClick={this.checkAgreement}>
-							<CheckRadio isSelect={checkBox1} />
-							点击“签约借款”，表示同意 {this.renderProtocol()}
-						</p>
+						<ProtocolRead
+							className={style.protocolLink}
+							tip="点击“签约借款”，表示同意"
+							isSelect={checkBox1}
+							protocolList={this.state.protocolList}
+							clickRadio={this.checkAgreement}
+							clickProtocol={this.readContract}
+							offsetH="0"
+						/>
 					) : null}
 				</div>
 				<div className={style.buttonWrap}>
