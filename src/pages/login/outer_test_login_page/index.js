@@ -8,7 +8,7 @@ import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem, Modal, Carousel } from 'antd-mobile';
 import ImageCode from 'components/ImageCode';
-import { ButtonCustom, CheckRadio } from 'components';
+import { ButtonCustom, ProtocolRead } from 'components';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -45,6 +45,7 @@ import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl, index_queryPLPShowSts } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
+
 import styles from './index.scss';
 import logo from './img/logo.png';
 import top_money from './img/top_money.png';
@@ -467,10 +468,10 @@ export default class login_common_page extends PureComponent {
 	};
 
 	// 跳转协议
-	go = (url) => {
+	go = (item) => {
 		store.setLoginBack(true);
 		this.props.setIframeProtocolShow({
-			url
+			url: item.url
 		});
 	};
 
@@ -668,36 +669,28 @@ export default class login_common_page extends PureComponent {
 					>
 						立即申请
 					</ButtonCustom>
-					<div className={styles.agreement_container} onClick={this.checkAgreement}>
-						<CheckRadio isSelect={isChecked} />
-						<div>
-							阅读并接受
-							<span
-								className={styles.agreement_link}
-								onClick={() => {
-									this.go('personal_credit_page');
-								}}
-							>
-								《信用风险告知书》
-							</span>
-							<span
-								className={styles.agreement_link}
-								onClick={() => {
-									this.go('register_agreement_page');
-								}}
-							>
-								《用户注册协议》
-							</span>
-							<span
-								className={styles.agreement_link}
-								onClick={() => {
-									this.go('privacy_agreement_page');
-								}}
-							>
-								《用户隐私权政策》
-							</span>
-						</div>
-					</div>
+          <ProtocolRead
+            className={styles.agreement_container}
+            tip="阅读并接受"
+            isSelect={isChecked}
+            protocolList={[
+              {
+                label: '信用风险告知书',
+                url: 'personal_credit_page'
+              },
+              {
+                label: '用户注册协议',
+                url: 'register_agreement_page',
+              },
+              {
+                label: '用户隐私权政策',
+                url: 'user_privacy_page'
+              }
+            ]}
+            clickRadio={this.checkAgreement}
+            clickProtocol={this.go}
+            offsetH="0"
+          />
 				</div>
 
 				<div className={styles.box_container}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Icon, NoticeBar } from 'antd-mobile';
-import { StepBar, ButtonCustom, CheckRadio } from 'components';
+import { StepBar, ButtonCustom, ProtocolRead } from 'components';
 import styles from './index.scss';
 
 export default class InsuranceModal extends React.PureComponent {
@@ -68,13 +68,19 @@ export default class InsuranceModal extends React.PureComponent {
 							授权并参与
 						</ButtonCustom>
 					</div>
-					<div className={styles.protocolWrap} onClick={toggleCheckbox}>
-						<CheckRadio isSelect={isChecked} />
-						<span>我已认真阅读，点击确认表示同意</span>
-						<span className={styles.protocolLink} onClick={handleContractClick}>
-							《{contact.contractMdlName}》
-						</span>
-					</div>
+					<ProtocolRead
+						className={styles.protocolWrap}
+						tip="我已认真阅读，点击确认表示同意"
+						isSelect={isChecked}
+						protocolList={[
+							{
+								label: contact.contractMdlName
+							}
+						]}
+						clickRadio={toggleCheckbox}
+						clickProtocol={handleContractClick}
+						offsetH="0"
+					/>
 				</div>
 				<div className={styles.fix_bottom}>
 					<NoticeBar
