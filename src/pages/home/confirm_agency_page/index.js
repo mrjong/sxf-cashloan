@@ -1331,8 +1331,7 @@ export default class confirm_agency_page extends PureComponent {
 							buriedPointEvent(home.riskGuaranteeModalPlanClick);
 							this.props.history.push('/home/insurance_introduce_page');
 						}}
-						handleContractClick={(e) => {
-							e.stopPropagation();
+						handleContractClick={() => {
 							this.readContract(FXBZ_contract[0]);
 						}}
 						toggleCheckbox={() => {
