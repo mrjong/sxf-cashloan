@@ -513,25 +513,13 @@ export default class bind_save_page extends PureComponent {
 							isSelect={selectFlag}
 							protocolList={[
 								{
-									label: '用户收款扣款委托书'
+									label: '用户授权委托书'
 								}
 							]}
 							clickRadio={this.selectProtocol}
 							clickProtocol={this.readContract}
 							offsetH="0.7rem"
 						/>
-						{/* <CheckRadio isSelect={selectFlag} />
-						请阅读协议内容，点击确认即视为您同意
-						<a
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract();
-							}}
-							className={styles.link}
-						>
-							《用户收款扣款委托书》
-						</a>
-						并确认授权 */}
 					</div>
 					<div className={styles.confirm_btn_box}>
 						<ButtonCustom onClick={this.confirmBindCard} type={this.validateFn() ? 'yellow' : 'default'}>
