@@ -513,7 +513,7 @@ export default class bind_save_page extends PureComponent {
 							isSelect={selectFlag}
 							protocolList={[
 								{
-									label: '用户授权委托书'
+									label: '绑卡声明'
 								}
 							]}
 							clickRadio={this.selectProtocol}
