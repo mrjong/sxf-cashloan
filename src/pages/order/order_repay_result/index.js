@@ -96,30 +96,12 @@ export default class order_repay_result_page extends React.PureComponent {
 	 */
 	queryFudaiReward = () => {
 		const { state = {} } = this.props.history.location;
-		const { isLastPerd, prodType } = state;
+		const { prodType, billSts } = state;
 		this.startRewardLoading();
 		this.props.$fetch
 			.get(`${msg_popup_list}/2`)
 			.then((res) => {
 				this.stopRewardLoading();
-				// this.props.setHomeModalAction({
-				// 	DataList: [
-				// 		{
-				// 			code: '999',
-				// 			name: '',
-				// 			backType: '0',
-				// 			backImgUrl: '',
-				// 			btnImgUrl: '',
-				// 			skipType: '0',
-				// 			skip: null,
-				// 			closeFlag: '0',
-				// 			extensionData: {
-				// 				rewardDays: 5
-				// 			}
-				// 		}
-				// 	],
-				// 	mPosition: '还款结果页'
-				// });
 				if (res.code === '000000' && res.data && res.data.popups && res.data.popups.length > 0) {
 					if (!isWXOpen()) {
 						this.props.setHomeModalAction({
@@ -127,8 +109,7 @@ export default class order_repay_result_page extends React.PureComponent {
 							mPosition: '还款结果页'
 						});
 					}
-				} else if (isLastPerd) {
-					//如果还的是最后一期
+				} else if (billSts === '4') {
 					if (isWXOpen()) {
 						//微信菜单栏过来的
 						this.props.history.replace(`/order/order_page`);
@@ -141,8 +122,7 @@ export default class order_repay_result_page extends React.PureComponent {
 			})
 			.catch(() => {
 				this.stopRewardLoading();
-				if (isLastPerd) {
-					//如果还的是最后一期
+				if (billSts === '4') {
 					setTimeout(() => {
 						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
 					}, 2000);
@@ -176,7 +156,7 @@ export default class order_repay_result_page extends React.PureComponent {
 			.then((res) => {
 				if (res.code === '000000' && res.data) {
 					isFetching = false;
-					const { payResultCode, repayOrdAmt, crdOrdAmt, failMsg } = res.data || {};
+					const { payResultCode, repayOrdAmt, crdOrdAmt, failMsg, billSts } = res.data || {};
 					if (payResultCode === '00') {
 						this.setState(
 							{
@@ -184,7 +164,8 @@ export default class order_repay_result_page extends React.PureComponent {
 								repayOrdAmt: Number(repayOrdAmt).toFixed(2),
 								crdOrdAmt: Number(crdOrdAmt).toFixed(2),
 								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
-								failMsg
+								failMsg,
+								billSts
 							},
 							() => {
 								buriedPointEvent(order.repayResultStatus, {
@@ -238,26 +219,16 @@ export default class order_repay_result_page extends React.PureComponent {
 		});
 	};
 
-	renderContinueButton = (isLastPerd, status) => {
-		if (isLastPerd) {
-			if (status === 'success' || status === 'waiting') {
-				return null;
-			}
-			return (
-				<SXFButton onClick={this.continueRepay} className={styles.button}>
-					继续还款
-				</SXFButton>
-			);
-		} else if (!isLastPerd) {
-			if (status === 'waiting') {
-				return null;
-			}
+	renderContinueButton = () => {
+		const { billSts, status } = this.state;
+		if (!((billSts === '4' && status === 'success') || status === 'waiting')) {
 			return (
 				<SXFButton onClick={this.continueRepay} className={styles.button}>
 					继续还款
 				</SXFButton>
 			);
 		}
+		return null;
 	};
 
 	render() {
@@ -273,7 +244,7 @@ export default class order_repay_result_page extends React.PureComponent {
 			percent
 		} = this.state;
 		const { state = {} } = this.props.history.location;
-		const { bankName, bankNo, isLastPerd } = state;
+		const { bankName, bankNo } = state;
 
 		return (
 			<div>
@@ -379,7 +350,7 @@ export default class order_repay_result_page extends React.PureComponent {
 						<span>{percent}s</span>
 					</div>
 				) : null}
-				{this.renderContinueButton(isLastPerd, status)}
+				{this.renderContinueButton()}
 			</div>
 		);
 	}

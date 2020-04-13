@@ -59,7 +59,6 @@ export default class order_repay_confirm extends PureComponent {
 
 	componentDidMount() {
 		this.dataInit();
-		this.isLastPerd();
 	}
 
 	onReloadData = () => {
@@ -422,8 +421,7 @@ export default class order_repay_confirm extends PureComponent {
 										overdueDays,
 										billDesc,
 										bankName,
-										bankNo,
-										isLastPerd: this.isLastPerd()
+										bankNo
 									}
 								});
 							}
@@ -460,18 +458,6 @@ export default class order_repay_confirm extends PureComponent {
 	//针对微信支付返回上一级页面
 	goBackForWeixin = () => {
 		this.props.history.goBack();
-	};
-
-	//判断该账单是否最后一期
-	isLastPerd = () => {
-		const { actPanelListDatas, billDesc, isPayAll } = this.props.history.location.state;
-		let lastPerd = [];
-		if (actPanelListDatas) {
-			lastPerd = actPanelListDatas[actPanelListDatas.length - 1];
-		}
-		let isClear = lastPerd.isChecked;
-
-		return billDesc.perdUnit === 'D' || isClear || isPayAll;
 	};
 
 	// 选择银行卡
