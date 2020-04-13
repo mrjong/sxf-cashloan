@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-07 09:57:08
+ * @LastEditTime: 2020-04-13 10:23:48
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -797,8 +797,8 @@ export default class home_page extends PureComponent {
 				entry: '0001,0002,0003,0004',
 				title: 'shareData.title',
 				desc: 'shareData.desc',
-				link: 'http://172.16.42.216:3200/inviteNewUsers/register/ddHgN6Zj7%2FSydAJz%2BkTv5Q%3D%3D',
-				imgUrl: 'http://172.16.42.216:3200/static/img/inviteNewUser/shareIcon.png'
+				link: 'https://lns-wap-test.vbillbank.com/login',
+				imgUrl: 'https://lns-wap-test.vbillbank.com/be2af2f34956834d43a23f68972edea7.png'
 			}
 		});
 	};
