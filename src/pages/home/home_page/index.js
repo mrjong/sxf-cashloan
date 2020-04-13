@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-13 17:56:18
+ * @LastEditTime: 2020-04-13 18:15:19
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -787,6 +787,9 @@ export default class home_page extends PureComponent {
 
 	downloadClick1 = () => {
 		getLocation();
+		this.setState({
+			location: store.getPosition()
+		});
 	};
 	downloadClick4 = () => {
 		getAppVersion();
@@ -797,6 +800,7 @@ export default class home_page extends PureComponent {
 				entry: '',
 				title: 'shareData.title',
 				desc: 'shareData.desc',
+				qrCodeUrl: 'https://lns-wap-test.vbillbank.com/activity/shareQrCode_page',
 				link: 'https://lns-wap-test.vbillbank.com/login',
 				imgUrl: 'https://lns-wap-test.vbillbank.com/be2af2f34956834d43a23f68972edea7.png'
 			}
@@ -814,7 +818,6 @@ export default class home_page extends PureComponent {
 				<div className={style.content_top}>
 					<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
 				</div>
-
 				<div className={activities && activities.length ? style.content_main_more : style.content_main}>
 					{/* <ActivityEntry data={activities} history={this.props.history} /> */}
 					<SwitchCard data={this.getDisPlayData()} />
@@ -837,6 +840,8 @@ export default class home_page extends PureComponent {
 				<SXFButton className={style.smart_button} onClick={this.downloadClick4}>
 					获取版本号
 				</SXFButton>
+				经纬度
+				<input value={this.state.location}></input>
 				<SXFButton className={style.smart_button} onClick={this.downloadClick3}>
 					关闭mpos
 				</SXFButton>

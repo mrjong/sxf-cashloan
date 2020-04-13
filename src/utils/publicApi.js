@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-13 09:45:10
+ * @LastEditTime: 2020-04-13 18:12:22
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -49,13 +49,11 @@ const getAppVersion = () => {
 			window.JSBridge.invoke(
 				'getAppVersion',
 				(jsonRsp) => {
-					Toast.info(JSON.stringify(jsonRsp.appVersion));
 					status = compare(jsonRsp.appVersion, '4.0.1') > 0;
 				},
 				{}
 			);
 	} else {
-		Toast.info('旧的');
 		status = false;
 	}
 };
@@ -104,6 +102,8 @@ const getLocation = () => {
 						Toast.info('旧的' + JSON.stringify(jsonRsp));
 						const location = jsonRsp.longitude + ',' + jsonRsp.latitude;
 						store.setPosition(location);
+					} else {
+						store.setPosition('-1,-1');
 					}
 				});
 		});
@@ -173,7 +173,6 @@ const nativeGetQRCodeContent = (callBack) => {
  */
 const mposShare = ({ shareData, callBack }) => {
 	if (status && window.JSBridge) {
-		Toast.info('新的');
 		window.JSBridge &&
 			window.JSBridge.invoke(
 				'nativeWebShare',
@@ -193,7 +192,6 @@ const mposShare = ({ shareData, callBack }) => {
 				}
 			);
 	} else {
-		Toast.info('旧的');
 		window.setupWebViewJavascriptBridge((bridge) => {
 			bridge.callHandler(
 				'mposShare',
@@ -213,26 +211,20 @@ const mposShare = ({ shareData, callBack }) => {
 //关闭view
 const closeCurrentWebView = () => {
 	if (status && window.JSBridge) {
-		Toast.info('新的');
-		setTimeout(() => {
-			window.JSBridge &&
-				window.JSBridge.invoke(
-					'closeCurrentWebview',
-					() => {
-						console.log('mpos关闭成功');
-					},
-					{}
-				);
-		}, 2000);
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'closeCurrentWebview',
+				() => {
+					console.log('mpos关闭成功');
+				},
+				{}
+			);
 	} else {
-		Toast.info('旧的');
-		setTimeout(() => {
-			window.setupWebViewJavascriptBridge((bridge) => {
-				bridge.callHandler('closeCurrentWebView', '', function(response) {
-					console.log(response);
-				});
+		window.setupWebViewJavascriptBridge((bridge) => {
+			bridge.callHandler('closeCurrentWebView', '', function(response) {
+				console.log(response);
 			});
-		}, 2000);
+		});
 	}
 };
 export {
