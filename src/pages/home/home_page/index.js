@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-13 10:23:48
+ * @LastEditTime: 2020-04-13 17:56:18
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -794,7 +794,7 @@ export default class home_page extends PureComponent {
 	downloadClick2 = () => {
 		mposShare({
 			shareData: {
-				entry: '0001,0002,0003,0004',
+				entry: '',
 				title: 'shareData.title',
 				desc: 'shareData.desc',
 				link: 'https://lns-wap-test.vbillbank.com/login',

@@ -115,9 +115,7 @@ export default class wxshare_page extends PureComponent {
 					_this.doInvite();
 				}, 200);
 			},
-			cancel: function() {
-				Toast.info('取消分享');
-			}
+			cancel: function() {}
 		};
 		// window.wx.updateAppMessageShareData(shareData);
 		// window.wx.updateTimelineShareData(shareData);
