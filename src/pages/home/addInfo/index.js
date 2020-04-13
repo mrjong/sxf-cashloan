@@ -27,8 +27,8 @@ import {
 	ButtonCustom,
 	FixedHelpCenter,
 	FixedTopTip,
-	CheckRadio,
-	AgreementModal
+	AgreementModal,
+	ProtocolRead
 } from 'components';
 import { add_info_submit } from './riskBuryConfig';
 
@@ -167,7 +167,7 @@ export default class add_info extends PureComponent {
 	};
 
 	// 跳转个人信息授权书
-	readContract = async (jumpUrl) => {
+	readContract = async (item) => {
 		// const { selectFlag } = this.state;
 		// store.setCacheBaseInfo({ selectFlag });
 		let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
@@ -178,7 +178,7 @@ export default class add_info extends PureComponent {
 				dateTime: dayjs(new Date()).format('YYYY年MM月DD日')
 			};
 			this.props.setIframeProtocolShow({
-				url: jumpUrl,
+				url: item.url,
 				contractInf: pageData
 			});
 		}
@@ -260,28 +260,25 @@ export default class add_info extends PureComponent {
 							);
 						})}
 					</div>
-					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<CheckRadio isSelect={selectFlag} />
-						点击按钮即视为同意
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract('personal_auth_page');
-							}}
-							className={style.link}
-						>
-							《个人信息授权书》
-						</em>
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract('user_privacy_page');
-							}}
-							className={style.link}
-						>
-							《用户隐私权政策》
-						</em>
-					</div>
+
+					<ProtocolRead
+						className={style.protocolBox}
+						tip="点击按钮即视为同意"
+						isSelect={selectFlag}
+						protocolList={[
+							{
+								label: '个人信息授权书',
+								url: 'personal_auth_page'
+							},
+							{
+								label: '用户隐私权政策',
+								url: 'user_privacy_page'
+							}
+						]}
+						clickRadio={this.selectProtocol}
+						clickProtocol={this.readContract}
+						offsetH="0"
+					/>
 				</div>
 				<div className={style.sureBtnWrap}>
 					<ButtonCustom

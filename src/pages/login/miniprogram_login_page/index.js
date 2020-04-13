@@ -24,6 +24,7 @@ import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
+import { ProtocolRead } from 'components';
 
 let timmer;
 
@@ -342,10 +343,10 @@ export default class miniprogram_login_page extends PureComponent {
 	};
 
 	// 跳转协议
-	go = (url) => {
+	go = (item) => {
 		store.setLoginBack(true);
 		this.props.setIframeProtocolShow({
-			url
+			url: item.url
 		});
 	};
 	checkAgreement = () => {
@@ -457,29 +458,25 @@ export default class miniprogram_login_page extends PureComponent {
 						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
 				</div>
-				<div className={styles.agreement}>
-					<i
-						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
-						onClick={this.checkAgreement}
-					/>
-					<div className={styles.agreementCont}>
-						阅读并接受
-						<span
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
-						>
-							《随行付金融用户注册协议》
-						</span>
-						<span
-							onClick={() => {
-								this.go('privacy_agreement_page');
-							}}
-						>
-							《用户隐私权政策》
-						</span>
-					</div>
-				</div>
+
+				<ProtocolRead
+					className={styles.agreement}
+					tip="阅读并接受"
+					isSelect={this.state.isChecked}
+					protocolList={[
+						{
+							label: '随行付金融用户注册协议',
+							url: 'register_agreement_page'
+						},
+						{
+							label: '用户隐私权政策',
+							url: 'user_privacy_page'
+						}
+					]}
+					clickRadio={this.checkAgreement}
+					clickProtocol={this.go}
+					offsetH="0"
+				/>
 				{showSlideModal && (
 					<ImageCode
 						imageUrl={slideImageUrl}

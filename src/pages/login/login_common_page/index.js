@@ -51,6 +51,7 @@ import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl, index_queryPLPShowSts } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import { ProtocolRead } from 'components';
 
 let timmer;
 
@@ -408,10 +409,10 @@ export default class login_common_page extends PureComponent {
 	};
 
 	// 跳转协议
-	go = (url) => {
+	go = (item) => {
 		store.setLoginBack(true);
 		this.props.setIframeProtocolShow({
-			url
+			url: item.url
 		});
 	};
 
@@ -577,36 +578,29 @@ export default class login_common_page extends PureComponent {
 					</div>
 					<img className={styles.listPNG} src={listPNG} />
 				</div>
-				<div className={styles.agreement}>
-					<i
-						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
-						onClick={this.checkAgreement}
-					/>
-					<div className={styles.agreementCont}>
-						阅读并接受
-						<span
-							onClick={() => {
-								this.go('personal_credit_page');
-							}}
-						>
-							《信用风险告知书》
-						</span>
-						<span
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
-						>
-							《用户注册协议》
-						</span>
-						<span
-							onClick={() => {
-								this.go('privacy_agreement_page');
-							}}
-						>
-							《用户隐私权政策》
-						</span>
-					</div>
-				</div>
+
+        <ProtocolRead
+          tip="阅读并接受"
+          isSelect={isChecked}
+          offsetH="0.58rem"
+          protocolList={[
+            {
+              label: '信用风险告知书',
+              url: 'personal_credit_page'
+            },
+            {
+              label: '用户注册协议',
+              url: 'register_agreement_page'
+            },
+            {
+              label: '用户隐私权政策',
+              url: 'user_privacy_page'
+            }
+          ]}
+          clickRadio={this.checkAgreement}
+          clickProtocol={this.go}
+        />
+
 				<div className={styles.footer_copyright}>
 					<p>贷款有风险,借款需谨慎;请根据个人能力合理贷款,理性消费,避免逾期</p>
 					<p> 贷款额度、放款时间以实际审核批准结果为准</p>
