@@ -96,7 +96,7 @@ export default class order_repay_result_page extends React.PureComponent {
 	 */
 	queryFudaiReward = () => {
 		const { state = {} } = this.props.history.location;
-		const { prodType, billSts } = state;
+		const { prodType } = state;
 		this.startRewardLoading();
 		this.props.$fetch
 			.get(`${msg_popup_list}/2`)
@@ -109,7 +109,7 @@ export default class order_repay_result_page extends React.PureComponent {
 							mPosition: '还款结果页'
 						});
 					}
-				} else if (billSts === '4') {
+				} else if (this.state.billSts === '4') {
 					if (isWXOpen()) {
 						//微信菜单栏过来的
 						this.props.history.replace(`/order/order_page`);
@@ -122,7 +122,7 @@ export default class order_repay_result_page extends React.PureComponent {
 			})
 			.catch(() => {
 				this.stopRewardLoading();
-				if (billSts === '4') {
+				if (this.state.billSts === '4') {
 					setTimeout(() => {
 						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
 					}, 2000);
