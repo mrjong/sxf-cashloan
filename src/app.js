@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-10 10:04:40
+ * @LastEditTime: 2020-04-10 10:06:39
  */
 /*eslint-disable*/
 import React from 'react';
@@ -48,9 +48,8 @@ var sa = require('sa-sdk-javascript/sensorsdata.min.js');
 if (!window.sa) {
 	window.sa = sa;
 }
-
-getAppVersion();
 isMPOS() && initJSBridge();
+isMPOS() && getAppVersion();
 fetchInit();
 initAnalytics();
 initSxfData();
