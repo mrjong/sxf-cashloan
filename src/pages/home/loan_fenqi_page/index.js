@@ -475,13 +475,16 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//阅读合同详情
 	readContract = (item) => {
-		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
+		const { loanMoney, resaveCardNo, repayCardNo, loanUsage, isJoinInsurancePlan } = this.state;
 		this.storeTempData();
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
 		const osType = getDeviceType();
 		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`;
 		if (item.contractType === 'FXBZ') {
 			//风险保障金合同
+			pathUrl = pathUrl + '&riskGuarantee=1';
+		}
+		if (item.contractType === 'WT' && isJoinInsurancePlan) {
 			pathUrl = pathUrl + '&riskGuarantee=1';
 		}
 		if (osType === 'IOS') {

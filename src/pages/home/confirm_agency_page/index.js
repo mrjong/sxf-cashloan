@@ -616,6 +616,9 @@ export default class confirm_agency_page extends PureComponent {
 			//风险保障金合同
 			pathUrl = pathUrl + '&riskGuarantee=1';
 		}
+		if (item.contractType === 'WT' && isJoinInsurancePlan) {
+			pathUrl = pathUrl + '&riskGuarantee=1';
+		}
 		if (osType === 'IOS') {
 			store.setHrefFlag(true);
 			window.location.href = pathUrl;
