@@ -334,13 +334,15 @@ export default class order_repay_page extends PureComponent {
 			canClick = prevPerd[0].perdSts === '4';
 		}
 
-		if (!item.isShowCheck || (item.isShowCheck && !canClick)) {
+		if (!item.isShowCheck) {
 			return;
-		}
-		if (repayPerds.length > 1) {
+		} else if (repayPerds.length > 1) {
 			this.props.toast.info('多期还款不支持分单还款');
 			return;
+		} else if (!canClick) {
+			return;
 		}
+
 		if (type === 'fees') {
 			buriedPointEvent(order.feesClick, {
 				isOverdue: !!overdueDays
