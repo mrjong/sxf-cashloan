@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-07 16:20:50
+ * @LastEditTime: 2020-04-13 09:45:10
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -50,7 +50,7 @@ const getAppVersion = () => {
 				'getAppVersion',
 				(jsonRsp) => {
 					Toast.info(JSON.stringify(jsonRsp.appVersion));
-					status = compare(jsonRsp.appVersion, '4.0.1') >= 0;
+					status = compare(jsonRsp.appVersion, '4.0.1') > 0;
 				},
 				{}
 			);
