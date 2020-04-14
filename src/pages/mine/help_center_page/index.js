@@ -13,7 +13,6 @@ import { ButtonCustom, LoadingView } from 'components';
 import QuestionModal from './components/QuestionModal';
 import Image from 'assets/image';
 import { isWXOpen } from 'utils';
-import qs from 'qs';
 import { question_questionInfo } from 'fetch/api';
 
 const noData = {
