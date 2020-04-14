@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-14 09:51:07
+ * @LastEditTime: 2020-04-14 10:29:14
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -206,6 +206,20 @@ const mposShare = ({ shareData, callBack }) => {
 		});
 	}
 };
+
+//新增导航叉的按钮
+const webWithBackAndClose = () => {
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'webWithBackAndClose',
+				() => {
+					console.log('mpos新增叉按钮');
+				},
+				{}
+			);
+	}
+};
 //关闭view
 const closeCurrentWebView = () => {
 	if (status && window.JSBridge) {
@@ -230,6 +244,7 @@ export {
 	getLocation,
 	mposShare,
 	closeCurrentWebView,
+	webWithBackAndClose,
 	nativeSaveWebView2Png,
 	nativeGetQRCodeContent
 };
