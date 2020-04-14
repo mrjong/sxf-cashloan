@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-13 18:15:19
+ * @LastEditTime: 2020-04-14 09:52:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
 import { isWXOpen, dateDiffer, activeConfigSts } from 'utils';
 import { index_queryIndexInfo, index_queryBannerList, index_queryWelfareList } from 'fetch/api';
-import SXFButton from 'components/ButtonCustom';
 
 import { showRedDot } from 'reduxes/actions/specialActions';
 import { setAuthId } from 'reduxes/actions/staticActions';
@@ -20,7 +19,6 @@ import {
 	setBannerList,
 	setWelfareList
 } from 'reduxes/actions/commonActions';
-import { getLocation, mposShare, getAppVersion, closeCurrentWebView } from 'utils/publicApi';
 
 import qs from 'qs';
 import { updateBillInf, goToPreLoan } from 'utils/CommonUtil/commonFunc';
@@ -785,31 +783,6 @@ export default class home_page extends PureComponent {
 		return componentsAddCards;
 	};
 
-	downloadClick1 = () => {
-		getLocation();
-		this.setState({
-			location: store.getPosition()
-		});
-	};
-	downloadClick4 = () => {
-		getAppVersion();
-	};
-	downloadClick2 = () => {
-		mposShare({
-			shareData: {
-				entry: '',
-				title: 'shareData.title',
-				desc: 'shareData.desc',
-				qrCodeUrl: 'https://lns-wap-test.vbillbank.com/activity/shareQrCode_page',
-				link: 'https://lns-wap-test.vbillbank.com/login',
-				imgUrl: 'https://lns-wap-test.vbillbank.com/be2af2f34956834d43a23f68972edea7.png'
-			}
-		});
-	};
-	downloadClick3 = () => {
-		closeCurrentWebView();
-	};
-
 	render() {
 		const { bannerList, activities } = this.state;
 		const { userInfo = {}, msgCount = 0 } = this.props;
@@ -831,20 +804,6 @@ export default class home_page extends PureComponent {
 						<FooterBar />
 					</div> */}
 				</div>
-				<SXFButton className={style.smart_button} onClick={this.downloadClick1}>
-					获取当前位置
-				</SXFButton>
-				<SXFButton className={style.smart_button} onClick={this.downloadClick2}>
-					分享
-				</SXFButton>
-				<SXFButton className={style.smart_button} onClick={this.downloadClick4}>
-					获取版本号
-				</SXFButton>
-				经纬度
-				<input value={this.state.location}></input>
-				<SXFButton className={style.smart_button} onClick={this.downloadClick3}>
-					关闭mpos
-				</SXFButton>
 			</div>
 		);
 	}

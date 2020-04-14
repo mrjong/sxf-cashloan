@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-13 18:12:22
+ * @LastEditTime: 2020-04-14 09:51:07
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -81,7 +81,6 @@ const getLocation = () => {
 					//     longiTude = "116.192053";
 					//     province = "北京市";
 					// }
-					Toast.info('新的' + JSON.stringify(jsonRsp));
 					const location = jsonRsp.longiTude + ',' + jsonRsp.latiTude;
 					store.setPosition(location);
 				},
@@ -99,7 +98,6 @@ const getLocation = () => {
 						jsonRsp = response;
 					}
 					if (jsonRsp.STATUS === '01') {
-						Toast.info('旧的' + JSON.stringify(jsonRsp));
 						const location = jsonRsp.longitude + ',' + jsonRsp.latitude;
 						store.setPosition(location);
 					} else {
@@ -168,7 +166,7 @@ const nativeGetQRCodeContent = (callBack) => {
 /**
  * @description: 分享
  * @param {type} 0001代表微信、0002代表朋友圈、0003代表QQ、0004代表QQ空间,0005 二维码分享,0006 复制链接
- * @return: 可传多个 entry: '0001,0002,0003,0004',
+ * @return: 可传多个 entry: '0001,0002,0003,0004', 不传默认 全部
  * 我们需要参数：{"title":"","description":"","url":"","iconUrl":"",}
  */
 const mposShare = ({ shareData, callBack }) => {
