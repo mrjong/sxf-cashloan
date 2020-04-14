@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-14 10:29:52
+ * @LastEditTime: 2020-04-14 11:18:14
  */
 /*eslint-disable*/
 import React from 'react';
@@ -11,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
 import { initJSBridge } from './utils/jsBridge';
-import { getAppVersion, webWithBackAndClose } from './utils/publicApi';
+import { getAppVersion } from './utils/publicApi';
 import { initAnalytics, initSxfData } from './utils/analytins';
 import { isMPOS } from 'utils/common';
 import { isWXOpen } from 'utils';
@@ -50,7 +50,6 @@ if (!window.sa) {
 }
 isMPOS() && initJSBridge();
 isMPOS() && getAppVersion();
-isMPOS() && webWithBackAndClose();
 fetchInit();
 initAnalytics();
 initSxfData();

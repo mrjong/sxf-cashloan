@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-14 10:29:14
+ * @LastEditTime: 2020-04-14 11:18:04
  */
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
@@ -12,6 +12,19 @@ import { Toast } from 'antd-mobile';
  */
 let status = false;
 
+//新增导航叉的按钮
+const webWithBackAndClose = () => {
+	if (status && window.JSBridge) {
+		window.JSBridge &&
+			window.JSBridge.invoke(
+				'webWithBackAndClose',
+				() => {
+					console.log('mpos新增叉按钮');
+				},
+				{}
+			);
+	}
+};
 function compare(a, b) {
 	if (a === b) {
 		return 0;
@@ -50,6 +63,7 @@ const getAppVersion = () => {
 				'getAppVersion',
 				(jsonRsp) => {
 					status = compare(jsonRsp.appVersion, '4.0.1') > 0;
+					webWithBackAndClose();
 				},
 				{}
 			);
@@ -206,20 +220,6 @@ const mposShare = ({ shareData, callBack }) => {
 		});
 	}
 };
-
-//新增导航叉的按钮
-const webWithBackAndClose = () => {
-	if (status && window.JSBridge) {
-		window.JSBridge &&
-			window.JSBridge.invoke(
-				'webWithBackAndClose',
-				() => {
-					console.log('mpos新增叉按钮');
-				},
-				{}
-			);
-	}
-};
 //关闭view
 const closeCurrentWebView = () => {
 	if (status && window.JSBridge) {
@@ -244,7 +244,6 @@ export {
 	getLocation,
 	mposShare,
 	closeCurrentWebView,
-	webWithBackAndClose,
 	nativeSaveWebView2Png,
 	nativeGetQRCodeContent
 };
