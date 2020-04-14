@@ -11,6 +11,7 @@ import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { wxTabBar } from 'utils/analytinsType';
 import { connect } from 'react-redux';
+import { isWXOpen } from 'utils';
 
 (function(w, d, n, a, j) {
 	w[n] =
@@ -36,7 +37,7 @@ export default class qiyu_page extends PureComponent {
 
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (queryData.entry === 'wxTabBar') {
+		if (isWXOpen()) {
 			buriedPointEvent(wxTabBar.onlineService);
 		}
 		if (queryData.apptoken) {

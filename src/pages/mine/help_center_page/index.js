@@ -6,16 +6,13 @@ import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter, wxTabBar } from 'utils/analytinsType';
 import styles from './index.scss';
-// import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { ButtonCustom, LoadingView } from 'components';
 import QuestionModal from './components/QuestionModal';
 import Image from 'assets/image';
-
-import qs from 'qs';
-
+import { isWXOpen } from 'utils';
 import { question_questionInfo } from 'fetch/api';
 
 const noData = {
@@ -37,9 +34,6 @@ const topNavList = [
 	}
 ];
 
-// let token = '';
-// let tokenFromStorage = '';
-let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
 export default class help_center_page extends PureComponent {
@@ -54,14 +48,8 @@ export default class help_center_page extends PureComponent {
 		};
 	}
 
-	componentWillMount() {
-		queryData = qs.parse(this.props.history.location.search, {
-			ignoreQueryPrefix: true
-		});
-	}
-
 	componentDidMount() {
-		if (queryData.entry === 'wxTabBar') {
+		if (isWXOpen()) {
 			buriedPointEvent(wxTabBar.helpCenterView);
 		}
 		this.qryHotListAdnTypes();
@@ -108,7 +96,7 @@ export default class help_center_page extends PureComponent {
 
 	goOnline = () => {
 		buriedPointEvent(helpCenter.goOnline);
-		if (queryData.entry === 'wxTabBar') {
+		if (isWXOpen()) {
 			buriedPointEvent(wxTabBar.onlineBtnClick);
 		}
 		this.props.history.push('/mine/qiyu_page');
@@ -200,7 +188,7 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question, hotList, categoryList } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{queryData.entry !== 'wxTabBar' ? (
+				{!isWXOpen() ? (
 					store.getToken() ? (
 						<div className={styles.top_nav}>{this.renderTopNav()}</div>
 					) : null
