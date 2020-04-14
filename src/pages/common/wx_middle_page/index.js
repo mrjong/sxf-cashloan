@@ -98,10 +98,8 @@ export default class wx_middle_page extends Component {
 				})
 				.then((res) => {
 					if (query.jumpUrl) {
-						// 针对活动，在url上增加entry参数
-						const jumpToUrl = query.entry ? `${query.jumpUrl}?entry=${query.entry}` : query.jumpUrl;
 						// 登陆的token
-						store.setJumpUrl(jumpToUrl);
+						store.setJumpUrl(query.jumpUrl);
 					}
 					if (query.NoLoginUrl) {
 						// 登陆的token
