@@ -25,6 +25,7 @@ export default {
 		mark_question: require('./adorn/mark_question.png'),
 		mark: require('./adorn/mark.png'),
 		card_select_yellow: require('./adorn/card_select_yellow.png'),
+		waiting: require('./adorn/status_waiting.png'),
 		success: require('./adorn/status_success.png'),
 		timeout: require('./adorn/status_timeout.png'),
 		fail: require('./adorn/status_fail.png'),
@@ -69,7 +70,9 @@ export default {
 		add_ico: require('./icon/add_ico.png'),
 		icon_question: require('./icon/icon_question.png'),
 		icon_close: require('./icon/icon_close.png'),
-		icon_arrow_right: require('./icon/icon_arrow_right.png')
+		icon_arrow_right: require('./icon/icon_arrow_right.png'),
+		order_detail_checked: require('./icon/order_detail_checked.png'),
+		order_detail_checked_no: require('./icon/order_detail_checked_no.png')
 	},
 
 	// 标志性的图片

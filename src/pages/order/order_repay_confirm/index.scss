@@ -1,73 +1,4 @@
 @import '../../../assets/styles/scss/base/fn';
-
-.alert_wrap {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	margin: 0;
-	z-index: 111;
-	background-color: rgba(0, 0, 0, 0.3);
-
-	.alert_body {
-		width: 580px;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		background-color: #fff;
-		text-align: center;
-		border-radius: 6px;
-	}
-
-	.alert_body_box {
-		padding: 80px 35px;
-	}
-
-	p {
-		color: #868e9e;
-		font-size: 30px;
-	}
-
-	.button_box {
-		position: relative;
-		overflow: hidden;
-
-		&::after {
-			position: absolute;
-			left: 0;
-			@include setTopLine(#f0f1f5);
-		}
-	}
-
-	.button_wrap {
-		display: flex;
-		position: relative;
-		margin: 10px 0;
-
-		&::before {
-			content: '';
-			position: absolute;
-			left: 50%;
-			@include setRightLine(#f0f1f5);
-			height: 100%;
-			background-color: #f0f1f5;
-		}
-	}
-
-	.button {
-		width: 50%;
-		padding: 15px 0;
-		font-size: 34px;
-		font-weight: 500;
-	}
-
-	.exit {
-		color: #868e9e;
-	}
-}
-
 .top_notice {
 	margin-bottom: 40px;
 	:global {
@@ -115,8 +46,8 @@
 				}
 				.am-list-arrow {
 					width: 20px;
-          height: 20px;
-          background-image: url(../../../assets/image/icon/icon_arrow_right.png);
+					height: 20px;
+					background-image: url(../../../assets/image/icon/icon_arrow_right.png);
 				}
 			}
 			.am-list-extra {
@@ -227,8 +158,8 @@
 .modal_weixin {
 	font-size: 28px;
 	color: $colorBlack;
-  margin-top: 30px;
-  padding-bottom: 30px;
+	margin-top: 30px;
+	padding-bottom: 30px;
 	.flex_div {
 		display: flex;
 		margin-top: 30px;

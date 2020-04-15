@@ -139,5 +139,17 @@ export default [
 		zhName: 'ysxbclxr',
 		title: '补充联系人',
 		component: () => import('pages/home/pre_add_contact_page')
+	},
+	{
+		path: '/home/insurance_introduce_page',
+		zhName: 'fxbzjh',
+		title: '什么是风险保障计划',
+		component: () => import('pages/home/insurance_introduce_page')
+	},
+	{
+		path: '/home/insurance_result_page',
+		zhName: 'fxpgjg',
+		title: '风险评估结果',
+		component: () => import('pages/home/insurance_result_page')
 	}
 ];

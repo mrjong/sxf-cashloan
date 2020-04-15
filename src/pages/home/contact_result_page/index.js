@@ -151,7 +151,6 @@ export default class contact_result_page extends PureComponent {
 				() => {
 					timer = setInterval(() => {
 						this.setPercent();
-						// ++this.state.time;
 					}, 1000);
 				}
 			);

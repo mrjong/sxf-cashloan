@@ -217,7 +217,7 @@ export default class juPei_page extends PureComponent {
 						</span>
 						<span
 							onClick={() => {
-								this.go('privacy_agreement_page');
+								this.go('user_privacy_page');
 							}}
 						>
 							《用户隐私政策》

@@ -1,0 +1,48 @@
+.loading_box {
+	text-align: center;
+}
+
+.icon {
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+}
+
+.iconDesc {
+	margin-top: 10px;
+}
+
+.pageWrap {
+	padding: 50px 40px 0;
+}
+
+.button {
+	margin-top: 270px;
+	margin-bottom: 30px;
+}
+
+.subButton {
+	display: block;
+	font-size: 30px;
+	color: #868e9e;
+  margin: 0 auto;
+  border: none;
+  outline: none;
+  background-color: #fff;
+}
+
+.waiting_icon {
+	width: 150px;
+	height: 150px;
+	background-color: #fff;
+	animation: rotateInfinte 1.5s linear 0.2s infinite;
+}
+
+@keyframes rotateInfinte {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

@@ -4,7 +4,7 @@
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import { LoadingView, ButtonCustom, ProtocolSmsModal } from 'components';
+import { LoadingView, ButtonCustom, ProtocolSmsModal, TipConfirmModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
@@ -59,7 +59,6 @@ export default class order_repay_confirm extends PureComponent {
 
 	componentDidMount() {
 		this.dataInit();
-		this.isLastPerd();
 	}
 
 	onReloadData = () => {
@@ -85,29 +84,43 @@ export default class order_repay_confirm extends PureComponent {
 
 	//获取可使用优惠券条数
 	queryCouponCount = () => {
-		const { billNo, billDesc = {}, repayPerds } = this.props.history.location.state;
-
-		this.props.$fetch
-			.post(coup_queryUsrRepayUsbCoup, {
-				billNo,
-				repayPerd: Number(repayPerds[0]),
-				prodType: billDesc.prodType,
-				coupSts: '00',
-				startPage: 1,
-				pageRow: 1
-			})
-			.then((res) => {
-				if (res.code === '000000' && res.data) {
-					this.setState({
-						availableCoupNum: res.data.totalRow
-					});
-				}
-			});
+		const {
+			billNo,
+			billDesc = {},
+			repayPerds,
+			repayPerdsTypes,
+			riskFlsg
+		} = this.props.history.location.state;
+		let params = {
+			billNo,
+			repayPerd: Number(repayPerds[0]),
+			prodType: billDesc.prodType,
+			coupSts: '00',
+			startPage: 1,
+			pageRow: 1
+		};
+		if (riskFlsg) {
+			params.repayPerdsTypes = repayPerdsTypes;
+		}
+		this.props.$fetch.post(coup_queryUsrRepayUsbCoup, params).then((res) => {
+			if (res.code === '000000' && res.data) {
+				this.setState({
+					availableCoupNum: res.data.totalRow
+				});
+			}
+		});
 	};
 
 	// 获取弹框明细信息
 	getRepayConfirmInfo = () => {
-		const { billNo, repayPerds, billDesc, isPayAll } = this.props.history.location.state;
+		const {
+			billNo,
+			repayPerds,
+			repayPerdsTypes,
+			billDesc,
+			isPayAll,
+			riskFlsg
+		} = this.props.history.location.state;
 		const { couponInfo } = this.state;
 
 		let submitParams = {
@@ -118,6 +131,9 @@ export default class order_repay_confirm extends PureComponent {
 		};
 		if (couponInfo.coupId) {
 			submitParams.coupId = couponInfo.coupId;
+		}
+		if (riskFlsg) {
+			submitParams.repayPerdsTypes = repayPerdsTypes;
 		}
 		this.props.$fetch
 			.post(repay_queryCashRegisterDetail, submitParams)
@@ -282,10 +298,12 @@ export default class order_repay_confirm extends PureComponent {
 			billDesc = {},
 			isPayAll,
 			repayPerds,
+			repayPerdsTypes,
 			thisPerdNum,
 			billNo,
 			overdueDays,
-			canUseCoupon
+			canUseCoupon,
+			riskFlsg
 		} = this.props.history.location.state;
 
 		const { totalAmt, payType, cardAgrNo, bankNo, bankName, couponInfo } = this.state;
@@ -294,7 +312,6 @@ export default class order_repay_confirm extends PureComponent {
 		if (couponInfo && couponInfo.coupId && couponInfo.coupId !== 'null') {
 			couponId = couponInfo.coupId;
 		}
-
 		let sendParams = {
 			billNo,
 			thisRepTotAmt: totalAmt,
@@ -310,6 +327,9 @@ export default class order_repay_confirm extends PureComponent {
 				...sendParams,
 				coupId: couponId
 			};
+		}
+		if (riskFlsg) {
+			sendParams.repayPerdsTypes = repayPerdsTypes;
 		}
 		// 添加微信新增参数
 		switch (payType) {
@@ -401,8 +421,7 @@ export default class order_repay_confirm extends PureComponent {
 										overdueDays,
 										billDesc,
 										bankName,
-										bankNo,
-										isLastPerd: this.isLastPerd()
+										bankNo
 									}
 								});
 							}
@@ -441,18 +460,6 @@ export default class order_repay_confirm extends PureComponent {
 		this.props.history.goBack();
 	};
 
-	//判断该账单是否最后一期
-	isLastPerd = () => {
-		const { actPanelListDatas, billDesc, isPayAll } = this.props.history.location.state;
-		let lastPerd = [];
-		if (actPanelListDatas) {
-			lastPerd = actPanelListDatas[actPanelListDatas.length - 1];
-		}
-		let isClear = lastPerd.isChecked;
-
-		return billDesc.perdUnit === 'D' || isClear || isPayAll;
-	};
-
 	// 选择银行卡
 	selectBank = () => {
 		const { cardAgrNo } = this.state;
@@ -463,14 +470,16 @@ export default class order_repay_confirm extends PureComponent {
 	// 选择优惠劵
 	selectCoupon = () => {
 		const { availableCoupNum } = this.state;
-		const { billNo, billDesc, repayPerds } = this.props.history.location.state;
+		const { billNo, billDesc, repayPerds, repayPerdsTypes, riskFlsg } = this.props.history.location.state;
 		let params = {};
 		if (!availableCoupNum) {
 			params.nouseCoupon = true;
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?billNo=${billNo}&perCont=${repayPerds[0]}&prodType=${billDesc.prodType}`,
+			search: `?billNo=${billNo}&perCont=${repayPerds[0]}&repayPerdsTypes=${JSON.stringify(
+				repayPerdsTypes
+			)}&riskFlsg=${riskFlsg}&prodType=${billDesc.prodType}`,
 			state: params
 		});
 	};
@@ -656,35 +665,16 @@ export default class order_repay_confirm extends PureComponent {
 					立即还款
 				</ButtonCustom>
 
-				{showCouponAlert ? (
-					<div className={styles.alert_wrap}>
-						<div className={styles.alert_body}>
-							<div className={styles.alert_body_box}>
-								<p>还有优惠券未使用确定提交吗？</p>
-							</div>
-							<div className={styles.button_box}>
-								<div className={styles.button_wrap}>
-									<span
-										className={[styles.button, styles.exit].join(' ')}
-										onClick={() => {
-											this.handleAlertShow('exit');
-										}}
-									>
-										再等等
-									</span>
-									<span
-										className={styles.button}
-										onClick={() => {
-											this.handleAlertShow('submit');
-										}}
-									>
-										提交
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				) : null}
+				<TipConfirmModal
+					visible={showCouponAlert}
+					onButtonClick={(type) => {
+						this.handleAlertShow(type);
+					}}
+					title=""
+					desc="还有优惠券未使用确定提交吗？"
+					cancelButtonText="再等等"
+					okButtonText="提交"
+				/>
 
 				{isShowSmsModal && (
 					<ProtocolSmsModal

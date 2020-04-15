@@ -1,0 +1,98 @@
+.title {
+	font-size: 46px;
+	color: #121b33;
+	font-weight: bold;
+}
+
+.subTitle {
+	color: #868f9e;
+	font-size: 28px;
+	margin-top: 10px;
+}
+
+.link_bar {
+	display: flex;
+	position: relative;
+	padding: 18px 56px 18px 20px;
+	justify-content: space-between;
+	background-color: #f7f8fa;
+	color: #868e9e;
+	font-size: 24px;
+	border-radius: 6px;
+	width: 100%;
+	box-sizing: border-box;
+	margin-bottom: 35px;
+	margin-top: 50px;
+	text-decoration: none;
+	.link_bar_close {
+		width: 34px;
+		height: 34px;
+		position: absolute;
+		right: 15px;
+	}
+}
+
+.buttonWrap {
+	display: flex;
+	justify-content: space-between;
+}
+
+.button {
+	width: 320px;
+	background-color: #dddfe6;
+}
+
+.activeButton {
+	background-color: #ffd210;
+}
+
+.protocolWrap {
+	margin-top: 16px;
+}
+
+.protocolLink {
+	color: #394259;
+}
+
+.modalInner {
+	padding: 55px 40px 80px;
+}
+
+.stepBarWrap {
+	height: 500px;
+	box-sizing: border-box;
+	overflow: scroll;
+}
+
+.fix_bottom {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	z-index: 100;
+}
+
+.antModal {
+	:global {
+		.am-modal-content {
+			border-radius: 10px 10px 0 0;
+			position: relative;
+			box-sizing: border-box;
+			text-align: left;
+		}
+	}
+}
+
+.fix_bottom {
+	:global {
+		.am-notice-bar {
+			height: 50px;
+			line-height: 50px;
+			background-color: #fff;
+			box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1) inset;
+		}
+		.am-notice-bar-content {
+			margin: 0 15px;
+		}
+	}
+}

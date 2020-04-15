@@ -8,12 +8,29 @@
 		height: 160px;
 		box-sizing: border-box;
 		padding: 30px 58px;
-    background: #fff;
-    z-index: 1;
+		background: #fff;
+		z-index: 1;
 	}
 	.disabled_confirm_btn {
 		background: #dcdfe6;
 		color: #fff;
+	}
+	/* stylelint-disable */
+	::-webkit-input-placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
+	:-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
+	::-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
+	}
+	::placeholder {
+		color: #b2b6bf;
+		font-size: 28px;
 	}
 }
 

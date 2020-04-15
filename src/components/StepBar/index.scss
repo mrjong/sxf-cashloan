@@ -1,9 +1,4 @@
 .step_wrap {
-	height: 600px;
-	padding-bottom: 200px;
-	box-sizing: border-box;
-	overflow: scroll;
-
 	.top_line {
 		text-align: left;
 	}
@@ -25,6 +20,7 @@
 	}
 
 	.right_box {
+		min-height: 40px;
 		padding: 0 0 42px 38px;
 		text-align: left;
 		margin-left: 110px;
@@ -43,6 +39,16 @@
 	.step_title {
 		font-size: 30px;
 		color: #121c32;
+		font-weight: 700;
+
+		.value {
+			font-family: 'DINMitAlt';
+		}
+	}
+
+	.step_title1 {
+		font-size: 28px;
+		color: #394259;
 		font-weight: 700;
 
 		.value {

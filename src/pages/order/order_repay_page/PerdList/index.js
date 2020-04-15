@@ -25,13 +25,15 @@ class PerdList extends Component {
 			return '（由平台方收取）';
 		} else if (name === '本金' || name === '利息') {
 			return '（由出借方收取）';
+		} else if (name === '风险保障金') {
+			return '（由担保公司收取）';
 		}
 	};
 
 	/**
 	 * @description 渲染子账单详情面板
 	 */
-	renderPerdDetail = (arr) => {
+	renderPerdDetail = (arr = []) => {
 		return arr.map((item, index) => (
 			<div key={index}>
 				{item.feeAmt ? (
@@ -58,8 +60,7 @@ class PerdList extends Component {
 	};
 
 	render() {
-		const { perdList, perdLth, onCheckboxClick } = this.props;
-
+		const { perdList, perdLth, onCheckboxClick, onFeesClick, riskFlsg } = this.props;
 		return (
 			<List className={styles.antListItem}>
 				{perdList &&
@@ -95,7 +96,47 @@ class PerdList extends Component {
 									<List.Item.Brief>{`应支付日：${item.perdDueDt}`}</List.Item.Brief>
 								</List.Item>
 								{item.showDetail ? (
-									<div className={styles.perdDetailWrap}>{this.renderPerdDetail(item.fees)}</div>
+									<div>
+										<div
+											className={styles.perdDetailWrap}
+											onClick={() => {
+												if (!riskFlsg) return;
+												onFeesClick(item, 'fees');
+											}}
+										>
+											{riskFlsg && item.isShowCheck && item.clearState !== '02' && (
+												<img
+													className={styles.perdDetailCheckedIcon}
+													src={
+														item.feesStatus && item.feesStatus[0]
+															? Image.icon.order_detail_checked
+															: Image.icon.order_detail_checked_no
+													}
+												/>
+											)}
+											{this.renderPerdDetail(item.fees)}
+										</div>
+										{riskFlsg && item.fees2.length > 0 && (
+											<div
+												className={styles.perdDetailWrap}
+												onClick={() => {
+													onFeesClick(item, 'riskFees');
+												}}
+											>
+												{item.isShowCheck && item.clearState !== '01' && (
+													<img
+														className={styles.perdDetailCheckedIcon}
+														src={
+															item.feesStatus && item.feesStatus[1]
+																? Image.icon.order_detail_checked
+																: Image.icon.order_detail_checked_no
+														}
+													/>
+												)}
+												{this.renderPerdDetail(item.fees2)}
+											</div>
+										)}
+									</div>
 								) : null}
 							</div>
 						);

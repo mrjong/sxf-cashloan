@@ -275,7 +275,7 @@ export default class mianxi822_page extends PureComponent {
 						</span>
 						<span
 							onClick={() => {
-								this.go('privacy_agreement_page');
+								this.go('user_privacy_page');
 							}}
 						>
 							《随行付用户隐私协议政策》

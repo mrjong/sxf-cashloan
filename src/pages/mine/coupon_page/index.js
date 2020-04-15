@@ -204,8 +204,10 @@ export default class coupon_page extends PureComponent {
 				billNo: receiveData.billNo,
 				repayPerd: receiveData.perCont,
 				prodType: receiveData.prodType
-				// loading: true,
 			};
+			if (receiveData.riskFlsg) {
+				sendParams.repayPerdsTypes = JSON.parse(receiveData.repayPerdsTypes);
+			}
 			url = coup_queryUsrRepayUsbCoup;
 		} else if (receiveData && receiveData.price && receiveData.prodType && receiveData.prodId) {
 			sendParams = {
@@ -213,15 +215,14 @@ export default class coupon_page extends PureComponent {
 				startPage: pIndex,
 				loanAmt: receiveData.price,
 				prodId: receiveData.prodId,
-				prodType: receiveData.prodType
-				// loading: true,
+				prodType: receiveData.prodType,
+				riskGuarantee: receiveData.isJoinInsurancePlan === 'true' ? '1' : '0' //参与风险保障计划
 			};
 			url = coup_queyUsrLoanUsbCoup;
 		} else {
 			sendParams = {
 				coupSts: `0${this.state.msgType}`,
 				startPage: pIndex
-				// loading: true,
 			};
 			url = coup_queryUsrCoupBySts;
 		}

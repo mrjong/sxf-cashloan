@@ -17,7 +17,8 @@
 }
 
 .drawer_wrap {
-	background-color: #fff;
+  background-color: #fff;
+  position: relative;
 }
 
 .modalTitle {
@@ -55,11 +56,11 @@
 	}
 	.money {
 		font-size: 68px;
-    color: #121c32;
-    .moneyUnit {
-      font-size: 36px;
-      margin-right: 10px;
-    }
+		color: #121c32;
+		.moneyUnit {
+			font-size: 36px;
+			margin-right: 10px;
+		}
 
 		.value {
 			font-family: 'DINMitAlt';
@@ -93,10 +94,17 @@
 	}
 }
 
+.stepbar_wrap {
+  padding-bottom: 150px;
+  height: 600px;
+	box-sizing: border-box;
+	overflow: scroll;
+}
+
 .fix_bottom {
 	position: absolute;
 	left: 0;
-	bottom: 0;
+	bottom: 140px;
 	width: 100%;
 	z-index: 100;
 }

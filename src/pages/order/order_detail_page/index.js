@@ -65,7 +65,7 @@ export default class order_detail_page extends PureComponent {
 			.then((res) => {
 				if (!this.viewRef) return;
 				if (res.code === '000000' && res.data) {
-					const { overdueDays, billSts, discRedRepay, waitRepAmt, preds, perdNum } = res.data;
+					const { overdueDays, billSts, discRedRepay, waitRepAmt, preds, perdNum, riskFlsg } = res.data;
 					this.setState(
 						{
 							panelCardList: this.generatePannelCard(res.data),
@@ -75,7 +75,8 @@ export default class order_detail_page extends PureComponent {
 							overdueDays,
 							discRedRepay,
 							waitRepAmt,
-							preds
+							preds,
+							riskFlsg: riskFlsg === '1' //为1风险保障金账单
 						},
 						() => {
 							this.viewRef.showDataView();
@@ -133,12 +134,17 @@ export default class order_detail_page extends PureComponent {
 
 	//一键结清
 	payAllOrder = () => {
-		const { billNo, billDesc, preds, thisPerdNum, waitRepAmt } = this.state;
+		const { billNo, billDesc, preds, thisPerdNum, waitRepAmt, riskFlsg } = this.state;
 		let repayPerds = [];
+		let repayPerdsTypes = [];
 		for (let i = 0; i < preds.length; i++) {
 			const item = preds[i];
 			if (item.perdSts === '0') {
 				repayPerds.push(item.perdNum);
+				repayPerdsTypes.push({
+					perdNum: item.perdNum,
+					perdType: item.clearState
+				});
 			}
 		}
 		buriedPointEvent(order.payAllOrderBtnClick, {
@@ -152,12 +158,14 @@ export default class order_detail_page extends PureComponent {
 				billNo,
 				billDesc,
 				repayPerds,
+				repayPerdsTypes,
 				canUseCoupon: false,
 				isPayAll: true,
 				thisPerdNum,
 				overdueDays: '',
 				totalList: [],
-				totalAmt: waitRepAmt
+				totalAmt: waitRepAmt,
+				riskFlsg
 			}
 		});
 	};

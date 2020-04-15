@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-26 14:36:57
+ */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 
@@ -9,9 +14,9 @@ export default class AgreementModal extends PureComponent {
 				<div className={style.title}>用户隐私权政策</div>
 				<div className={style.modal_inner_wrap}>
 					<iframe
-						src={`/disting/#/privacy_agreement_page`}
-						name="privacy_agreement_page"
-						id="privacy_agreement_page"
+						src={`/disting/#/user_privacy_page`}
+						name="user_privacy_page"
+						id="user_privacy_page"
 						width="100%"
 						height="100%"
 						frameBorder="0"

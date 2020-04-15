@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Modal, InputItem, Icon } from 'antd-mobile';
-import { ButtonCustom, RepayPlanModal, ProtocolSmsModal, ProtocolRead } from 'components';
+import { ButtonCustom, RepayPlanModal, ProtocolSmsModal, ProtocolRead, InsuranceModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
@@ -27,7 +27,8 @@ import {
 	bank_card_protocol_sms,
 	bank_card_protocol_bind,
 	loan_loanSub,
-	loan_queryCashLoanApplInfo
+	loan_queryCashLoanApplInfo,
+	coup_queyUsrLoanUsbCoup
 } from 'fetch/api.js';
 
 @fetch.inject()
@@ -76,7 +77,10 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveCardLast: '', //还款银行卡后四位
 			resaveCardName: '', //还款银行卡银行
 			isShowDetail: false, // 是否展示产品列表
-			productListCopy: []
+			productListCopy: [],
+			insurancePlanText: '',
+			showInsuranceModal: false,
+			isRiskGuaranteeProd: false // 产品是否配置了风险保障金
 		};
 	}
 
@@ -101,6 +105,7 @@ export default class loan_fenqi_page extends PureComponent {
 	}
 	componentWillUnmount() {
 		store.setHrefFlag(true);
+		store.removeRiskGuaranteeModalShow();
 	}
 
 	//处理数据反显
@@ -108,6 +113,9 @@ export default class loan_fenqi_page extends PureComponent {
 		this.setState({ ...confirmAgencyInfo }, () => {
 			// 初始化数据渲染
 			this.selectMax();
+			if (store.getRiskGuaranteeModalShow()) {
+				this.openInsuranceModal(1500);
+			}
 		});
 	};
 
@@ -150,16 +158,10 @@ export default class loan_fenqi_page extends PureComponent {
 					);
 				} else {
 					this.props.toast.info(res.message);
-					// setTimeout(() => {
-					// 	this.props.history.push('/home/home');
-					// }, 2000);
 				}
 			})
 			.catch(() => {
 				this.props.toast.info('系统开小差,请稍后重试');
-				// setTimeout(() => {
-				// 	this.props.history.push('/home/home');
-				// }, 2000);
 			});
 	};
 
@@ -233,7 +235,6 @@ export default class loan_fenqi_page extends PureComponent {
 		// 找出prodCount最大对象所在的索引
 		let maxItem = null;
 		let indexOfMax = 0;
-		console.log(loanDate, 'aw');
 		if (loanDate) {
 			maxItem = loanDate;
 		} else {
@@ -244,7 +245,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	/**
-	 * 获取借款合同与优惠券，注意请求报错则清空选中期数termSelected=null
+	 * 获取借款合同
 	 */
 	requestProtocolCoupon = async () => {
 		if (!parseFloat(this.state.loanMoney) > 0 || !this.state.repayCardLast.length > 0) {
@@ -264,77 +265,105 @@ export default class loan_fenqi_page extends PureComponent {
 			wtdwTyp: '0' //还款时间
 		};
 
-		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((protocolRes) => {
-			if (protocolRes.code === '000000') {
-				// 试算传参
-				let couponParams = {
-					loanAmt: loanMoney,
-					prodType: '11',
-					repayType: '0',
-					prodId:
-						protocolRes &&
-						protocolRes.data &&
-						protocolRes.data.contracts &&
-						protocolRes.data.contracts[0] &&
-						protocolRes.data.contracts[0].prodId
-				};
-				const { couponData } = this.props;
-				// 不使用优惠券,不传coupId,
-				// 使用优惠券,coupId传优惠券ID
-				if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
-					// 不使用优惠劵的情况
-					couponParams = {
-						...couponParams
-					};
-				} else if (couponData && JSON.stringify(couponData) !== '{}') {
-					couponParams = {
-						...couponParams,
-						coupId: couponData.coupId
-					};
-				}
-				this.requestLoanPlan(couponParams, protocolRes);
-			} else {
+		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((result) => {
+			if (result.code === '000000') {
+				let { contracts = [] } = result.data;
+				let FXBZ_contract = {};
+				contracts.forEach((v, i) => {
+					if (v.contractType === 'FXBZ') {
+						FXBZ_contract = contracts.splice(i, 1);
+					}
+				});
 				this.setState(
 					{
-						protocolList: [],
-						repayPlanInfo: { perds: [] }
+						protocolList: result.data && result.data.contracts,
+						isRiskGuaranteeProd: result.data.riskGuarantee === '1', //是否是风险保障金产品
+						FXBZ_contract
 					},
 					() => {
-						this.props.toast.info(protocolRes.message);
+						this.requestLoanPlan(true);
+						this.queryCouponCount();
 					}
 				);
+			} else {
+				this.props.toast.info(result.message);
 			}
 		});
 	};
 
 	// 借款试算
-	requestLoanPlan = (planParam, protocolRes) => {
-		this.props.$fetch.post(loan_loanPlan, planParam).then((planRes) => {
-			this.props.toast.hide();
-			if (planRes.code === '000000') {
+	requestLoanPlan = (riskGuaranteeFlag) => {
+		const { loanMoney, protocolList = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
+		// 试算传参
+		let params = {
+			loanAmt: loanMoney,
+			prodType: '11',
+			repayType: '0',
+			prodId: protocolList[0] && protocolList[0].prodId,
+			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
+		};
+		const { couponData } = this.props;
+		// 不使用优惠券,不传coupId,
+		// 使用优惠券,coupId传优惠券ID
+		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
+			// 不使用优惠劵的情况
+			params = {
+				...params
+			};
+		} else if (couponData && JSON.stringify(couponData) !== '{}') {
+			params = {
+				...params,
+				coupId: couponData.coupId
+			};
+		}
+		return new Promise((resolve) => {
+			this.props.$fetch.post(loan_loanPlan, params).then((result) => {
 				this.props.toast.hide();
+				if (result.code === '000000' && result.data) {
+					this.props.toast.hide();
+					this.setState({
+						repayPlanInfo: result.data
+					});
+					resolve();
+				} else {
+					this.setState(
+						{
+							protocolList: [],
+							repayPlanInfo: { perds: [] }
+						},
+						() => {
+							this.props.toast.info(result.message);
+						}
+					);
+				}
+			});
+		});
+	};
+
+	//获取可使用优惠券条数
+	queryCouponCount = () => {
+		const { loanMoney, protocolList = [], isJoinInsurancePlan } = this.state;
+		let params = {
+			loanAmt: loanMoney,
+			prodId: protocolList[0].prodId,
+			prodType: '11',
+			coupSts: '00',
+			startPage: 1,
+			pageRow: 1,
+			riskGuarantee: isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
+		};
+		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
+			if (res.code === '000000' && res.data) {
 				this.setState({
-					protocolList: (protocolRes.data && protocolRes.data.contracts) || [],
-					repayPlanInfo: planRes.data
+					availableCoupNum: res.data.totalRow
 				});
-				buriedPointEvent(loan_fenqi.repayPlan);
-			} else {
-				this.setState(
-					{
-						protocolList: [],
-						repayPlanInfo: { perds: [] }
-					},
-					() => {
-						this.props.toast.info(planRes.message);
-					}
-				);
 			}
 		});
 	};
 
 	// 选择优惠劵
 	selectCoupon = () => {
-		const { protocolList, repayPlanInfo } = this.state;
+		const { protocolList, availableCoupNum, isJoinInsurancePlan } = this.state;
 		this.storeTempData();
 		const { loanMoney, loanDate = {} } = this.state;
 		let prodId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
@@ -342,8 +371,8 @@ export default class loan_fenqi_page extends PureComponent {
 
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
-			state: { nouseCoupon: !(repayPlanInfo && repayPlanInfo.availableCoupCount) }
+			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`,
+			state: { nouseCoupon: !availableCoupNum }
 		});
 	};
 
@@ -373,7 +402,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	// 选择分期期限
-	selectLoanDate = (item) => {
+	selectLoanDate = (item = {}) => {
 		this.setState(
 			{
 				loanDate: item
@@ -433,14 +462,31 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	//还款计划点击
+	handleRepayPlanClick = () => {
+		buriedPointEvent(home.repayPlanClick, {
+			isJoinInsurancePlan: this.state.isJoinInsurancePlan
+		});
+		// buriedPointEvent(loan_fenqi.repayPlan);
+		this.requestLoanPlan().then(() => {
+			this.openModal('plan');
+		});
+	};
+
 	//阅读合同详情
 	readContract = (item) => {
-		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
+		const { loanMoney, resaveCardNo, repayCardNo, loanUsage, isJoinInsurancePlan } = this.state;
 		this.storeTempData();
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
-
 		const osType = getDeviceType();
 		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`;
+		if (item.contractType === 'FXBZ') {
+			//风险保障金合同
+			pathUrl = pathUrl + '&riskGuarantee=1';
+		}
+		if (item.contractType === 'WT' && isJoinInsurancePlan) {
+			pathUrl = pathUrl + '&riskGuarantee=1';
+		}
 		if (osType === 'IOS') {
 			store.setHrefFlag(true);
 			window.location.href = pathUrl;
@@ -478,6 +524,10 @@ export default class loan_fenqi_page extends PureComponent {
 			checkBox1,
 			productList,
 			isShowTipModal,
+			showInsuranceModal,
+			insurancePlanText,
+			isJoinInsurancePlan,
+			insuranceModalChecked,
 			productListCopy
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
@@ -500,6 +550,10 @@ export default class loan_fenqi_page extends PureComponent {
 			checkBox1,
 			productList,
 			isShowTipModal,
+			showInsuranceModal,
+			insurancePlanText,
+			isJoinInsurancePlan,
+			insuranceModalChecked,
 			productListCopy
 		});
 	};
@@ -524,9 +578,15 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//验证信息是否填写完整
 	validateFn = () => {
-		const { loanMoney, loanDate, loanUsage } = this.state;
-		// if (loanMoney && loanDate && loanDate.prodCount && loanUsage && repayCardNo && resaveCardNo) {
-		if (loanMoney && loanDate && loanDate.prodCount && loanUsage) {
+		const { loanMoney, loanDate, loanUsage, insurancePlanText, checkBox1, isRiskGuaranteeProd } = this.state;
+		if (
+			loanMoney &&
+			loanDate &&
+			loanDate.prodCount &&
+			loanUsage &&
+			(isRiskGuaranteeProd ? insurancePlanText : true) &&
+			checkBox1
+		) {
 			return true;
 		}
 		return false;
@@ -534,7 +594,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//借款申请提交
 	loanApplySubmit = () => {
-		const { loanMoney, loanDate, loanUsage, checkBox1 } = this.state;
+		const { loanMoney, loanDate, loanUsage, checkBox1, insurancePlanText, isRiskGuaranteeProd } = this.state;
 		if (!loanMoney) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -547,8 +607,16 @@ export default class loan_fenqi_page extends PureComponent {
 			this.props.toast.info('请选择借款用途');
 			return;
 		}
+		if (isRiskGuaranteeProd && !insurancePlanText) {
+			this.props.toast.info('请选择是否参与风险保障计划');
+			return;
+		}
 		if (!checkBox1) {
 			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
+			return;
+		}
+		if (insurancePlanText === '暂不考虑') {
+			this.handleShowTipModal();
 			return;
 		}
 
@@ -608,11 +676,29 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	submitHandler = () => {
+		const {
+			isJoinInsurancePlan,
+			isRiskGuaranteeProd,
+			loanMoney,
+			repayCardNo,
+			resaveCardNo,
+			loanUsage,
+			protocolList
+		} = this.state;
+		// 未参加风险保障计划
+		if (isRiskGuaranteeProd && !isJoinInsurancePlan) {
+			this.setState(
+				{
+					isShowTipModal: false
+				},
+				() => {
+					this.storeTempData();
+				}
+			);
+			this.props.history.push('/home/insurance_result_page');
+			return;
+		}
 		const { couponData } = this.props;
-		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
-
-		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList } = this.state;
-
 		let couponId = '';
 		if (couponData && couponData.coupId) {
 			if (couponData.coupId !== 'null') {
@@ -630,7 +716,8 @@ export default class loan_fenqi_page extends PureComponent {
 			repayType: '0', //还款方式
 			coupId: couponId, //优惠劵id
 			loanUsage: loanUsage.usageCd, //借款用途
-			prodType: '11'
+			prodType: '11',
+			riskGuarantee: isRiskGuaranteeProd ? '1' : '0' //参与风险保障计划
 		};
 
 		this.props.$fetch
@@ -763,12 +850,12 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	renderListRowCouponValue() {
-		const { repayPlanInfo = {} } = this.state;
-		if (repayPlanInfo && repayPlanInfo.availableCoupCount && Number(repayPlanInfo.availableCoupCount)) {
-			if (repayPlanInfo.deductAmount) {
+		const { availableCoupNum, repayPlanInfo } = this.state;
+		if (availableCoupNum) {
+			if (repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt) {
 				return (
 					<span className={style.repayPlan} style={{ color: '#FE6666' }}>
-						{repayPlanInfo.deductAmount}元
+						{repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt}元
 					</span>
 				);
 			}
@@ -781,7 +868,7 @@ export default class loan_fenqi_page extends PureComponent {
 					iconsource={Images.adorn.coupon}
 					onClick={this.goSelectCoupon}
 				>
-					{repayPlanInfo.availableCoupCount}个可用
+					{availableCoupNum}个可用
 				</ButtonCustom>
 			);
 		}
@@ -813,6 +900,60 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	//打开风险保证金弹窗
+	openInsuranceModal = (delay = 0) => {
+		let timer = setTimeout(() => {
+			this.setState({
+				showInsuranceModal: true
+			});
+			clearTimeout(timer);
+		}, delay);
+	};
+
+	closeInsuranceModal = () => {
+		store.removeRiskGuaranteeModalShow();
+		this.setState({
+			showInsuranceModal: false
+		});
+	};
+
+	//风险保障计划弹窗
+	handleInsuranceModal = () => {
+		buriedPointEvent(home.riskGuaranteePlanClick);
+		const { repayPlanInfo } = this.state;
+		if (!repayPlanInfo || !repayPlanInfo.perdLth) {
+			this.props.toast.info('请输入借款金额');
+			return;
+		}
+		if (repayPlanInfo && repayPlanInfo.perdUnit === 'D') {
+			return;
+		}
+		this.requestLoanPlan(true).then(() => {
+			this.openInsuranceModal();
+		});
+	};
+
+	handleInsuranceModalClick = (type) => {
+		if (type === 'submit') {
+			buriedPointEvent(home.riskGuaranteeModalOk);
+		} else {
+			buriedPointEvent(home.riskGuaranteeModalCancel);
+		}
+		this.setState(
+			{
+				insurancePlanText: type === 'submit' ? '已授权并参与' : '暂不考虑',
+				isJoinInsurancePlan: type === 'submit' ? true : false
+			},
+			() => {
+				buriedPointEvent(home.riskGuaranteeChangePlanText, {
+					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
+				});
+				this.queryCouponCount();
+				this.closeInsuranceModal();
+			}
+		);
+	};
+
 	render() {
 		const { userInfo = {} } = this.props;
 		const {
@@ -837,7 +978,13 @@ export default class loan_fenqi_page extends PureComponent {
 			protocolList,
 			isShowTipModal,
 			buttonDisabled,
-			isShowDetail
+			isShowDetail,
+			showInsuranceModal,
+			isJoinInsurancePlan,
+			insurancePlanText,
+			insuranceModalChecked,
+			FXBZ_contract = [],
+			isRiskGuaranteeProd
 		} = this.state;
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
@@ -900,115 +1047,132 @@ export default class loan_fenqi_page extends PureComponent {
 								}}
 							/>
 						</div>
-						<p className={style.inputTip}>建议全部借出，借款后剩余额度将不可用</p>
+						<p className={style.billInpBoxTip}>建议全部借出，借款后剩余额度将不可用</p>
 					</div>
 
-					<div className={style.pannel}>
-						<ul>
-							<li
-								className={style.listItem}
+					<ul className={style.pannel}>
+						<li
+							className={style.listItem}
+							onClick={() => {
+								this.showDetail();
+							}}
+						>
+							<label>借多久</label>
+							<div className={[style.listValue, style.hasArrow].join(' ')}>
+								{(!isShowDetail && loanDate && loanDate.prodName) || null}
+								<Icon type={isShowDetail ? 'up' : 'down'} className={style.icon} />
+							</div>
+							{(isShowDetail && this.renderProductListDom()) || null}
+						</li>
+						<li className={style.listItem}>
+							<label>借款用途</label>
+							<div
 								onClick={() => {
-									this.showDetail();
+									this.openModal('usage');
 								}}
+								className={[style.listValue, style.hasArrow].join(' ')}
 							>
-								<label>借多久</label>
-								<div className={style.listValue}>
-									{(!isShowDetail && loanDate && loanDate.prodName) || null}
-									<Icon type={isShowDetail ? 'up' : 'down'} className={style.icon} />
-								</div>
-								{(isShowDetail && this.renderProductListDom()) || null}
-							</li>
+								{loanUsage && loanUsage.loanUseRmk}
+								<Icon type="right" className={style.icon} />
+							</div>
+						</li>
+
+						{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
 							<li className={style.listItem}>
-								<label>借款用途</label>
+								<label>优惠券</label>
 								<div
-									onClick={() => {
-										this.openModal('usage');
-									}}
-									className={style.listValue}
+									className={`${style.listValue} ${style.hasArrow} ${style.couponListValue}`}
+									onClick={this.selectCoupon}
 								>
-									{loanUsage && loanUsage.loanUseRmk}
+									{this.renderListRowCouponValue()}
 									<Icon type="right" className={style.icon} />
 								</div>
 							</li>
-							<li className={style.listItem}>
-								<label>还款计划</label>
-								<span>
-									{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
-										<span
-											className={style.listValue}
-											onClick={() => {
-												this.openModal('plan');
-											}}
-										>
-											点击查看
-											<Icon type="right" className={style.icon} />
-										</span>
-									) : (
-										<span className={style.greyText}>暂无</span>
-									)}
+						) : null}
+					</ul>
+					<ul className={style.pannel}>
+						{isRiskGuaranteeProd && (
+							<li className={style.listItem} onClick={this.handleInsuranceModal}>
+								<div className={style.labelBox}>
+									<label>风险保障计划</label>
+									<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
+								</div>
+								<span
+									className={[
+										style.listValue,
+										style.hasArrow,
+										store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
+										!isJoinInsurancePlan && style.greyText
+									].join(' ')}
+								>
+									{insurancePlanText || '请选择'}
 								</span>
+								<Icon type="right" className={style.icon} />
 							</li>
-							{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
-								<li className={style.listItem}>
-									<label>优惠券</label>
-									<div className={`${style.listValue} ${style.couponListValue}`} onClick={this.selectCoupon}>
-										{this.renderListRowCouponValue()}
-										<Icon type="right" className={style.icon} />
-									</div>
-								</li>
-							) : null}
-						</ul>
-					</div>
-					<div className={style.pannel}>
-						<ul>
-							<li className={style.listItem}>
-								<label>收款银行卡</label>
-								{repayCardLast.length > 0 ? (
+						)}
+						<li className={style.listItem}>
+							<label>还款计划</label>
+							<span>
+								{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
 									<span
-										className={style.listValue}
-										onClick={() => {
-											this.selectBankCard(repayCardNo, 'withdraw');
-										}}
+										className={[style.listValue, style.hasArrow].join(' ')}
+										onClick={this.handleRepayPlanClick}
 									>
-										{`${repayCardName}(${repayCardLast})`}
+										点击查看
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
-									<span
-										className={style.highlightText}
-										onClick={() => {
-											this.bindBankCard('withdraw');
-										}}
-									>
-										绑定储蓄卡 <i className={style.addIcon}>+</i>
-									</span>
+									<span className={style.greyText}>暂无</span>
 								)}
-							</li>
-							<li className={style.listItem}>
-								<label>还款银行卡</label>
-								{resaveCardLast.length > 0 ? (
-									<span
-										className={style.listValue}
-										onClick={() => {
-											this.selectBankCard(resaveCardNo, 'withhold');
-										}}
-									>
-										{`${resaveCardName}(${resaveCardLast})`}
-										<Icon type="right" className={style.icon} />
-									</span>
-								) : (
-									<span
-										className={style.highlightText}
-										onClick={() => {
-											this.bindBankCard('withhold');
-										}}
-									>
-										绑定储蓄卡 <i className={style.addIcon}>+</i>
-									</span>
-								)}
-							</li>
-						</ul>
-					</div>
+							</span>
+						</li>
+					</ul>
+					<ul className={style.pannel}>
+						<li className={style.listItem}>
+							<label>收款银行卡</label>
+							{repayCardLast.length > 0 ? (
+								<span
+									className={[style.listValue, style.hasArrow].join(' ')}
+									onClick={() => {
+										this.selectBankCard(repayCardNo, 'withdraw');
+									}}
+								>
+									{`${repayCardName}(${repayCardLast})`}
+									<Icon type="right" className={style.icon} />
+								</span>
+							) : (
+								<span
+									onClick={() => {
+										this.bindBankCard('withdraw');
+									}}
+								>
+									绑定储蓄卡 <i className={style.addIcon}>+</i>
+								</span>
+							)}
+						</li>
+						<li className={style.listItem}>
+							<label>还款银行卡</label>
+							{resaveCardLast.length > 0 ? (
+								<span
+									className={[style.listValue, style.hasArrow].join(' ')}
+									onClick={() => {
+										this.selectBankCard(resaveCardNo, 'withhold');
+									}}
+								>
+									{`${resaveCardName}(${resaveCardLast})`}
+									<Icon type="right" className={style.icon} />
+								</span>
+							) : (
+								<span
+									onClick={() => {
+										this.bindBankCard('withhold');
+									}}
+								>
+									绑定储蓄卡 <i className={style.addIcon}>+</i>
+								</span>
+							)}
+						</li>
+					</ul>
 
 					{loanMoney &&
 					loanDate &&
@@ -1027,12 +1191,10 @@ export default class loan_fenqi_page extends PureComponent {
 					) : null}
 				</div>
 				<div className={style.buttonWrap}>
-					<ButtonCustom
-						onClick={this.loanApplySubmit}
-						type={this.validateFn() && checkBox1 ? 'yellow' : 'default'}
-					>
+					<ButtonCustom onClick={this.loanApplySubmit} type={this.validateFn() ? 'yellow' : 'default'}>
 						签约借款
 					</ButtonCustom>
+					<span className={style.bottomTip}>当借款由持牌机构放款，年化综合息费率不超36%</span>
 				</div>
 				<Modal
 					popup
@@ -1072,8 +1234,39 @@ export default class loan_fenqi_page extends PureComponent {
 					data={repayPlanInfo.perds}
 					loanMoney={loanMoney}
 					history={this.props.history}
+					isJoinInsurancePlan={isJoinInsurancePlan}
 					goPage={() => {
+						this.storeTempData();
 						this.props.history.push('/home/payment_notes');
+					}}
+				/>
+
+				<InsuranceModal
+					visible={showInsuranceModal}
+					onButtonClick={(type) => {
+						this.handleInsuranceModalClick(type);
+					}}
+					onClose={() => {
+						this.closeInsuranceModal();
+					}}
+					data={repayPlanInfo.perds}
+					toast={this.props.toast}
+					guaranteeCompany={repayPlanInfo.guaranteeCompany}
+					isChecked={insuranceModalChecked}
+					contact={FXBZ_contract[0]}
+					handlePlanClick={() => {
+						this.storeTempData();
+						buriedPointEvent(home.riskGuaranteeModalPlanClick);
+						this.props.history.push('/home/insurance_introduce_page');
+					}}
+					handleContractClick={() => {
+						this.readContract(FXBZ_contract[0]);
+					}}
+					toggleCheckbox={() => {
+						buriedPointEvent(home.riskGuaranteeModalChecked);
+						this.setState({
+							insuranceModalChecked: !this.state.insuranceModalChecked
+						});
 					}}
 				/>
 

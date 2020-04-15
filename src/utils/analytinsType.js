@@ -115,7 +115,17 @@ const home = {
 	loanTipGetNowClick: `${prefix}_HOME_LOAN_TIP_GET_NOW`, // 签约借款-温馨提示-现在申请
 	loanTipGetLaterClick: `${prefix}_HOME_LOAN_TIP_GET_LATER`, // 签约借款-温馨提示-稍后申请
 	abTestbasicInfoA: `${prefix}_abTestbasicInfoA`, // 基本信息ab测试
-	abTestbasicInfoB: `${prefix}_abTestbasicInfoB` // 基本信息ab测试
+	abTestbasicInfoB: `${prefix}_abTestbasicInfoB`, // 基本信息ab测试
+
+	riskGuaranteeModalOk: `${prefix}_RISKGUARANTEE_MODAL_OK`, // 风险保障计划弹窗-ok
+	riskGuaranteeModalCancel: `${prefix}_RISKGUARANTEE_MODAL_CANCEL`, // 风险保障计划弹窗-cancel
+	riskGuaranteeModalChecked: `${prefix}_RISKGUARANTEE_MODAL_CHECKED`, // 风险保障计划弹窗-协议勾选
+	riskGuaranteeModalPlanClick: `${prefix}_RISKGUARANTEE_MODAL_PLAN_CLICK`, // 风险保障计划弹窗-点击计划
+	riskGuaranteePlanClick: `${prefix}_RISKGUARANTEE_PLAN_CLICK`, // 签约页-风险计划点击
+	riskGuaranteeChangePlanText: `${prefix}_RISKGUARANTEE_CHANGE_PLAN_TEXT`, // 签约页-风险计划文本切换
+	riskGuaranteeResultTry: `${prefix}_RISKGUARANTEE_RESULT_TRY_CLICK`, // 风险保障计划结果页-try
+	riskGuaranteeResultBackHome: `${prefix}_RISKGUARANTEE_RESULT_BACKHOME_CLICK`, // 风险保障计划结果页-backhome
+	repayPlanClick: `${prefix}_REPAY_PLAN_CLICK` // 签约页-还款计划点击
 };
 
 const mine = {
@@ -147,7 +157,11 @@ const order = {
 	couponUseAlert_yes: `${prefix}_COUPONUSEALERT_YES`, // 优惠券使用弹窗按钮点击
 	repayResultStatus: `${prefix}_REPAYRESULT_STATUS`, // 还款完成页-还款状态
 	continueRepayBtn: `${prefix}_CONTINUEREPAY_BTN`, // 结果页-继续还款按钮点击
-	payAllOrderBtnClick: `${prefix}_PAYALL_BTN_CLICK` // 一键结清按钮点击
+	payAllOrderBtnClick: `${prefix}_PAYALL_BTN_CLICK`, // 一键结清按钮点击
+	feesClick: `${prefix}_ORDER_DETAIL_FEES_CLICK`, // 账单勾选页-本金勾选
+	riskFeesClick: `${prefix}_ORDER_DETAIL_RISKFEES_CLICK`, // 账单勾选页-风险保障金勾选
+	splitOrderTipOk: `${prefix}_SPLIT_ORDER_TIP_OK`, // 账单勾选页-合并还款确认
+	splitOrderTipCancel: `${prefix}_SPLIT_ORDER_TIP_CANCEL` // 账单勾选页-分单还款确认
 };
 
 const membership = {

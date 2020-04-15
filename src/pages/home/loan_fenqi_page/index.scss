@@ -1,85 +1,119 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .fenqi_page {
-	padding: 70px 40px 0;
-
+	/* stylelint-disable */
+	::-webkit-input-placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
+	:-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
+	::-ms-input-placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
+	::placeholder {
+		color: #b2b6bf;
+		font-size: 56px;
+	}
 	.scrollWrap {
 		padding-bottom: 160px;
 	}
 
 	.billInpBox {
 		position: relative;
-		display: flex;
-		justify-content: space-between;
-		overflow: hidden;
-		color: #484747;
+		padding: 57px 40px 0;
+		box-sizing: border-box;
 		.moneyUnit {
-			line-height: 80px;
+			position: absolute;
 			font-size: 40px;
-			color: #333;
+			color: #394259;
+			left: 40px;
+			top: 70px;
+			z-index: 10;
 		}
 		&::after {
 			@include setBottomLine(#333);
-			left: 0;
+			left: 40px;
+			right: 40px;
+			bottom: 0;
 		}
 	}
-	.billInput {
-    // width: 583px;
-    width: 100%;
-    background-color: transparent;
-		input {
-			text-align: left;
-			font-size: 56px;
-			font-family: 'DINMitAlt';
-			padding-top: 15px;
-		}
-	}
-	.inputTip {
+	.billInpBoxTip {
+		margin: 0 40px;
 		font-size: 24px;
 		color: $colorInactiveColor;
-		margin: 20px 0 30px;
+		margin-top: 20px;
 	}
-
+	.billInput {
+		background-color: transparent;
+		input {
+			font-size: 80px;
+			font-family: 'DINMitAlt';
+			color: #394259;
+		}
+	}
 	.pannel {
-    overflow: hidden;
-    background-color: #fff;
-    border-radius: 10px;
+		overflow: hidden;
+		margin: 20px 30px;
+		background: #fff;
+		border-radius: 10px;
+		border: 1px solid #f0f1f5;
+		padding: 0 30px;
 		.listItem {
 			position: relative;
-      display: flex;
-      flex-wrap: wrap;
-			min-height: 100px;
+			display: flex;
+			min-height: 110px;
 			justify-content: space-between;
 			align-items: center;
 			box-sizing: border-box;
-			font-size: 28px;
-      color: #394259;
-      padding: 30px 30px;
-
-    }
-    .listItem + .listItem {
-      &::after {
-				@include setTopLine(#f0f1f5);
-        left: 40px;
-        right: 40px;
+			font-size: 30px;
+			color: $colorBlack;
+			flex-wrap: wrap;
+			padding: 20px 0;
+			.labelBox {
+				position: relative;
 			}
-    }
+			.labelSub {
+				position: absolute;
+				top: 45px;
+				left: 0;
+				width: 450px;
+				font-size: 20px;
+				color: #f76c5c;
+			}
+		}
+		.listItem + .listItem {
+			&::after {
+				@include setTopLine(#f0f1f5);
+				left: 0;
+			}
+		}
 
+		.hasArrow {
+			padding-right: 24px;
+		}
 		.listValue {
-      // font-weight: 700;
-      flex: 1;
-      text-align: right;
+			font-weight: normal;
+			font-size: 28px;
+			font-family: 'DINMitAlt';
+			margin-top: 3px;
 		}
 
 		.icon {
-			vertical-align: middle;
+			position: absolute;
 			width: 40px;
 			height: 50px;
-			margin-bottom: 5px;
+			color: #121c32;
+			right: -12px;
+			top: 50%;
+			margin-top: -27px;
 		}
-  }
-  .pannel + .pannel {
-    margin-top: 30px;
-  }
+	}
+	.pannel + .pannel {
+		margin-top: 30px;
+	}
 
 	.protocolLink {
     margin: 24px 0;
@@ -87,16 +121,6 @@
 
 	.greyText {
 		color: $colorInactiveColor;
-		// font-weight: 700;
-	}
-
-	.redText {
-		color: #fe6666;
-		font-weight: 700;
-	}
-
-	.highlightText {
-		// font-weight: 700;
 	}
 
 	.addIcon {
@@ -106,46 +130,46 @@
 	}
 
 	.tagListWrap {
-    margin-top: 20px;
-    width: 100%;
+		margin-top: 20px;
+		width: 100%;
 	}
 
 	.tagButton {
 		min-width: 150px;
-  }
-  .tagButton + .tagButton {
-    margin-left: 30px
-  }
-
-	.tagButtonActive {
-		color: #fe6666;
-		border: 1px solid #fe6666;
+	}
+	.tagButton + .tagButton {
+		margin-left: 30px;
 	}
 
 	.buttonWrap {
 		width: 100%;
-		padding: 30px 40px;
 		position: fixed;
 		bottom: 0;
-    left: 0;
-    box-sizing: border-box;
-    background-color: $colorBg;
-	}
+		left: 0;
+		box-sizing: border-box;
+    background-color: #fff;
+		padding: 16px 40px 0 40px;
+    text-align: center;
+  }
+  .bottomTip {
+    font-size: 22px;
+    color: #F76C5C;
+  }
 	// 优惠劵金额展示
 	.couponListValue {
 		.icon {
 			margin-bottom: 0;
 		}
-  }
+	}
 
-  .repayPlan {
-    font-size: 30px;
-    color: #B2B6BF;
-  }
-  .couponBtn {
-    background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+	.repayPlan {
+		font-size: 30px;
+		color: #b2b6bf;
+	}
+	.couponBtn {
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
 		color: #fff;
-  }
+	}
 	.couNumBox {
 		display: flex;
 		height: 42px;
@@ -165,20 +189,20 @@
 			background-size: 100%;
 			margin-right: 10px;
 		}
-  }
+	}
 }
 
 :global {
-  .loan_fenqi_page{
-    .am-list-line {
-      padding-right: 0;
-    }
-  }
-  .purpose_modal {
-    .am-modal-content {
-      border-radius: 10px 10px 0 0;
-    }
-  }
+	.loan_fenqi_page {
+		.am-list-line {
+			padding-right: 0;
+		}
+	}
+	.purpose_modal {
+		.am-modal-content {
+			border-radius: 10px 10px 0 0;
+		}
+	}
 }
 
 .modalTitle {
@@ -200,51 +224,36 @@
 	line-height: 110px;
 	width: 100%;
 	font-size: 32px;
-  color: #121c32;
+	color: #121c32;
 	&::after {
 		@include setBottomLine(#f0f1f5);
 		left: 0;
 	}
 }
 .modalItemActive {
-  color: $colorGolden;
+	color: $colorGolden;
+}
+.shakeAnimatedText {
+	position: absolute;
+	right: 0;
+	top: 32px;
+	animation: shake 0.8s linear;
 }
 
-.modal_content {
-	position: relative;
-	.modal_close_btn {
-		position: absolute;
-		top: -5px;
-		right: 0;
+@keyframes shake {
+	10%,
+	50%,
+	90% {
+		transform: translateX(15px);
 	}
-
-	.modal_title {
-		font-size: 0.36rem;
-		color: #333;
-		border-bottom: 1px solid #e5e5e5;
-		padding-bottom: 0.3rem;
+	20%,
+	40%,
+	60%,
+	80% {
+		transform: translateX(0px);
 	}
-
-	.bill_list {
-		padding: 0.1rem;
-		max-height: 500px;
-		overflow: scroll;
-	}
-
-	.list_item {
-		display: flex;
-		justify-content: space-between;
-		padding: 0.13rem 0;
-	}
-
-	.item_name {
-		font-size: 0.3rem;
-		color: #333;
-	}
-
-	.item_value {
-		font-size: 0.3rem;
-		color: #333;
-		font-weight: bold;
+	30%,
+	70% {
+		transform: translateX(-15px);
 	}
 }

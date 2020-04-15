@@ -7,7 +7,7 @@ class OverdueEntry extends Component {
 		const { isOverdue, overdueDays } = this.props;
 		return (
 			<div>
-				{overdueDays && (isMPOS() || !isPhone() || isWXOpen()) && (
+				{overdueDays > 0 && (isMPOS() || !isPhone() || isWXOpen()) && (
 					<div className={styles.overdueEntryTip}>
 						关注“还到”公众号，使用<span>微信支付</span>还款
 					</div>
