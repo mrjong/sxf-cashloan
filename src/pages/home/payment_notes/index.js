@@ -30,9 +30,11 @@ export default class payment_notes_page extends PureComponent {
 				</dd>
 				<dt>收费规则：</dt>
 				<dd>
-					本金、利息、罚息由出借方收取
+					本金、利息、罚息由出借方收取。
 					<br />
-					风险保障金由融资担保公司收取，平台方不收取任何费用。
+					服务费、逾期管理费由平台方收取。
+					<br />
+					风险保障金由融资担保公司收取。
 				</dd>
 
 				<div className={style.fix_bottom}>
