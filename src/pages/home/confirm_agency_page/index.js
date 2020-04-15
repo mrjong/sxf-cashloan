@@ -330,7 +330,7 @@ export default class confirm_agency_page extends PureComponent {
 							FXBZ_contract
 						},
 						() => {
-							this.requestGetRepayInfo(true);
+							this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}
 					);
@@ -492,11 +492,19 @@ export default class confirm_agency_page extends PureComponent {
 				.then((result) => {
 					if (result && result.code === '000000' && result.data !== null) {
 						this.props.toast.hide();
-						this.setState({
-							repayInfo2: result.data,
-							deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
-							showInterestTotal: result.data.showFlag === '1'
-						});
+						if (riskGuaranteeFlag) {
+							//只更新风险计划
+							this.setState({
+								riskGuaranteePlans: result.data.perds
+							});
+						} else {
+							this.setState({
+								repayInfo2: result.data,
+								deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
+								showInterestTotal: result.data.showFlag === '1'
+							});
+						}
+
 						this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
 						resolve();
 					} else {
@@ -924,7 +932,8 @@ export default class confirm_agency_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
-			showInsuranceModal
+			showInsuranceModal,
+			riskGuaranteePlans
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
 			cardBillAmt,
@@ -939,7 +948,8 @@ export default class confirm_agency_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
-			showInsuranceModal
+			showInsuranceModal,
+			riskGuaranteePlans
 		});
 	};
 
@@ -991,6 +1001,7 @@ export default class confirm_agency_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
+				this.requestGetRepayInfo();
 				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
@@ -1025,7 +1036,8 @@ export default class confirm_agency_page extends PureComponent {
 			FXBZ_contract = [],
 			insuranceModalChecked,
 			availableCoupNum,
-			isRiskGuaranteeProd
+			isRiskGuaranteeProd,
+			riskGuaranteePlans
 		} = this.state;
 
 		return (
@@ -1324,7 +1336,7 @@ export default class confirm_agency_page extends PureComponent {
 						onClose={() => {
 							this.closeInsuranceModal();
 						}}
-						data={repayInfo2.perds}
+						data={riskGuaranteePlans}
 						toast={this.props.toast}
 						guaranteeCompany={repayInfo2.guaranteeCompany}
 						isChecked={insuranceModalChecked}
