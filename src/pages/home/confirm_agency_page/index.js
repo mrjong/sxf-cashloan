@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 16:32:51
+ * @LastEditTime: 2020-04-15 18:46:23
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -470,7 +470,10 @@ export default class confirm_agency_page extends PureComponent {
 			repayType: lendersDate.value,
 			loanAmt: cardBillAmt,
 			prodType: '01',
-			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee:
+				(isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan || store.getRiskGuaranteeModalShow()
+					? '1'
+					: '0'
 		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
@@ -493,7 +496,7 @@ export default class confirm_agency_page extends PureComponent {
 				.then((result) => {
 					if (result && result.code === '000000' && result.data !== null) {
 						this.props.toast.hide();
-						if (riskGuaranteeFlag) {
+						if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
 							//只更新风险计划
 							this.setState({
 								riskGuaranteePlans: result.data.perds
