@@ -300,7 +300,10 @@ export default class loan_fenqi_page extends PureComponent {
 			prodType: '11',
 			repayType: '0',
 			prodId: protocolList[0] && protocolList[0].prodId,
-			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee:
+				(isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan || store.getRiskGuaranteeModalShow()
+					? '1'
+					: '0'
 		};
 		const { couponData } = this.props;
 		// 不使用优惠券,不传coupId,
@@ -322,7 +325,7 @@ export default class loan_fenqi_page extends PureComponent {
 				this.props.toast.hide();
 				if (result.code === '000000' && result.data) {
 					this.props.toast.hide();
-					if (riskGuaranteeFlag) {
+					if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
 						//只更新风险计划
 						this.setState({
 							riskGuaranteePlans: result.data.perds
