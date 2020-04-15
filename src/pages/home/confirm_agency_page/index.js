@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-15 18:46:23
+ * @LastEditTime: 2020-04-15 18:52:26
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -496,6 +496,7 @@ export default class confirm_agency_page extends PureComponent {
 				.then((result) => {
 					if (result && result.code === '000000' && result.data !== null) {
 						this.props.toast.hide();
+						// 从风险评估结果页点击您可以尝试参加风险保障计划返回或者点击风险保障计划,更新弹框里的数据,但是不更新还款计划以及息费合计
 						if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
 							//只更新风险计划
 							this.setState({
