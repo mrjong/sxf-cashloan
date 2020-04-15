@@ -281,7 +281,7 @@ export default class loan_fenqi_page extends PureComponent {
 						FXBZ_contract
 					},
 					() => {
-						this.requestLoanPlan();
+						// this.requestLoanPlan();
 						this.queryCouponCount();
 					}
 				);
@@ -293,7 +293,13 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 借款试算
 	requestLoanPlan = (riskGuaranteeFlag) => {
-		const { loanMoney, protocolList = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
+		const {
+			loanMoney,
+			protocolList = [],
+			isJoinInsurancePlan,
+			isRiskGuaranteeProd,
+			availableCoupNum
+		} = this.state;
 		// 试算传参
 		let params = {
 			loanAmt: loanMoney,
@@ -305,17 +311,20 @@ export default class loan_fenqi_page extends PureComponent {
 		const { couponData } = this.props;
 		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
-		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
-			// 不使用优惠劵的情况
-			params = {
-				...params
-			};
-		} else if (couponData && JSON.stringify(couponData) !== '{}') {
-			params = {
-				...params,
-				coupId: couponData.coupId
-			};
+		if (availableCoupNum) {
+			if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
+				// 不使用优惠劵的情况
+				params = {
+					...params
+				};
+			} else if (couponData && JSON.stringify(couponData) !== '{}') {
+				params = {
+					...params,
+					coupId: couponData.coupId
+				};
+			}
 		}
+
 		return new Promise((resolve) => {
 			this.props.$fetch.post(loan_loanPlan, params).then((result) => {
 				this.props.toast.hide();
@@ -361,9 +370,14 @@ export default class loan_fenqi_page extends PureComponent {
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
-				this.setState({
-					availableCoupNum: res.data.totalRow
-				});
+				this.setState(
+					{
+						availableCoupNum: res.data.totalRow
+					},
+					() => {
+						this.requestLoanPlan();
+					}
+				);
 			}
 		});
 	};
@@ -956,7 +970,7 @@ export default class loan_fenqi_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
-				this.requestLoanPlan();
+				// this.requestLoanPlan()
 				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}

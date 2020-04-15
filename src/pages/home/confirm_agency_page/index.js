@@ -330,7 +330,7 @@ export default class confirm_agency_page extends PureComponent {
 							FXBZ_contract
 						},
 						() => {
-							this.requestGetRepayInfo();
+							// this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}
 					);
@@ -462,7 +462,14 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 获取确认代还信息
 	requestGetRepayInfo = (riskGuaranteeFlag) => {
-		let { contractData, lendersDate, cardBillAmt, isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
+		let {
+			contractData,
+			lendersDate,
+			cardBillAmt,
+			isJoinInsurancePlan,
+			isRiskGuaranteeProd,
+			availableCoupNum
+		} = this.state;
 		const { couponData, authId } = this.props;
 		let params = {
 			prodId: contractData[0] && contractData[0].prodId,
@@ -475,17 +482,20 @@ export default class confirm_agency_page extends PureComponent {
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
-		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
-			// 不使用优惠劵的情况
-			params = {
-				...params
-			};
-		} else if (couponData && JSON.stringify(couponData) !== '{}') {
-			params = {
-				...params,
-				coupId: couponData.coupId
-			};
+		if (availableCoupNum) {
+			if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
+				// 不使用优惠劵的情况
+				params = {
+					...params
+				};
+			} else if (couponData && JSON.stringify(couponData) !== '{}') {
+				params = {
+					...params,
+					coupId: couponData.coupId
+				};
+			}
 		}
+
 		return new Promise((resolve) => {
 			this.props.$fetch
 				.post(loan_loanPlan, params)
@@ -546,9 +556,14 @@ export default class confirm_agency_page extends PureComponent {
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
-				this.setState({
-					availableCoupNum: res.data.totalRow
-				});
+				this.setState(
+					{
+						availableCoupNum: res.data.totalRow
+					},
+					() => {
+						this.requestGetRepayInfo();
+					}
+				);
 			}
 		});
 	};
@@ -1001,7 +1016,7 @@ export default class confirm_agency_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
-				this.requestGetRepayInfo();
+				// this.requestGetRepayInfo();
 				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
@@ -1365,7 +1380,7 @@ export default class confirm_agency_page extends PureComponent {
 							this.setState({
 								showCouponAlert: false
 							});
-							this.requestGetRepayInfo();
+							// this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}}
 					/>
