@@ -281,7 +281,7 @@ export default class loan_fenqi_page extends PureComponent {
 						FXBZ_contract
 					},
 					() => {
-						this.requestLoanPlan(true);
+						// this.requestLoanPlan();
 						this.queryCouponCount();
 					}
 				);
@@ -300,7 +300,10 @@ export default class loan_fenqi_page extends PureComponent {
 			prodType: '11',
 			repayType: '0',
 			prodId: protocolList[0] && protocolList[0].prodId,
-			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee:
+				(isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan || store.getRiskGuaranteeModalShow()
+					? '1'
+					: '0'
 		};
 		const { couponData } = this.props;
 		// 不使用优惠券,不传coupId,
@@ -316,14 +319,22 @@ export default class loan_fenqi_page extends PureComponent {
 				coupId: couponData.coupId
 			};
 		}
+
 		return new Promise((resolve) => {
 			this.props.$fetch.post(loan_loanPlan, params).then((result) => {
 				this.props.toast.hide();
 				if (result.code === '000000' && result.data) {
 					this.props.toast.hide();
-					this.setState({
-						repayPlanInfo: result.data
-					});
+					if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
+						//只更新风险计划
+						this.setState({
+							riskGuaranteePlans: result.data.perds
+						});
+					} else {
+						this.setState({
+							repayPlanInfo: result.data
+						});
+					}
 					resolve();
 				} else {
 					this.setState(
@@ -354,9 +365,14 @@ export default class loan_fenqi_page extends PureComponent {
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
-				this.setState({
-					availableCoupNum: res.data.totalRow
-				});
+				this.setState(
+					{
+						availableCoupNum: res.data.totalRow
+					},
+					() => {
+						this.requestLoanPlan();
+					}
+				);
 			}
 		});
 	};
@@ -467,7 +483,6 @@ export default class loan_fenqi_page extends PureComponent {
 		buriedPointEvent(home.repayPlanClick, {
 			isJoinInsurancePlan: this.state.isJoinInsurancePlan
 		});
-		// buriedPointEvent(loan_fenqi.repayPlan);
 		this.requestLoanPlan().then(() => {
 			this.openModal('plan');
 		});
@@ -528,6 +543,7 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
+			riskGuaranteePlans,
 			productListCopy
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
@@ -554,6 +570,7 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
+			riskGuaranteePlans,
 			productListCopy
 		});
 	};
@@ -948,6 +965,9 @@ export default class loan_fenqi_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
+				// this.requestLoanPlan()
+				// 清空优惠劵数据
+				this.props.setCouponDataAction({});
 				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
@@ -984,7 +1004,8 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			insuranceModalChecked,
 			FXBZ_contract = [],
-			isRiskGuaranteeProd
+			isRiskGuaranteeProd,
+			riskGuaranteePlans
 		} = this.state;
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
@@ -1249,7 +1270,7 @@ export default class loan_fenqi_page extends PureComponent {
 					onClose={() => {
 						this.closeInsuranceModal();
 					}}
-					data={repayPlanInfo.perds}
+					data={riskGuaranteePlans}
 					toast={this.props.toast}
 					guaranteeCompany={repayPlanInfo.guaranteeCompany}
 					isChecked={insuranceModalChecked}

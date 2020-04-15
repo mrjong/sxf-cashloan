@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 16:32:51
+ * @LastEditTime: 2020-04-15 18:46:23
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -330,7 +330,7 @@ export default class confirm_agency_page extends PureComponent {
 							FXBZ_contract
 						},
 						() => {
-							this.requestGetRepayInfo(true);
+							// this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}
 					);
@@ -470,7 +470,10 @@ export default class confirm_agency_page extends PureComponent {
 			repayType: lendersDate.value,
 			loanAmt: cardBillAmt,
 			prodType: '01',
-			riskGuarantee: (isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan ? '1' : '0'
+			riskGuarantee:
+				(isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan || store.getRiskGuaranteeModalShow()
+					? '1'
+					: '0'
 		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
@@ -486,17 +489,26 @@ export default class confirm_agency_page extends PureComponent {
 				coupId: couponData.coupId
 			};
 		}
+
 		return new Promise((resolve) => {
 			this.props.$fetch
 				.post(loan_loanPlan, params)
 				.then((result) => {
 					if (result && result.code === '000000' && result.data !== null) {
 						this.props.toast.hide();
-						this.setState({
-							repayInfo2: result.data,
-							deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
-							showInterestTotal: result.data.showFlag === '1'
-						});
+						if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
+							//只更新风险计划
+							this.setState({
+								riskGuaranteePlans: result.data.perds
+							});
+						} else {
+							this.setState({
+								repayInfo2: result.data,
+								deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
+								showInterestTotal: result.data.showFlag === '1'
+							});
+						}
+
 						this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
 						resolve();
 					} else {
@@ -538,9 +550,14 @@ export default class confirm_agency_page extends PureComponent {
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
-				this.setState({
-					availableCoupNum: res.data.totalRow
-				});
+				this.setState(
+					{
+						availableCoupNum: res.data.totalRow
+					},
+					() => {
+						this.requestGetRepayInfo();
+					}
+				);
 			}
 		});
 	};
@@ -924,7 +941,8 @@ export default class confirm_agency_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
-			showInsuranceModal
+			showInsuranceModal,
+			riskGuaranteePlans
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
 			cardBillAmt,
@@ -939,7 +957,8 @@ export default class confirm_agency_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
-			showInsuranceModal
+			showInsuranceModal,
+			riskGuaranteePlans
 		});
 	};
 
@@ -991,6 +1010,9 @@ export default class confirm_agency_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
+				// this.requestGetRepayInfo();
+				// 清空优惠劵数据
+				this.props.setCouponDataAction({});
 				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
@@ -1025,7 +1047,8 @@ export default class confirm_agency_page extends PureComponent {
 			FXBZ_contract = [],
 			insuranceModalChecked,
 			availableCoupNum,
-			isRiskGuaranteeProd
+			isRiskGuaranteeProd,
+			riskGuaranteePlans
 		} = this.state;
 
 		return (
@@ -1324,7 +1347,7 @@ export default class confirm_agency_page extends PureComponent {
 						onClose={() => {
 							this.closeInsuranceModal();
 						}}
-						data={repayInfo2.perds}
+						data={riskGuaranteePlans}
 						toast={this.props.toast}
 						guaranteeCompany={repayInfo2.guaranteeCompany}
 						isChecked={insuranceModalChecked}
@@ -1353,7 +1376,7 @@ export default class confirm_agency_page extends PureComponent {
 							this.setState({
 								showCouponAlert: false
 							});
-							this.requestGetRepayInfo();
+							// this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}}
 					/>
