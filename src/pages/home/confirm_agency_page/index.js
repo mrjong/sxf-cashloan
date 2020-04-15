@@ -462,14 +462,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 获取确认代还信息
 	requestGetRepayInfo = (riskGuaranteeFlag) => {
-		let {
-			contractData,
-			lendersDate,
-			cardBillAmt,
-			isJoinInsurancePlan,
-			isRiskGuaranteeProd,
-			availableCoupNum
-		} = this.state;
+		let { contractData, lendersDate, cardBillAmt, isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		const { couponData, authId } = this.props;
 		let params = {
 			prodId: contractData[0] && contractData[0].prodId,
@@ -482,18 +475,16 @@ export default class confirm_agency_page extends PureComponent {
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
-		if (availableCoupNum) {
-			if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
-				// 不使用优惠劵的情况
-				params = {
-					...params
-				};
-			} else if (couponData && JSON.stringify(couponData) !== '{}') {
-				params = {
-					...params,
-					coupId: couponData.coupId
-				};
-			}
+		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
+			// 不使用优惠劵的情况
+			params = {
+				...params
+			};
+		} else if (couponData && JSON.stringify(couponData) !== '{}') {
+			params = {
+				...params,
+				coupId: couponData.coupId
+			};
 		}
 
 		return new Promise((resolve) => {
@@ -1017,6 +1008,8 @@ export default class confirm_agency_page extends PureComponent {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
 				// this.requestGetRepayInfo();
+				// 清空优惠劵数据
+				this.props.setCouponDataAction({});
 				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
