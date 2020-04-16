@@ -335,7 +335,8 @@ export default class loan_fenqi_page extends PureComponent {
 					if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
 						//只更新风险计划
 						this.setState({
-							riskGuaranteePlans: result.data.perds
+							riskGuaranteePlans: result.data.perds,
+							guaranteeCompany: result.data.guaranteeCompany
 						});
 					} else {
 						this.setState({
@@ -550,6 +551,7 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
+			guaranteeCompany,
 			riskGuaranteePlans,
 			productListCopy
 		} = this.state;
@@ -577,6 +579,7 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
+			guaranteeCompany,
 			riskGuaranteePlans,
 			productListCopy
 		});
@@ -1011,6 +1014,7 @@ export default class loan_fenqi_page extends PureComponent {
 			isJoinInsurancePlan,
 			insurancePlanText,
 			insuranceModalChecked,
+			guaranteeCompany,
 			FXBZ_contract = [],
 			isRiskGuaranteeProd,
 			riskGuaranteePlans
@@ -1280,7 +1284,7 @@ export default class loan_fenqi_page extends PureComponent {
 					}}
 					data={riskGuaranteePlans}
 					toast={this.props.toast}
-					guaranteeCompany={repayPlanInfo.guaranteeCompany}
+					guaranteeCompany={guaranteeCompany}
 					isChecked={insuranceModalChecked}
 					contact={FXBZ_contract[0]}
 					handlePlanClick={() => {
