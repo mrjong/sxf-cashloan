@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-15 18:46:23
+ * @LastEditTime: 2020-04-15 18:52:26
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -241,6 +241,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersDate,
 			lendersIndex,
 			checkBox1,
+			insuranceModalChecked,
 			isJoinInsurancePlan,
 			insurancePlanText
 		} = this.state;
@@ -252,6 +253,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersDate,
 			checkBox1,
 			lendersIndex,
+			insuranceModalChecked,
 			isJoinInsurancePlan,
 			insurancePlanText
 		});
@@ -315,22 +317,29 @@ export default class confirm_agency_page extends PureComponent {
 			})
 			.then((result) => {
 				if (result && result.code === '000000' && result.data !== null) {
-					let { contracts = [] } = result.data;
+					let { contracts = [], riskGuarantee } = result.data;
 					let FXBZ_contract = {};
+					let isRiskGuaranteeProd = riskGuarantee === '1'; //是否是风险保障金产品
 					contracts.forEach((v, i) => {
 						if (v.contractType === 'FXBZ') {
 							FXBZ_contract = contracts.splice(i, 1);
 						}
 					});
+					if (!isRiskGuaranteeProd) {
+						//切换为未配置风险计划产品需清空之前授权逻辑
+						this.setState({
+							insurancePlanText: '',
+							isJoinInsurancePlan: false
+						});
+					}
 					this.setState(
 						{
-							contractData: result.data && result.data.contracts,
+							contractData: contracts,
 							disabledBtn: false,
-							isRiskGuaranteeProd: result.data.riskGuarantee === '1', //是否是风险保障金产品
+							isRiskGuaranteeProd,
 							FXBZ_contract
 						},
 						() => {
-							// this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}
 					);
@@ -471,7 +480,7 @@ export default class confirm_agency_page extends PureComponent {
 			loanAmt: cardBillAmt,
 			prodType: '01',
 			riskGuarantee:
-				(isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan || store.getRiskGuaranteeModalShow()
+				riskGuaranteeFlag || (isRiskGuaranteeProd && isJoinInsurancePlan) || store.getRiskGuaranteeModalShow()
 					? '1'
 					: '0'
 		};
@@ -496,6 +505,7 @@ export default class confirm_agency_page extends PureComponent {
 				.then((result) => {
 					if (result && result.code === '000000' && result.data !== null) {
 						this.props.toast.hide();
+						// 从风险评估结果页点击您可以尝试参加风险保障计划返回或者点击风险保障计划,更新弹框里的数据,但是不更新还款计划以及息费合计
 						if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
 							//只更新风险计划
 							this.setState({
@@ -538,7 +548,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	//获取可使用优惠券条数
 	queryCouponCount = () => {
-		const { cardBillAmt, contractData = [], isJoinInsurancePlan } = this.state;
+		const { cardBillAmt, contractData = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		let params = {
 			loanAmt: cardBillAmt,
 			prodId: contractData[0].prodId,
@@ -546,7 +556,7 @@ export default class confirm_agency_page extends PureComponent {
 			coupSts: '00',
 			startPage: 1,
 			pageRow: 1,
-			riskGuarantee: isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
+			riskGuarantee: isRiskGuaranteeProd && isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
@@ -572,6 +582,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersDate,
 			lendersIndex,
 			checkBox1,
+			insuranceModalChecked,
 			isJoinInsurancePlan,
 			insurancePlanText
 		} = this.state;
@@ -587,6 +598,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersIndex,
 			checkBox1,
 			isJoinInsurancePlan,
+			insuranceModalChecked,
 			insurancePlanText
 		});
 		if (useFlag) {
@@ -612,6 +624,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersDate,
 			lendersIndex,
 			checkBox1,
+			insuranceModalChecked,
 			isJoinInsurancePlan,
 			insurancePlanText
 		} = this.state;
@@ -623,6 +636,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersDate,
 			lendersIndex,
 			checkBox1,
+			insuranceModalChecked,
 			isJoinInsurancePlan,
 			insurancePlanText
 		});
@@ -1010,7 +1024,6 @@ export default class confirm_agency_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
-				// this.requestGetRepayInfo();
 				// 清空优惠劵数据
 				this.props.setCouponDataAction({});
 				this.queryCouponCount();
@@ -1376,7 +1389,6 @@ export default class confirm_agency_page extends PureComponent {
 							this.setState({
 								showCouponAlert: false
 							});
-							// this.requestGetRepayInfo();
 							this.queryCouponCount();
 						}}
 					/>

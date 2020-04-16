@@ -266,22 +266,29 @@ export default class loan_fenqi_page extends PureComponent {
 		};
 
 		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((result) => {
-			if (result.code === '000000') {
-				let { contracts = [] } = result.data;
+			if (result.code === '000000' && result.data) {
+				let { contracts = [], riskGuarantee } = result.data;
 				let FXBZ_contract = {};
+				let isRiskGuaranteeProd = riskGuarantee === '1'; //是否是风险保障金产品
 				contracts.forEach((v, i) => {
 					if (v.contractType === 'FXBZ') {
 						FXBZ_contract = contracts.splice(i, 1);
 					}
 				});
+				if (!isRiskGuaranteeProd) {
+					//切换为未配置风险计划产品需清空之前授权逻辑
+					this.setState({
+						insurancePlanText: '',
+						isJoinInsurancePlan: false
+					});
+				}
 				this.setState(
 					{
-						protocolList: result.data && result.data.contracts,
-						isRiskGuaranteeProd: result.data.riskGuarantee === '1', //是否是风险保障金产品
+						protocolList: contracts,
+						isRiskGuaranteeProd,
 						FXBZ_contract
 					},
 					() => {
-						// this.requestLoanPlan();
 						this.queryCouponCount();
 					}
 				);
@@ -301,7 +308,7 @@ export default class loan_fenqi_page extends PureComponent {
 			repayType: '0',
 			prodId: protocolList[0] && protocolList[0].prodId,
 			riskGuarantee:
-				(isRiskGuaranteeProd && riskGuaranteeFlag) || isJoinInsurancePlan || store.getRiskGuaranteeModalShow()
+				riskGuaranteeFlag || (isRiskGuaranteeProd && isJoinInsurancePlan) || store.getRiskGuaranteeModalShow()
 					? '1'
 					: '0'
 		};
@@ -328,7 +335,8 @@ export default class loan_fenqi_page extends PureComponent {
 					if (riskGuaranteeFlag || store.getRiskGuaranteeModalShow()) {
 						//只更新风险计划
 						this.setState({
-							riskGuaranteePlans: result.data.perds
+							riskGuaranteePlans: result.data.perds,
+							guaranteeCompany: result.data.guaranteeCompany
 						});
 					} else {
 						this.setState({
@@ -353,7 +361,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//获取可使用优惠券条数
 	queryCouponCount = () => {
-		const { loanMoney, protocolList = [], isJoinInsurancePlan } = this.state;
+		const { loanMoney, protocolList = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		let params = {
 			loanAmt: loanMoney,
 			prodId: protocolList[0].prodId,
@@ -361,7 +369,7 @@ export default class loan_fenqi_page extends PureComponent {
 			coupSts: '00',
 			startPage: 1,
 			pageRow: 1,
-			riskGuarantee: isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
+			riskGuarantee: isRiskGuaranteeProd && isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
@@ -543,6 +551,7 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
+			guaranteeCompany,
 			riskGuaranteePlans,
 			productListCopy
 		} = this.state;
@@ -570,6 +579,7 @@ export default class loan_fenqi_page extends PureComponent {
 			insurancePlanText,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
+			guaranteeCompany,
 			riskGuaranteePlans,
 			productListCopy
 		});
@@ -854,6 +864,8 @@ export default class loan_fenqi_page extends PureComponent {
 							className={style.tagButton}
 							type={loanDate && loanDate.prodCount === item.prodCount ? 'yellow' : 'gray'}
 							onClick={() => {
+								//清空优惠券
+								this.props.setCouponDataAction({});
 								this.selectLoanDate(item);
 							}}
 						>
@@ -965,7 +977,6 @@ export default class loan_fenqi_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
-				// this.requestLoanPlan()
 				// 清空优惠劵数据
 				this.props.setCouponDataAction({});
 				this.queryCouponCount();
@@ -1003,6 +1014,7 @@ export default class loan_fenqi_page extends PureComponent {
 			isJoinInsurancePlan,
 			insurancePlanText,
 			insuranceModalChecked,
+			guaranteeCompany,
 			FXBZ_contract = [],
 			isRiskGuaranteeProd,
 			riskGuaranteePlans
@@ -1272,7 +1284,7 @@ export default class loan_fenqi_page extends PureComponent {
 					}}
 					data={riskGuaranteePlans}
 					toast={this.props.toast}
-					guaranteeCompany={repayPlanInfo.guaranteeCompany}
+					guaranteeCompany={guaranteeCompany}
 					isChecked={insuranceModalChecked}
 					contact={FXBZ_contract[0]}
 					handlePlanClick={() => {
