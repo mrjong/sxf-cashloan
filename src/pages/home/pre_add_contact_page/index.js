@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-16 13:29:08
+ * @LastEditTime: 2020-04-17 15:27:53
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -141,10 +141,10 @@ export default class pre_add_contact_page extends PureComponent {
 				Toast.info('请填写联系人1姓名');
 				return true;
 			}
-			if (!validators.name(linkman)) {
-				Toast.info('请填写正确的联系人1姓名');
-				return true;
-			}
+			// if (!validators.name(linkman)) {
+			// 	Toast.info('请填写正确的联系人1姓名');
+			// 	return true;
+			// }
 			if (!linkphone) {
 				Toast.info('请填写联系人1手机号');
 				return true;
@@ -161,10 +161,10 @@ export default class pre_add_contact_page extends PureComponent {
 				Toast.info('请填写联系人2姓名');
 				return true;
 			}
-			if (!validators.name(linkman2)) {
-				Toast.info('请填写正确的联系人2姓名');
-				return true;
-			}
+			// if (!validators.name(linkman2)) {
+			// 	Toast.info('请填写正确的联系人2姓名');
+			// 	return true;
+			// }
 			if (!linkphone2) {
 				Toast.info('请填写联系人2手机号');
 				return true;
