@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 16:13:34
+ * @LastEditTime: 2020-04-17 15:25:46
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -216,9 +216,12 @@ export default class real_name_page extends Component {
 		if (!this.state.rightUploaded) {
 			return false;
 		}
-		if (!validators.name(this.state.idName)) {
+		if (!this.state.idName) {
 			return false;
 		}
+		// if (!validators.name(this.state.idName)) {
+		// 	return false;
+		// }
 		if (!validators.iDCardNumber(this.state.idNo)) {
 			return false;
 		}
@@ -239,10 +242,10 @@ export default class real_name_page extends Component {
 			Toast.info('请输入中文姓名');
 			return false;
 		}
-		if (!validators.name(idName)) {
-			Toast.info('请输入有效的中文姓名');
-			return false;
-		}
+		// if (!validators.name(idName)) {
+		// 	Toast.info('请输入有效的中文姓名');
+		// 	return false;
+		// }
 		if (!idNo) {
 			Toast.info('请输入身份证号');
 			return false;
