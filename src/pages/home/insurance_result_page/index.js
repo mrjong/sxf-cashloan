@@ -66,7 +66,8 @@ class insurance_result_page extends Component {
 					{status === 'fail' && (
 						<div>
 							<img className={styles.icon} src={Images.adorn.fail} alt="" />
-							<p className={styles.iconDesc}>您的风险评估未通过</p>
+							<p className={styles.iconDesc}>对不起，您的风险评估尚未通过。</p>
+							<p className={styles.iconDesc}>99%的人选择参加风险保障计划后成功放款。</p>
 						</div>
 					)}
 				</div>
@@ -74,7 +75,7 @@ class insurance_result_page extends Component {
 					{status === 'fail' && (
 						<div>
 							<ButtonCustom className={styles.button} onClick={this.goBack}>
-								您可以尝试参加风险保障计划
+								立即参加
 							</ButtonCustom>
 							<button onClick={this.goHome} className={styles.subButton}>
 								返回首页
