@@ -175,11 +175,7 @@ export default class HomeModal extends Component {
 					</Modal>
 				) : (
 					<Modal visible={visible} transparent className="welfareModal" maskClosable={false}>
-						{DataList &&
-						DataList[0] &&
-						DataList[0].olpSts === '1' &&
-						this.billNo &&
-						location.pathname === '/home/home' ? (
+						{DataList && DataList[0] && DataList[0].olpSts === '1' ? (
 							<OverDueModal
 								overDueInf={overDueInf}
 								decreaseCoupExpiryDate={DataList[0].decreaseCoupExpiryDate}

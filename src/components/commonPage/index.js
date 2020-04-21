@@ -223,7 +223,8 @@ export default () => (WrappedComponent) => {
 												decreaseCoupExpiryDate,
 												progressInfos
 											}
-										]
+										],
+										routeName: 'Order'
 									});
 								}
 								this.props.setOverDueModalInfo({
