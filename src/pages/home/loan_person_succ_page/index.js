@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 12:07:52
+ * @LastEditTime: 2020-04-24 16:31:12
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -260,7 +260,7 @@ export default class remit_ing_page extends PureComponent {
 					<div className={[style.step_item, style.active].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							放款审核中
+							借款申请提交成功
 						</div>
 						<div className={style.line} />
 					</div>
@@ -295,7 +295,7 @@ export default class remit_ing_page extends PureComponent {
 					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							短信形式告知您审核结果，审核通过自动放款
+							自动放款至信用卡
 						</div>
 						<div className={style.line} />
 					</div>
