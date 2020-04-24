@@ -1,54 +1,57 @@
 :global {
 	.warningModal.am-modal {
-    // height: 94%;
+		// height: 94%;
 		.am-modal-content {
 			border-radius: 10px 10px 0 0;
 		}
 	}
 }
 .warningModalCont {
-  padding-top: 80px;
-  padding-bottom: 240px;
+	padding-top: 80px;
+	padding-bottom: 240px;
 
-  .closeBtn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 20px;
+	.closeBtn {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 20px;
 		display: inline-block;
 		width: 34px;
 		height: 34px;
-  }
+	}
 
-  .mainTit {
-    text-align: left;
-    color: $colorBlack;
+	.mainTit {
+		text-align: left;
+		color: #121b33;
 		font-size: 36px;
-    margin-bottom: 28px;
-    padding: 0 60px;
-    font-weight: normal;
+		margin-bottom: 40px;
+		padding: 0 60px;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
 	}
 }
 .warningCont {
 	text-align: left;
 	color: $colorBlack;
-  padding: 0 60px;
-  max-height: 600px;
-  overflow: auto;
+	padding: 0 60px;
+	max-height: 600px;
+	overflow: auto;
 
 	.subTit {
-		font-size: 28px;
-		line-height: 46px;
-		padding-bottom: 12px;
+		font-size: 30px;
+		line-height: 42px;
+		padding-bottom: 20px;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
 	}
 	.subCont {
 		font-size: 28px;
-		font-weight: 500;
-		line-height: 46px;
+    line-height: 42px;
+    padding-bottom: 20px;
 	}
 	.redText {
-		color: $colorTipRed;
-		margin-bottom: 32px;
+		color: #f76c5c;
+		margin-bottom: 20px;
 	}
 	.underlineText {
 		text-decoration: underline;
@@ -60,15 +63,15 @@
 		margin-left: 10px;
 	}
 	.spaceStyle {
-		margin-top: 44px;
+		margin-top: 20px;
 	}
 }
 .fixedBottomWrap {
-  position: fixed;
-  bottom: 0;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 20px 60px;
+	position: fixed;
+	bottom: 0;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 20px 60px;
 }
 .confirm_btn {
 	width: 634px;
@@ -83,7 +86,6 @@
 }
 .agreement {
 	text-align: left;
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 	line-height: 40px;
 }
-

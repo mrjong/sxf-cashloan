@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-10 17:07:30
+ * @LastEditTime: 2020-04-24 14:48:33
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -106,7 +106,7 @@ export default class WarningModal extends React.PureComponent {
 						</p>
 						<h3 className={styles.subTit}>二、为了避免影响您的信用，请您务必认真阅读以下内容：</h3>
 						<p className={styles.subCont}>
-							①{' '}
+							1、
 							<span
 								className={styles.underlineText}
 								onClick={() => {
@@ -117,7 +117,7 @@ export default class WarningModal extends React.PureComponent {
 							</span>
 						</p>
 						<p className={styles.subCont}>
-							②{' '}
+							2、
 							<span
 								className={styles.underlineText}
 								onClick={() => {
@@ -131,13 +131,13 @@ export default class WarningModal extends React.PureComponent {
 							三、如您的逾期记录上传至征信平台后将会对您产生以下影响：
 						</h3>
 						<div className={[styles.subCont, styles.specialText].join(' ')}>
-							<p>①</p>
+							<p>1、</p>
 							<p className={styles.modl_special_text}>影响您银行及互联网金融的借贷业务（房贷、车贷等）。</p>
 						</div>
-						<p className={styles.subCont}>② 影响您子女上学、入伍、就业等。</p>
-						<p className={styles.subCont}>③ 逾期时间的增长会使您成为银行“黑户”。</p>
+						<p className={styles.subCont}>2、影响您子女上学、入伍、就业等。</p>
+						<p className={styles.subCont}>3、逾期时间的增长会使您成为银行“黑户”。</p>
 						<div className={[styles.subCont, styles.specialText].join(' ')}>
-							<p>④</p>
+							<p>4、</p>
 							<p className={styles.modl_special_text}>
 								征信变“黑”将会影响您的出行及高消费（乘坐高铁、飞机、出境等）。
 							</p>

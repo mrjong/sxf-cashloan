@@ -1,13 +1,13 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-03-24 17:53:25
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-04-24 14:50:56
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-// import { setBackGround } from 'utils/background';
+import { setBackGround } from 'utils/background';
 import ContactResultList from '../contact_result_page/components/ContactResultList';
 import { validators, arrCheckDup } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -25,7 +25,7 @@ import qs from 'qs';
 let timer;
 let timerOut;
 let queryData = {};
-// @setBackGround('#fff')
+@setBackGround('#fff')
 @fetch.inject()
 @createForm()
 @connect(

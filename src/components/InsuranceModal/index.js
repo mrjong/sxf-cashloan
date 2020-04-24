@@ -42,7 +42,14 @@ export default class InsuranceModal extends React.PureComponent {
 						<span>什么是风险保障计划?</span>
 						<Icon type="right" className={styles.link_bar_close} />
 					</a>
-					<div className={styles.stepBarWrap}>
+					{/* 针对3期产品不需要设置高度, 没有1期产品暂时不考虑 */}
+					<div
+						className={
+							stepData && stepData.length < 6
+								? [styles.stepBarWrap, styles.stepBarWrap2].join(' ')
+								: styles.stepBarWrap
+						}
+					>
 						<StepBar data={stepData} riskGuarantee={true} />
 					</div>
 

@@ -52,7 +52,12 @@
 	}
 	.billInput {
 		background-color: transparent;
-		padding-left: 0;
+    padding-left: 0;
+    :global {
+      .am-list-line::after {
+        @include setBottomLine(#394259);
+      }
+    }
 		input {
 			font-size: 80px;
 			font-family: 'DINMitAlt';
