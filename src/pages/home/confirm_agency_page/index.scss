@@ -21,16 +21,20 @@
 		padding-bottom: 160px;
 	}
 
+	.inputWrap {
+		padding-bottom: 80px;
+		background-color: #fff;
+	}
 	.billInpBox {
 		position: relative;
-		padding: 57px 40px 0;
+		padding: 76px 40px 0;
 		box-sizing: border-box;
 		.moneyUnit {
 			position: absolute;
 			font-size: 40px;
 			color: #394259;
 			left: 40px;
-			top: 70px;
+			top: 92px;
 			z-index: 10;
 		}
 		&::after {
@@ -48,11 +52,25 @@
 	}
 	.billInput {
 		background-color: transparent;
+		padding-left: 0;
 		input {
 			font-size: 80px;
 			font-family: 'DINMitAlt';
 			color: #394259;
+			padding-left: 41px;
+			padding-right: 110px;
 		}
+	}
+	.lendAllStyle {
+		position: absolute;
+		right: 40px;
+		top: 80px;
+		font-size: 30px;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		color: #ffbc00;
+		line-height: 88px;
+		padding-left: 30px;
 	}
 	.pannel {
 		overflow: hidden;
@@ -69,20 +87,16 @@
 			align-items: center;
 			box-sizing: border-box;
 			font-size: 30px;
-			color: $colorBlack;
+			color: #121b33;
 			flex-wrap: wrap;
 			padding: 20px 0;
-			.labelBox {
-				position: relative;
-			}
-			.labelSub {
-				position: absolute;
-				top: 45px;
-				left: 0;
-				width: 450px;
-				font-size: 20px;
-				color: #f76c5c;
-			}
+		}
+		.labelSub {
+			font-size: 24px;
+			color: $colorSubTitle;
+			line-height: 32px;
+			margin-top: -25px;
+			padding-bottom: 20px;
 		}
 		.listItem + .listItem {
 			&::after {
@@ -101,45 +115,56 @@
 		}
 
 		.listValue {
-			font-weight: normal;
-			font-size: 28px;
-			font-family: 'DINMitAlt';
+			font-size: 30px;
 			margin-top: 3px;
+			font-family: PingFangSC-Semibold, PingFang SC;
+			font-weight: 600;
+			color: #394259;
+		}
+		.numberFont {
+			font-family: 'DINMitAlt';
 		}
 		.listValue2 {
 			font-weight: 500;
 			font-size: 30px;
 			font-family: 'PingFangSC-Medium';
 			line-height: 2;
-			color: #868e9e;
+			color: #b2b6bf;
 		}
 		.listValue3 {
 			display: block;
 			position: relative;
 			line-height: normal;
+			text-align: right;
 		}
 		.hasArrow {
 			padding-right: 24px;
 		}
+		.listDesc {
+			font-size: 24px;
+			color: #394259;
+			text-align: right;
+      padding-right: 24px;
+      margin-top: 8px;
+		}
 		// 息费合计
 		.derateMoney {
-			margin-left: 20px;
-			font-family: 'DINMitAlt';
+			margin-left: 10px;
 		}
 		.allMoneyBox {
 			display: flex;
 			text-align: right;
-			color: #868e9e;
-			font-size: 26px;
+			color: $colorSubTitle;
 			justify-content: space-between;
+      font-size: 24px;
+      margin-top: 12px;
 		}
 		.moneyTit {
 			width: 150px;
-			text-align: right;
 		}
 		.allMoney {
 			text-decoration: line-through;
-			font-family: 'DINMitAlt';
+			margin-left: 10px;
 		}
 		.highlightText {
 			padding-right: 30px;
@@ -154,10 +179,11 @@
 			margin-top: -25px;
 			// margin-bottom: 5px;
 		}
-  }
-
-	.greyText {
-		color: #b2b6bf;
+		.greyText {
+			color: #b2b6bf;
+			font-family: sans-serif;
+			font-weight: normal;
+		}
 	}
 
 	.redText {
@@ -165,20 +191,20 @@
 	}
 
 	.buttonWrap {
-    width: 100%;
-    padding: 16px 40px 0 40px;
-    position: fixed;
-    z-index: 10;
+		width: 100%;
+		padding: 16px 40px 0 40px;
+		position: fixed;
+		z-index: 10;
 		bottom: 0;
 		left: 0;
 		box-sizing: border-box;
-    background-color: #fff;
-    text-align: center;
-  }
-  .bottomTip {
-    font-size: 22px;
-    color: #F76C5C;
-  }
+		background-color: #fff;
+		text-align: center;
+	}
+	.bottomTip {
+		font-size: 22px;
+		color: #f76c5c;
+	}
 	// 优惠劵金额展示
 	.couNumBox {
 		display: flex;

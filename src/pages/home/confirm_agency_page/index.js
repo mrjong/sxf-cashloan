@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-22 18:50:59
+ * @LastEditTime: 2020-04-24 14:12:09
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -49,6 +49,7 @@ if (isIPhone) {
 	};
 }
 let closeBtn = true;
+let lendAllBtn = true;
 
 @setBackGround('#f0f4f9')
 @fetch.inject()
@@ -153,6 +154,7 @@ export default class confirm_agency_page extends PureComponent {
 	componentWillUnmount() {
 		store.removeConfirmAgencyBackHome();
 		store.removeRiskGuaranteeModalShow();
+		lendAllBtn = true;
 	}
 
 	// 拦截发放优惠券
@@ -990,6 +992,40 @@ export default class confirm_agency_page extends PureComponent {
 		);
 	};
 
+	// 全部取出
+	lendAllHandler = () => {
+		if (!lendAllBtn) {
+			return;
+		}
+		const { repaymentDate, cardBillAmt } = this.state;
+		if (repaymentDate && repaymentDate.maxAmt && Number(cardBillAmt) === Number(repaymentDate.maxAmt)) {
+			return;
+		}
+		// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
+		this.props.setCouponDataAction({});
+		this.props.form.setFieldsValue({
+			cardBillAmt: `${repaymentDate.maxAmt}`
+		});
+		this.setState(
+			{
+				cardBillAmt: `${repaymentDate.maxAmt}`
+			},
+			() => {
+				this.handleClickConfirm();
+			}
+		);
+	};
+
+	getTerm = () => {
+		const { repayInfo } = this.state;
+		const prodLth = (repayInfo && repayInfo.prods && repayInfo.prods[0] && repayInfo.prods[0].prodLth) || '';
+		const prodTerm =
+			repayInfo && repayInfo.prods && repayInfo.prods[0] && repayInfo.prods[0].prodUnit === 'D'
+				? '1'
+				: prodLth;
+		return prodTerm;
+	};
+
 	render() {
 		const { history, toast, userInfo } = this.props;
 		const { getFieldProps } = this.props.form;
@@ -1062,10 +1098,11 @@ export default class confirm_agency_page extends PureComponent {
 										]
 									})}
 									placeholder={
-										repaymentDate.maxAmt ? `${repaymentDate.minAmt}-${repaymentDate.maxAmt}可借` : ''
+										repaymentDate.maxAmt ? `可申请${repaymentDate.minAmt}-${repaymentDate.maxAmt}` : ''
 									}
 									onBlur={(v) => {
 										setTimeout(() => {
+											lendAllBtn = true;
 											// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
 											this.props.setCouponDataAction({});
 											if (!closeBtn) {
@@ -1076,51 +1113,41 @@ export default class confirm_agency_page extends PureComponent {
 										}, 10);
 									}}
 									onFocus={() => {
+										lendAllBtn = false;
 										this.setState({
 											disabledBtn: true
 										});
 									}}
 									moneykeyboardwrapprops={moneyKeyboardWrapProps}
 								/>
+								<span className={style.lendAllStyle} onClick={this.lendAllHandler}>
+									全部取出
+								</span>
 							</div>
-							<p className={style.billInpBoxTip}>建议全部借出，借款后剩余额度将不可用</p>
 						</div>
 						<div>
 							<ul className={style.pannel}>
-								{/* <li style={{ display: 'none' }}>
-									<TabList
-										tagList={repaymentDateList}
-										defaultindex={repaymentIndex}
-										activeindex={repaymentIndex}
-										onClick={this.handleRepaymentTagClick}
-									/>
-								</li> */}
-								<li className={style.listItem}>
-									<label>借多久</label>
-									<span className={style.listValue}>
-										{repayInfo && repayInfo.prods && repayInfo.prods[0] && repayInfo.prods[0].prodLth}
-										{repayInfo && repayInfo.prods && repayInfo.prods[0] && repayInfo.prods[0].prodUnit === 'M'
-											? '个月'
-											: '天'}
-									</span>
-								</li>
+								{isRiskGuaranteeProd && (
+									<li onClick={this.handleInsuranceModal}>
+										<div className={style.listItem}>
+											<label>风险保障计划</label>
+											<span
+												className={[
+													style.listValue,
+													style.hasArrow,
+													store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
+													!isJoinInsurancePlan && style.greyText
+												].join(' ')}
+											>
+												{insurancePlanText || '请选择'}
+											</span>
+											<Icon type="right" className={style.icon} />
+										</div>
+										<p className={style.labelSub}>风险保障计划由第三方担保公司提供服务</p>
+									</li>
+								)}
 							</ul>
 							<ul className={style.pannel}>
-								{/* <li className={style.listItem}>
-									<div>
-										<label>放款日期</label>
-									</div>
-									<div className={style.TabListWrap}>
-										<TabList
-											burientype="lenders"
-											tagType="lenders"
-											tagList={lendersDateList}
-											defaultindex={defaultIndex}
-											activeindex={lendersIndex}
-											onClick={this.handleLendersTagClick}
-										/>
-									</div>
-								</li> */}
 								<li
 									className={style.listItem}
 									onClick={() => {
@@ -1148,27 +1175,8 @@ export default class confirm_agency_page extends PureComponent {
 									)}
 								</li>
 							</ul>
-							<ul className={style.pannel}>
-								{isRiskGuaranteeProd && (
-									<li className={style.listItem} onClick={this.handleInsuranceModal}>
-										<div className={style.labelBox}>
-											<label>风险保障计划</label>
-											<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
-										</div>
-										<span
-											className={[
-												style.listValue,
-												style.hasArrow,
-												store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
-												!isJoinInsurancePlan && style.greyText
-											].join(' ')}
-										>
-											{insurancePlanText || '请选择'}
-										</span>
-										<Icon type="right" className={style.icon} />
-									</li>
-								)}
 
+							<ul className={style.pannel}>
 								<li
 									className={
 										repayInfo2 && showInterestTotal ? `${style.listItem} ${style.listItem3}` : style.listItem
@@ -1177,7 +1185,7 @@ export default class confirm_agency_page extends PureComponent {
 								>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
 									<div>
-										{(repayInfo2 && (
+										{(this.getTerm() && repayInfo2 && (
 											<span
 												className={
 													repayInfo2 && repayInfo2.perdUnit === 'D'
@@ -1185,32 +1193,22 @@ export default class confirm_agency_page extends PureComponent {
 														: [style.listValue, style.listValue3, style.hasArrow].join(' ')
 												}
 											>
-												总计6期
+												合计<span className={style.numberFont}>{this.getTerm()}</span>期
 												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
 													<Icon type="right" className={style.icon} />
 												)}
-												{/* {showInterestTotal && (
-													<span>
-														<span className={style.moneyTit}>优惠后合计</span>
-														<span className={style.derateMoney}>
-															{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
-														</span>
-														元
-													</span>
-												)}
-												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
-													<Icon type="right" className={style.icon} />
-												)} */}
 											</span>
 										)) || <span className={style.listValue2}>暂无</span>}
 										{repayInfo2 && showInterestTotal && (
 											<div>
-												<div className={[style.listValue, style.listValue3].join(' ')}>
-													<span className={style.moneyTit}>优惠后合计</span>
+												<div className={style.listDesc}>
+													<span className={style.moneyTit}>优惠后应还</span>
 													<span className={style.derateMoney}>
-														{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+														¥
+														<span className={style.numberFont}>
+															{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+														</span>
 													</span>
-													元
 												</div>
 												<div
 													className={
@@ -1220,7 +1218,10 @@ export default class confirm_agency_page extends PureComponent {
 													}
 												>
 													<span className={style.moneyTit}>息费合计</span>
-													<span className={style.allMoney}>{repayInfo2 && repayInfo2.intrFeeTotAmt}元</span>
+													<span className={style.allMoney}>
+														¥
+														<span className={style.numberFont}>{repayInfo2 && repayInfo2.intrFeeTotAmt}</span>
+													</span>
 												</div>
 											</div>
 										)}
@@ -1228,20 +1229,16 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 							</ul>
 							<ul className={style.pannel}>
-								<li className={style.listItem}>
-									<label>收款信用卡</label>
-									<span className={style.listValue}>
-										{repayInfo && repayInfo.withdrawBankName ? repayInfo.withdrawBankName : ''}(
-										{repayInfo && repayInfo.withdrawBankLastNo ? repayInfo.withdrawBankLastNo : ''})
-									</span>
-								</li>
 								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
 									<label>还款银行卡</label>
 
 									{repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0 ? (
 										<span className={[style.listValue, style.hasArrow].join(' ')}>
 											{repayInfo && repayInfo.withholdBankName ? repayInfo.withholdBankName : ''}(
-											{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''})
+											<span className={style.numberFont}>
+												{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''}
+											</span>
+											)
 											<Icon type="right" className={style.icon} />
 										</span>
 									) : (
@@ -1250,6 +1247,16 @@ export default class confirm_agency_page extends PureComponent {
 											<Icon type="right" className={style.icon} />
 										</span>
 									)}
+								</li>
+								<li className={style.listItem}>
+									<label>收款信用卡</label>
+									<span className={style.listValue}>
+										{repayInfo && repayInfo.withdrawBankName ? repayInfo.withdrawBankName : ''}(
+										<span className={style.numberFont}>
+											{repayInfo && repayInfo.withdrawBankLastNo ? repayInfo.withdrawBankLastNo : ''}
+										</span>
+										)
+									</span>
 								</li>
 							</ul>
 
@@ -1280,7 +1287,7 @@ export default class confirm_agency_page extends PureComponent {
 									: 'default'
 							}
 						>
-							申请借款
+							签约借款
 						</ButtonCustom>
 						<span className={style.bottomTip}>当借款由持牌机构放款，年化综合息费率不超36%</span>
 					</div>
