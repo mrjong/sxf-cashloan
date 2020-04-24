@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-15 18:52:26
+ * @LastEditTime: 2020-04-22 18:50:59
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -13,7 +13,6 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { getFirstError, handleInputBlur, getDeviceType } from 'utils';
-import TabList from './components/TagList';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
 import { RepayPlanModal, ButtonCustom, ProtocolSmsModal, ProtocolRead, InsuranceModal } from 'components';
@@ -99,32 +98,18 @@ export default class confirm_agency_page extends PureComponent {
 			deratePrice: '',
 			isShowTipModal: false,
 			cardBillAmt: 0,
-			dateDiff: 0,
 			isShowModal: false,
 
 			repayInfo: {},
 			repayInfo2: {},
 			repaymentDate: '',
 			repaymentIndex: 0, // mpos取1（最后一个），只限返回两种期限的情况
-			lendersDate: '',
-			lendersIndex: 0,
+			lendersDate: {
+				value: '0'
+			},
 			goData: {},
-			defaultIndex: 0,
 			isNeedExamine: false,
 			repaymentDateList: [],
-			lendersDateList: [
-				{
-					name: '还款日前一天',
-					value: '1'
-				},
-				{
-					name: '立即放款',
-					value: '0',
-					style: {
-						width: '1.9rem'
-					}
-				}
-			],
 			isShowVIPModal: false,
 			contractData: [], // 合同和产品id数据
 			isShowSmsModal: false, //是否显示短信验证码弹窗
@@ -212,20 +197,6 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 
-	// 还款 Tag 点击事件
-	handleLendersTagClick = (data, type) => {
-		const cardBillAmt = this.props.form.getFieldValue('cardBillAmt');
-		this.setState(
-			{
-				lendersDate: data.value,
-				lendersIndex: data.index
-			},
-			() => {
-				type && cardBillAmt && this.handleClickConfirm();
-			}
-		);
-	};
-
 	// 按钮点击事件
 	_handleClick = (callback, e) => {
 		e && e.preventDefault && e.preventDefault();
@@ -239,7 +210,6 @@ export default class confirm_agency_page extends PureComponent {
 			cardBillAmt,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			insuranceModalChecked,
 			isJoinInsurancePlan,
@@ -252,7 +222,6 @@ export default class confirm_agency_page extends PureComponent {
 			repaymentDate,
 			lendersDate,
 			checkBox1,
-			lendersIndex,
 			insuranceModalChecked,
 			isJoinInsurancePlan,
 			insurancePlanText
@@ -358,12 +327,6 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.info('当前渠道暂不支持提现申请，请进入MPOS代偿');
 					return;
 				}
-				// const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
-				const diff = result.data.lastReapyDt;
-				let lendersDateListFormat = this.state.lendersDateList;
-				if (diff <= 4) {
-					lendersDateListFormat[0].disable = true;
-				}
 				// base64解密
 				if (result.data.contacts && result.data.contacts.length) {
 					// map 改变引用型数组,值类型数组不改变
@@ -395,22 +358,23 @@ export default class confirm_agency_page extends PureComponent {
 						cardBillAmt: `${result.data.prods[0].maxAmt}`
 					});
 				}
-				this.setState({
-					repayInfo: result.data,
-					repaymentDateList: result.data.prods.map((item) => ({
-						name: item.prdName,
-						value: item.prdId,
-						minAmt: item.minAmt,
-						maxAmt: item.maxAmt,
-						periodUnit: item.periodUnit,
-						periodCount: item.periodCount,
-						periodLth: item.periodLth
-					})),
-					dateDiff: diff,
-					lendersIndex: 1,
-					defaultIndex: 1,
-					lendersDateList: lendersDateListFormat
-				});
+				this.setState(
+					{
+						repayInfo: result.data,
+						repaymentDateList: result.data.prods.map((item) => ({
+							name: item.prdName,
+							value: item.prdId,
+							minAmt: item.minAmt,
+							maxAmt: item.maxAmt,
+							periodUnit: item.periodUnit,
+							periodCount: item.periodCount,
+							periodLth: item.periodLth
+						}))
+					},
+					() => {
+						this.handleClickConfirm();
+					}
+				);
 			} else {
 				this.props.toast.info(result.message);
 			}
@@ -580,7 +544,6 @@ export default class confirm_agency_page extends PureComponent {
 			repayInfo,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			insuranceModalChecked,
 			isJoinInsurancePlan,
@@ -595,7 +558,6 @@ export default class confirm_agency_page extends PureComponent {
 			repayInfo,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			isJoinInsurancePlan,
 			insuranceModalChecked,
@@ -622,7 +584,6 @@ export default class confirm_agency_page extends PureComponent {
 			cardBillAmt,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			insuranceModalChecked,
 			isJoinInsurancePlan,
@@ -634,7 +595,6 @@ export default class confirm_agency_page extends PureComponent {
 			repayInfo,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			insuranceModalChecked,
 			isJoinInsurancePlan,
@@ -947,7 +907,6 @@ export default class confirm_agency_page extends PureComponent {
 			cardBillAmt,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			isShowTipModal,
 			repayInfo2,
@@ -963,7 +922,6 @@ export default class confirm_agency_page extends PureComponent {
 			repayInfo,
 			repaymentDate,
 			lendersDate,
-			lendersIndex,
 			checkBox1,
 			isShowTipModal,
 			repayInfo2,
@@ -1042,9 +1000,6 @@ export default class confirm_agency_page extends PureComponent {
 			isShowTipModal,
 			repayInfo2,
 			repaymentDate,
-			lendersDateList,
-			defaultIndex,
-			lendersIndex,
 			isShowModal,
 			isShowSmsModal,
 			smsCode,
@@ -1151,7 +1106,7 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 							</ul>
 							<ul className={style.pannel}>
-								<li className={style.listItem}>
+								{/* <li className={style.listItem}>
 									<div>
 										<label>放款日期</label>
 									</div>
@@ -1165,7 +1120,7 @@ export default class confirm_agency_page extends PureComponent {
 											onClick={this.handleLendersTagClick}
 										/>
 									</div>
-								</li>
+								</li> */}
 								<li
 									className={style.listItem}
 									onClick={() => {
@@ -1230,7 +1185,11 @@ export default class confirm_agency_page extends PureComponent {
 														: [style.listValue, style.listValue3, style.hasArrow].join(' ')
 												}
 											>
-												{showInterestTotal && (
+												总计6期
+												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
+													<Icon type="right" className={style.icon} />
+												)}
+												{/* {showInterestTotal && (
 													<span>
 														<span className={style.moneyTit}>优惠后合计</span>
 														<span className={style.derateMoney}>
@@ -1241,19 +1200,28 @@ export default class confirm_agency_page extends PureComponent {
 												)}
 												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
 													<Icon type="right" className={style.icon} />
-												)}
+												)} */}
 											</span>
 										)) || <span className={style.listValue2}>暂无</span>}
 										{repayInfo2 && showInterestTotal && (
-											<div
-												className={
-													repayInfo2 && repayInfo2.perdUnit === 'D'
-														? style.allMoneyBox
-														: [style.allMoneyBox, style.hasArrow].join(' ')
-												}
-											>
-												<span className={style.moneyTit}>息费合计</span>
-												<span className={style.allMoney}>{repayInfo2 && repayInfo2.intrFeeTotAmt}元</span>
+											<div>
+												<div className={[style.listValue, style.listValue3].join(' ')}>
+													<span className={style.moneyTit}>优惠后合计</span>
+													<span className={style.derateMoney}>
+														{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+													</span>
+													元
+												</div>
+												<div
+													className={
+														repayInfo2 && repayInfo2.perdUnit === 'D'
+															? style.allMoneyBox
+															: [style.allMoneyBox, style.hasArrow].join(' ')
+													}
+												>
+													<span className={style.moneyTit}>息费合计</span>
+													<span className={style.allMoney}>{repayInfo2 && repayInfo2.intrFeeTotAmt}元</span>
+												</div>
 											</div>
 										)}
 									</div>
@@ -1343,7 +1311,6 @@ export default class confirm_agency_page extends PureComponent {
 								repayInfo,
 								repaymentDate,
 								lendersDate,
-								lendersIndex,
 								checkBox1,
 								isJoinInsurancePlan,
 								insurancePlanText

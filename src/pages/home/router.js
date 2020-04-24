@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-24 18:07:14
+ * @LastEditTime: 2020-04-23 10:59:35
  */
 export default [
 	{
@@ -151,5 +151,11 @@ export default [
 		zhName: 'fxpgjg',
 		title: '风险评估结果',
 		component: () => import('pages/home/insurance_result_page')
+	},
+	{
+		path: '/home/lend_confirm_page',
+		zhName: 'fkqr',
+		title: '放款确认',
+		component: () => import('pages/home/lend_confirm_page')
 	}
 ];
