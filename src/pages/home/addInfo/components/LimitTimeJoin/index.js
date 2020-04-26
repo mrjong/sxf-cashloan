@@ -83,10 +83,7 @@ export default class LimitTimeJoin extends React.PureComponent {
 		const { shuntNum } = this.props;
 		let tipText = null;
 		switch (shuntNum) {
-			case 3:
-				tipText = '借款直接还到信用卡，秒到账';
-				break;
-			case 4:
+			case 14:
 				tipText = '有账单的信用卡即可借款';
 				break;
 			default:
@@ -100,34 +97,27 @@ export default class LimitTimeJoin extends React.PureComponent {
 		const { shuntNum } = this.props;
 		let titleDom = null;
 		switch (shuntNum) {
-			case 8:
+			case 12:
+				titleDom = (
+					<div className={classNM.loan_cont2}>
+						<p className={classNM.card_loan_text2}>按时还款提额快</p>
+						<p className={classNM.card_loan_text2}>提前还款有部分优惠</p>
+					</div>
+				);
+				break;
+			case 13:
+				titleDom = (
+					<div className={classNM.loan_cont2}>
+						<p className={classNM.card_loan_text2}>凭有账单的信用卡</p>
+						<p className={classNM.card_loan_text2}>即可借款</p>
+					</div>
+				);
+				break;
+			case 14:
 				titleDom = (
 					<div className={classNM.loan_cont}>
 						<p className={classNM.card_loan_text}>借款高至(元)</p>
-						<p className={classNM.card_loan_amout}>{thousandFormatNum(100000)}</p>
-					</div>
-				);
-				break;
-			case 9:
-				titleDom = (
-					<div className={classNM.loan_cont2}>
-						<p className={classNM.card_loan_text2}>信用卡账单多少</p>
-						<p className={classNM.card_loan_text2}>申请借款就帮你还多少</p>
-					</div>
-				);
-				break;
-			case 10:
-				titleDom = (
-					<div className={classNM.loan_cont2}>
-						<p className={classNM.card_loan_text2}>额度低没关系</p>
-						<p className={classNM.card_loan_text2}>按时还款提额快</p>
-					</div>
-				);
-				break;
-			case 11:
-				titleDom = (
-					<div className={classNM.loan_cont3}>
-						<p className={classNM.card_loan_text3}>好信用=高额度+低利率</p>
+						<p className={classNM.card_loan_amout}>{thousandFormatNum(50000)}</p>
 					</div>
 				);
 				break;
@@ -144,69 +134,25 @@ export default class LimitTimeJoin extends React.PureComponent {
 	};
 
 	renderSubTit = () => {
-		const { shuntNum } = this.props;
-		let subTitleDom = null;
-		switch (shuntNum) {
-			case 1:
-				subTitleDom = (
-					<div className={classNM.text}>
-						<p className={classNM.textCont}>您被选为VIP用户，立即参与成功率高</p>
-					</div>
-				);
-				break;
-			default:
-				subTitleDom = (
-					<div className={classNM.text}>
-						限时参与 成功率高&nbsp;
-						<ClockS count={this.state.count} />
-						<span className="jg">:</span>
-						{this.state.millisecond < 9 ? <span className="mins">0</span> : <span className="mins">1</span>}
-						<span className="mins">{this.state.millisecond}</span>
-					</div>
-				);
-				break;
-		}
-		return subTitleDom;
+		return (
+			<div className={classNM.text}>
+				限时参与 成功率高&nbsp;
+				<ClockS count={this.state.count} />
+				<span className="jg">:</span>
+				{this.state.millisecond < 9 ? <span className="mins">0</span> : <span className="mins">1</span>}
+				<span className="mins">{this.state.millisecond}</span>
+			</div>
+		);
 	};
 
 	renderDesc = () => {
 		const { shuntNum } = this.props;
-		let descDom = null;
-		switch (shuntNum) {
-			case 5:
-				descDom = (
-					<div className={classNM.descWrap}>
-						敏感数据加密传输，且资金流转安全可靠
-						<i>{shuntNum}</i>
-					</div>
-				);
-				break;
-			case 6:
-				descDom = (
-					<div className={classNM.descWrap}>
-						随行付金融旗下借款还信用卡服务
-						<i>{shuntNum}</i>
-					</div>
-				);
-				break;
-			case 7:
-				descDom = (
-					<div className={classNM.descWrap}>
-						手头紧，分期慢慢还 &nbsp;&nbsp;&nbsp;&nbsp;手头宽，提前还款有部分优惠
-						<i>{shuntNum}</i>
-					</div>
-				);
-				break;
-			default:
-				descDom = (
-					<div className={classNM.descWrap}>
-						随行付金融，正规持牌机构，专业帮你还信用卡账单
-						<i className={shuntNum > 9 ? classNM.doubleNum : null}>{shuntNum}</i>
-					</div>
-				);
-				break;
-		}
-		return descDom;
+		return (
+			<div className={classNM.descWrap}>
+				敏感数据加密传输，且资金流转安全可靠
+				<i className={shuntNum > 9 ? classNM.doubleNum : null}>{shuntNum}</i>
+			</div>
+		);
 	};
 
 	render() {

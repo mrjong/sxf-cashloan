@@ -39,7 +39,7 @@ export default class MsgTip extends React.PureComponent {
 						</div>
 					)}
 				</div>
-				<p className={style.home_header_sub}>借钱还信用卡</p>
+				<p className={style.home_header_sub}>随行付旗下信贷产品</p>
 			</section>
 		);
 	}
