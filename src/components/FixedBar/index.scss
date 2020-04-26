@@ -1,0 +1,25 @@
+.fix_bar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 750px;
+	height: 60px;
+	display: flex;
+	background: #f6f9fd;
+	box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1);
+	font-size: 24px;
+	color: $colorListText;
+	justify-content: center;
+	align-items: center;
+	a {
+		color: $colorListText;
+	}
+	a:hover {
+		text-decoration: none;
+	}
+	span {
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		color: #ffbc00;
+	}
+}

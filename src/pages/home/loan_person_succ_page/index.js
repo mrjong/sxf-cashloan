@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-24 16:31:12
+ * @LastEditTime: 2020-04-26 11:22:18
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -18,6 +18,7 @@ import qs from 'qs';
 import { store } from 'utils/store';
 import CouponModal from 'components/CouponModal';
 import { isShowCouponModal, closeCouponModal } from '../loan_apply_succ_page/common';
+import { FixedBar } from 'components';
 
 import { person_appointment_info, person_appointment_sub } from 'fetch/api.js';
 
@@ -38,16 +39,26 @@ export default class remit_ing_page extends PureComponent {
 				day: '今日'
 			},
 			isPlus: false,
-			couponModalShow: false
+			couponModalShow: false,
+			isAppOpen: false
 		};
 	}
 
 	componentWillMount() {
+		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		isShowCouponModal(this);
+		const that = this;
+		if (queryData && queryData.isPlus) {
+			this.setState({
+				isAppOpen: true,
+				isPlus: queryData.isPlus
+			});
+		} else {
+			document.addEventListener('message', that.checkAppOpen);
+		}
 	}
 
 	componentDidMount() {
-		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(manualAudit.pageview, {
 			s_medium: queryData.apptoken ? 'APP' : 'H5'
 		});
@@ -60,6 +71,18 @@ export default class remit_ing_page extends PureComponent {
 			});
 		} else {
 			this.querySubscribeInfo();
+		}
+	}
+
+	componentWillUnmount() {
+		const that = this;
+		if (queryData && queryData.isPlus) {
+			this.setState({
+				isAppOpen: false,
+				isPlus: false
+			});
+		} else {
+			document.removeEventListener('message', that.checkAppOpen);
 		}
 	}
 
@@ -220,6 +243,16 @@ export default class remit_ing_page extends PureComponent {
 		}
 	};
 
+	// 检查是否是app webview打开
+	checkAppOpen = (e) => {
+		const that = this;
+		const passData = JSON.parse(e.data);
+		that.setState({
+			isAppOpen: passData && passData.isAppOpen,
+			isPlus: passData && passData.isPlus
+		});
+	};
+
 	render() {
 		const {
 			showRulesPannel,
@@ -231,7 +264,9 @@ export default class remit_ing_page extends PureComponent {
 			scheduledTime,
 			daySelectedItem,
 			timeSelectedItem,
-			couponModalShow
+			couponModalShow,
+			isAppOpen,
+			isPlus
 		} = this.state;
 
 		const dayList = [
@@ -254,7 +289,7 @@ export default class remit_ing_page extends PureComponent {
 				</div>
 				<div className={style.topBox}>
 					<div className={style.title}>需要人工审核，耐心等待</div>
-					<div className={style.subtitle}>至少会拨打3次，最长不超过3个工作日</div>
+					<div className={style.subtitle}>至少会拨打3次，请保持电话通畅</div>
 				</div>
 				<div className={style.step_box_new}>
 					<div className={[style.step_item, style.active].join(' ')}>
@@ -268,19 +303,22 @@ export default class remit_ing_page extends PureComponent {
 						<div className={[style.title].join(' ')}>
 							<div className={style.step_circle} />
 							{!applyDate ? (
-								<span
-									className={style.order_button}
-									onClick={() => {
-										this.setState({
-											visibleModal: true
-										});
-										buriedPointEvent(manualAudit.order_button, {
-											s_medium: queryData.apptoken ? 'APP' : 'H5'
-										});
-									}}
-								>
-									请预约人工审核时间
-								</span>
+								<p>
+									<span className={style.step_desc}>人工审核</span>
+									<span
+										className={style.order_button}
+										onClick={() => {
+											this.setState({
+												visibleModal: true
+											});
+											buriedPointEvent(manualAudit.order_button, {
+												s_medium: queryData.apptoken ? 'APP' : 'H5'
+											});
+										}}
+									>
+										点击并预约时间
+									</span>
+								</p>
 							) : (
 								<p style={{ display: 'flex', alignItems: 'center' }}>
 									<span className={[style.order_button, style.order_active_button].join(' ')}>
@@ -399,10 +437,10 @@ export default class remit_ing_page extends PureComponent {
 
 				<CopyToClipboard text={this.state.copyText} onCopy={() => this.copyOperation()}>
 					<div className={style.submitBtnWrap}>
-						<ZButton className={style.submitBtn}>关注“还到”公众号</ZButton>
+						<ZButton className={style.attentionBtn}>关注“还到”公众号</ZButton>
 					</div>
 				</CopyToClipboard>
-				<div className={style.desctext}>关注还到公众号 实时查看审核进度</div>
+				<div className={style.descText}>关注还到公众号 实时查看审核进度</div>
 				{/* 首贷首期用户-还款券测试 */}
 				<CouponModal
 					visible={couponModalShow}
@@ -412,6 +450,8 @@ export default class remit_ing_page extends PureComponent {
 					}}
 					couponData={queryData && queryData.couponInfo}
 				/>
+				{/* 吸底条 */}
+				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />
 			</div>
 		);
 	}

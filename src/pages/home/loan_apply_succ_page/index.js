@@ -14,6 +14,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity, home } from 'utils/analytinsType';
 import CouponModal from 'components/CouponModal';
 import { isShowCouponModal, closeCouponModal } from './common';
+import { FixedBar } from 'components';
 let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
@@ -34,6 +35,9 @@ export default class remit_ing_page extends PureComponent {
 	componentWillMount() {
 		isShowCouponModal(this);
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData && queryData.prodType && queryData.prodType === '21') {
+			this.props.setTitle('快速打款中');
+		}
 		this.setState({
 			queryData
 		});
@@ -122,27 +126,6 @@ export default class remit_ing_page extends PureComponent {
 				</div>
 				<div className={style.topBox}>
 					<div className={style.title}>{queryData.title}</div>
-					<div className={style.subtitle}>
-						{queryData.desc}
-						<a
-							href={isAppOpen ? 'javascript:;' : 'tel:400-088-7626'}
-							onClick={
-								isAppOpen
-									? () => {
-											setTimeout(() => {
-												if (isPlus) {
-													window.ReactNativeWebView.postMessage('tel:400-088-7626');
-												} else {
-													window.postMessage('tel:400-088-7626', () => {});
-												}
-											}, 0);
-									  }
-									: () => {}
-							}
-						>
-							联系客服
-						</a>
-					</div>
 				</div>
 				<div className={style.step_box_new}>
 					<div className={[style.step_item, style.active].join(' ')}>
@@ -157,7 +140,7 @@ export default class remit_ing_page extends PureComponent {
 							<div className={style.step_circle} />
 							{queryData && queryData.prodType && queryData.prodType === '21'
 								? '借款打入银行卡'
-								: '借款打入信用卡'}
+								: '自动放款信用卡'}
 						</div>
 						<div className={style.line} />
 					</div>
@@ -212,7 +195,6 @@ export default class remit_ing_page extends PureComponent {
 					}}
 					couponData={queryData && queryData.couponInfo}
 				/>
-
 				<ZButton
 					onClick={() => {
 						buriedPointEvent(home.gotIt);
@@ -232,7 +214,9 @@ export default class remit_ing_page extends PureComponent {
 				>
 					我知道了
 				</ZButton>
-				<p className={style.bottom_tip}>关注“还到”公众号查看授信进度</p>
+				<p className={style.bottom_tip}>关注还到公众号 实时查看审核进度</p>
+				{/* 吸底条 */}
+				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />
 			</div>
 		);
 	}

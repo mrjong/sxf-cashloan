@@ -3,17 +3,17 @@
 	.title {
 		font-size: 46px;
 		font-family: 'PingFangSC-Medium';
-		font-weight: 500;
+		font-weight: 600;
 		text-align: center;
 	}
 	.subtitle {
-		font-size: 26px;
+		font-size: 28px;
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		text-align: center;
-		color: #868e9e;
+		color: #121B33;
 		a {
-			color: #3A7AE5;
+			color: #3a7ae5;
 			font-weight: bold;
 		}
 	}
@@ -21,11 +21,11 @@
 
 .topImg {
 	min-height: 1px;
-	margin-top: -80px;
+	margin-top: -40px;
 }
 .step_box_new {
 	position: relative;
-	margin: 70px 70px;
+	margin: 70px 70px 20px 70px;
 	.content {
 		padding: 45px 0;
 		.item_box {
@@ -37,7 +37,7 @@
 
 	.step_item {
 		min-height: 120px;
-		padding: 0 15px 0 40px;
+		padding: 0 15px 0 50px;
 		position: relative;
 		vertical-align: top;
 		flex: 1;
@@ -47,33 +47,36 @@
 		.title {
 			font-size: 30px;
 			line-height: 1.4;
-			color: #868e9e;
+			color: #b2b6bf;
 			position: relative;
 			// font-weight: 600;
 			.step_circle {
 				background-image: url(./img/circle_not.png);
 				background-repeat: no-repeat;
-				background-size: 14px 14px;
-				width: 14px;
+				background-size: 100%;
+				width: 8PX; // 写成大写,否则会有小数问题,造成不是正常的圆
 				position: absolute;
-				left: -30px;
-				background-color: #f7f8fa;
+				left: -40px;
+				// background-color: #f7f8fa;
 				z-index: 100;
-				top: 20px;
-				height: 14px;
+				top: 16px;
+				height: 8PX; // 写成大写,否则会有小数问题,造成不是正常的圆
 			}
 			&.blue {
-				color: #3A7AE5;
+				color: #3a7ae5;
 			}
+		}
+		&:last-child .step_circle {
+			top: 12px;
 		}
 		&.active .title {
 			font-size: 30px;
 			color: #121c32;
 			// font-weight: 600;
 			.step_circle {
-				top: 15px;
+				top: 12px;
 				z-index: 100;
-				background-color: #f7f8fa;
+				// background-color: #f7f8fa;
 				background-image: url(./img/circle.png);
 			}
 		}
@@ -82,17 +85,15 @@
 			left: 14px;
 			top: -10px;
 			height: 100%;
-			width: 1px;
+			// width: 1px;
 			padding: 30px 0 4px;
 			&::after {
 				content: '';
 				display: inline-block;
-				background: #ddd;
 				position: relative;
 				left: 2px;
 				height: 100%;
-				width: 2.5px;
-				background-color: #e0e2e6;
+				border-left: 2.5px dashed #cdcfd9;
 			}
 		}
 		.desc {
@@ -102,38 +103,42 @@
 			font-weight: 400;
 		}
 	}
+	.step_desc {
+		margin-right: 20px;
+	}
 	.order_button {
 		display: inline-block;
-		width: 350px;
+		padding: 0 20px;
 		height: 50px;
 		line-height: 52px;
 		text-align: center;
 		background-color: #fff;
-		border-radius: 28px;
-		border: 2px solid #3A7AE5;
-		color: #3A7AE5;
+		border-radius: 25px;
+		border: 1px solid #ffbc00;
+		color: #ffbc00;
 		font-size: 30px;
 		font-weight: 400;
 		margin-right: 10px;
 	}
 	.order_active_button {
-		color: #ff6666;
-		border: 2px solid #ff6666;
+		width: 350px;
+		color: #f66;
+		border: 2px solid #f66;
+		padding: 0;
 	}
 }
 .submitBtnWrap {
-  padding: 0 70px;
+	padding: 0 40px;
 }
 .submitBtn {
 	font-family: 'PingFangSC-Medium';
 	font-weight: 500;
 }
-.desctext {
-	color: #868e9e;
-	font-size: 26px;
-	font-weight: 400;
+.descText {
+	color: #121B33;
+	font-size: 24px;
 	text-align: center;
-  margin-top: 20px;
+	margin-top: 37px;
 }
 
 .title_wrap {
@@ -146,8 +151,8 @@
 	// top: 20px;
 	display: inline-block;
 	width: 28px;
-  height: 28px;
-  margin-left: 20px;
+	height: 28px;
+	margin-left: 20px;
 }
 
 .modalTitle {
@@ -156,9 +161,9 @@
 	text-align: left;
 }
 .modalTitleSub {
-  font-size: 24px;
-  margin-top: 10px;
-  color: #868E9E;
+	font-size: 24px;
+	margin-top: 10px;
+	color: #868e9e;
 	text-align: left;
 }
 
@@ -168,7 +173,7 @@
 	text-align: left;
 	margin-bottom: 64px;
 	span {
-		color: #3A7AE5;
+		color: #3a7ae5;
 	}
 }
 
@@ -186,11 +191,11 @@
 }
 
 .opts_button_day {
-  min-height: 70px;
-  min-width: 230px;
+	min-height: 70px;
+	min-width: 230px;
 }
 .opts_button_day + .opts_button_day {
-  margin-left: 35px;
+	margin-left: 35px;
 }
 
 .opts_button {
@@ -198,12 +203,12 @@
 	min-width: 210px;
 }
 .opts_button + .opts_button {
-  margin-left: 14px;
+	margin-left: 14px;
 }
 
 .opts_button_active {
-	border: 1px solid #3A7AE5;
-	color: #3A7AE5;
+	border: 1px solid #3a7ae5;
+	color: #3a7ae5;
 	background-color: #f0f6ff;
 	font-weight: bold;
 }
@@ -230,6 +235,10 @@
 .submitBtn {
 	margin-top: 60px;
 	width: 634px;
+}
+
+.attentionBtn {
+
 }
 
 .submitBtnDisabled {

@@ -1,9 +1,9 @@
 .topBox {
-	margin-top: -60px;
+	margin-top: -90px;
 	.title {
 		font-size: 46px;
 		font-family: 'PingFangSC-Medium';
-		font-weight: 500;
+		font-weight: 600;
 		text-align: center;
 	}
 	.subtitle {
@@ -11,9 +11,9 @@
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		text-align: center;
-		color: #B2B6BF;
+		color: #b2b6bf;
 		a {
-			color: #3A7AE5;
+			color: #3a7ae5;
 		}
 	}
 }
@@ -47,7 +47,7 @@
 .successTime {
 	font-family: 'PingFangSC-Medium';
 	font-weight: 500;
-	color: #B2B6BF;
+	color: #b2b6bf;
 	position: relative;
 	top: -310px;
 	font-size: 32px;
@@ -63,7 +63,7 @@
 .failTime {
 	font-family: 'PingFangSC-Medium';
 	font-weight: 500;
-	color: #B2B6BF;
+	color: #b2b6bf;
 	position: relative;
 	top: -430px;
 	font-size: 32px;
@@ -84,26 +84,24 @@
 	margin: 0 auto;
 }
 .submitBtn {
-	width: 634px;
-	font-family: 'PingFangSC-Medium';
-  font-weight: 500;
-  margin-left: 58px;
+	width: 670px;
+	margin-left: 40px;
 }
 .bottom_tip {
-  font-size: 26px;
-  color: #868E9E;
-  text-align: center;
-  margin-top: 20px;
+	color: #121b33;
+	font-size: 24px;
+	text-align: center;
+	margin-top: 37px;
 }
 .topImg {
 	min-height: 1px;
 	// position: absolute;
-	margin-top: -80px;
+	margin-top: -40px;
 	top: 0;
 }
 .step_box_new {
 	position: relative;
-	margin: 80px 100px 120px;
+	margin: 124px 110px 140px;
 	.content {
 		padding: 45px 0;
 		.item_box {
@@ -114,8 +112,8 @@
 	}
 
 	.step_item {
-		min-height: 100px;
-		padding: 0 40px;
+		min-height: 120px;
+		padding: 0 15px 0 60px;
 		position: relative;
 		vertical-align: top;
 		flex: 1;
@@ -125,33 +123,35 @@
 		.title {
 			font-size: 30px;
 			line-height: 1.4;
-			color: #B2B6BF;
+			color: #b2b6bf;
 			position: relative;
 			// font-weight: 600;
 			.step_circle {
 				background-image: url(./img/circle_not.png);
 				background-repeat: no-repeat;
-				background-size: 14px 14px;
-				width: 14px;
+				background-size: 100%;
+				width: 8PX; // 写成大写,否则会有小数问题,造成不是正常的圆
 				position: absolute;
-				left: -30px;
-				background-color: #f7f8fa;
+				left: -50px;
+				// background-color: #f7f8fa;
 				z-index: 100;
-				top: 20px;
-				height: 14px;
+				top: 16px;
+				height: 8PX; // 写成大写,否则会有小数问题,造成不是正常的圆
 			}
 			&.blue {
-				color: #3A7AE5;
+				color: #3a7ae5;
 			}
 		}
+		&:last-child .step_circle {
+			top: 12px;
+		}
 		&.active .title {
-			font-size: 30px;
 			color: #121c32;
 			// font-weight: 600;
 			.step_circle {
-				top: 15px;
+				top: 12px;
 				z-index: 100;
-				background-color: #f7f8fa;
+				// background-color: #f7f8fa;
 				background-image: url(./img/circle.png);
 			}
 		}
@@ -160,23 +160,19 @@
 			left: 14px;
 			top: -10px;
 			height: 100%;
-			width: 1px;
+			// width: 1px;
 			padding: 30px 0 4px;
 			&::after {
 				content: '';
 				display: inline-block;
-				background: #ddd;
-				// -webkit-transition: background .3s;
-				// transition: background .3s;
 				position: relative;
 				left: 2px;
 				height: 100%;
-				width: 2.5px;
-				background-color: #e0e2e6;
+				border-left: 2.5px dashed #cdcfd9;
 			}
 		}
 		.desc {
-			color: #B2B6BF;
+			color: #b2b6bf;
 			font-size: 22px;
 			font-family: 'PingFangSC-Regular';
 			font-weight: 400;

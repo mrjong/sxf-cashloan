@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-23 10:59:35
+ * @LastEditTime: 2020-04-26 11:41:05
  */
 export default [
 	{
@@ -65,7 +65,7 @@ export default [
 	{
 		path: '/home/loan_apply_succ_page',
 		zhName: 'ksdkz',
-		title: '快速打款中',
+		title: '放款审核中',
 		component: () => import('pages/home/loan_apply_succ_page')
 	},
 	{
@@ -83,7 +83,7 @@ export default [
 	{
 		path: '/home/loan_person_succ_page',
 		zhName: 'ddrgsh',
-		title: '等待人工审核',
+		title: '放款审核中',
 		component: () => import('pages/home/loan_person_succ_page')
 	},
 	{
@@ -95,7 +95,7 @@ export default [
 	{
 		path: '/home/loan_robot_succ_page',
 		zhName: 'ddjqrsh',
-		title: '等待人工审核',
+		title: '放款审核中',
 		component: () => import('pages/home/loan_robot_succ_page')
 	},
 	{

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 18:05:01
+ * @LastEditTime: 2020-04-24 18:01:48
  */
 import FooterBar from './FooterBar';
 import LoadingView from './LoadingView';
@@ -31,6 +31,7 @@ import IframeProtocol from './IframeProtocol';
 import InsuranceModal from './InsuranceModal';
 import TipConfirmModal from './TipConfirmModal';
 import ProtocolRead from './ProtocolRead';
+import FixedBar from './FixedBar';
 
 export {
 	FooterBar,
@@ -61,5 +62,6 @@ export {
 	IframeProtocol,
 	InsuranceModal,
 	TipConfirmModal,
-	ProtocolRead
+	ProtocolRead,
+	FixedBar
 };
