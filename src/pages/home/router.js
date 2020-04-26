@@ -7,7 +7,7 @@ export default [
 	{
 		path: '/home/home',
 		zhName: 'jqhxyk',
-		title: '随行付旗下信贷产品',
+		title: '借钱还信用卡',
 		footerHide: false,
 		arrowHide: 'empty',
 		component: () => import('pages/home/home_page')
