@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-26 11:22:18
+ * @LastEditTime: 2020-04-26 13:07:03
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -306,7 +306,7 @@ export default class remit_ing_page extends PureComponent {
 								<p>
 									<span className={style.step_desc}>人工审核</span>
 									<span
-										className={style.order_button}
+										className={[style.order_button, style.weightStyle].join(' ')}
 										onClick={() => {
 											this.setState({
 												visibleModal: true
@@ -437,7 +437,7 @@ export default class remit_ing_page extends PureComponent {
 
 				<CopyToClipboard text={this.state.copyText} onCopy={() => this.copyOperation()}>
 					<div className={style.submitBtnWrap}>
-						<ZButton className={style.attentionBtn}>关注“还到”公众号</ZButton>
+						<ZButton>关注“还到”公众号</ZButton>
 					</div>
 				</CopyToClipboard>
 				<div className={style.descText}>关注还到公众号 实时查看审核进度</div>

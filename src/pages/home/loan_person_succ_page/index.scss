@@ -11,7 +11,7 @@
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		text-align: center;
-		color: #121B33;
+		color: #121b33;
 		a {
 			color: #3a7ae5;
 			font-weight: bold;
@@ -126,6 +126,10 @@
 		border: 2px solid #f66;
 		padding: 0;
 	}
+	.weightStyle {
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+	}
 }
 .submitBtnWrap {
 	padding: 0 40px;
@@ -135,7 +139,7 @@
 	font-weight: 500;
 }
 .descText {
-	color: #121B33;
+	color: #121b33;
 	font-size: 24px;
 	text-align: center;
 	margin-top: 37px;
@@ -235,10 +239,6 @@
 .submitBtn {
 	margin-top: 60px;
 	width: 634px;
-}
-
-.attentionBtn {
-
 }
 
 .submitBtnDisabled {
