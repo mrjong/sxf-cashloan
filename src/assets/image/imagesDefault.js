@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 11:23:28
+ * @LastEditTime: 2020-04-26 13:20:21
  */
 export default {
 	/* 先按照不同功能划分 */
@@ -36,7 +36,8 @@ export default {
 		intro_ico2: require('./adorn/intro_ico2.png'),
 		intro_ico3: require('./adorn/intro_ico3.png'),
 		lock_black: require('./adorn/lock_black.png'),
-		lable_ico: require('./adorn/lable_ico.png')
+		lable_ico: require('./adorn/lable_ico.png'),
+		waiting_ico: require('./adorn/waiting_ico.png')
 	},
 
 	// 银行图标 单独放这

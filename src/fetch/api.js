@@ -180,6 +180,9 @@ export const loan_loanPlan = '/loan/loanPlan';
 export const loan_contractPreview = '/loan/contractPreviewH5';
 // 借款提交
 export const loan_loanSub = '/loan/loanSub';
+// 借款提交
+export const loan_queryLoanAdvanceSts = '/loan/queryLoanAdvanceSts';
+
 /**
  * @description: // 优惠券相关
  * @param {type}

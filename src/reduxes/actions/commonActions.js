@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 15:22:01
+ * @LastEditTime: 2020-04-26 17:26:17
  */
 import { createAction } from 'redux-actions';
 import {
@@ -22,7 +22,8 @@ import {
 	COMMON_BIND_DEPOSIT_INFO,
 	COMMON_PROTOCOL_SELECT_FLAG,
 	COMMON_IFRAME_PROTOCOL_SHOW,
-	COMMON_PRE_LOAN_DATA
+	COMMON_PRE_LOAN_DATA,
+	COMMON_CREDICT_INFO
 } from '../constants/commonConstants';
 
 /**
@@ -174,3 +175,10 @@ export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (
  * @return:
  */
 export const setPreLoanDataAction = createAction(COMMON_PRE_LOAN_DATA, (info) => ({ preLoanData: info }));
+
+/**
+ * @description: 用户额度的相关信息
+ * @param {type}
+ * @return:
+ */
+export const setCredictInfoAction = createAction(COMMON_CREDICT_INFO, (info) => ({ credictInfo: info }));

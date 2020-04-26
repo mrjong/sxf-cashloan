@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-26 11:41:05
+ * @LastEditTime: 2020-04-26 13:46:48
  */
 export default [
 	{
@@ -157,5 +157,11 @@ export default [
 		zhName: 'fkqr',
 		title: '放款确认',
 		component: () => import('pages/home/lend_confirm_page')
+	},
+	{
+		path: '/home/loan_applying_page',
+		zhName: 'fksqtjz',
+		title: '放款申请提交中',
+		component: () => import('pages/home/loan_applying_page')
 	}
 ];

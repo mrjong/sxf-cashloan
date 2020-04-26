@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 18:08:18
+ * @LastEditTime: 2020-04-26 17:28:28
  */
 import { handleActions } from 'redux-actions';
 
@@ -23,7 +23,8 @@ import {
 	COMMON_BIND_DEPOSIT_INFO,
 	COMMON_PROTOCOL_SELECT_FLAG,
 	COMMON_IFRAME_PROTOCOL_SHOW,
-	COMMON_PRE_LOAN_DATA
+	COMMON_PRE_LOAN_DATA,
+	COMMON_CREDICT_INFO
 } from '../constants/commonConstants';
 /**
  * @description: commonState 初始化
@@ -49,7 +50,8 @@ const initState = {
 	msgCount: 0,
 	bindDepositInfo: {},
 	iframeProtocolData: {},
-	preLoanData: {}
+	preLoanData: {},
+	credictInfo: {}
 };
 export default handleActions(
 	{
@@ -71,6 +73,7 @@ export default handleActions(
 		[COMMON_PROTOCOL_SELECT_FLAG]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_IFRAME_PROTOCOL_SHOW]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_PRE_LOAN_DATA]: (state, action) => ({ ...state, ...action.payload }),
+		[COMMON_CREDICT_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_CLEAR_STATE]: () => ({})
 	},
 	initState

@@ -1,0 +1,171 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.topImg {
+	min-height: 1px;
+	// position: absolute;
+	margin-top: -40px;
+	top: 0;
+}
+.step_box_new {
+	position: relative;
+	margin: 124px 110px 140px;
+	.content {
+		padding: 45px 0;
+		.item_box {
+			background: #fff;
+			border-radius: 6px;
+			margin-top: 20px;
+		}
+	}
+
+	.step_item {
+		min-height: 120px;
+		padding: 0 15px 0 60px;
+		position: relative;
+		vertical-align: top;
+		flex: 1;
+		&:last-child .line {
+			display: none;
+		}
+		.title {
+			font-size: 30px;
+			line-height: 1.4;
+			color: #b2b6bf;
+			position: relative;
+			// font-weight: 600;
+			.step_circle {
+				background-image: url(./img/circle_not.png);
+				background-repeat: no-repeat;
+				background-size: 100%;
+				width: 8PX; // 写成大写,否则会有小数问题,造成不是正常的圆
+				position: absolute;
+				left: -50px;
+				// background-color: #f7f8fa;
+				z-index: 100;
+				top: 16px;
+				height: 8PX; // 写成大写,否则会有小数问题,造成不是正常的圆
+			}
+			&.blue {
+				color: #3a7ae5;
+			}
+		}
+		&:last-child .step_circle {
+			top: 12px;
+		}
+		&.active .title {
+			color: #121c32;
+			// font-weight: 600;
+			.step_circle {
+				top: 12px;
+				z-index: 100;
+				// background-color: #f7f8fa;
+				background-image: url(./img/circle.png);
+			}
+		}
+		.line {
+			position: absolute;
+			left: 14px;
+			top: -10px;
+			height: 100%;
+			// width: 1px;
+			padding: 30px 0 4px;
+			&::after {
+				content: '';
+				display: inline-block;
+				position: relative;
+				left: 2px;
+				height: 100%;
+				border-left: 2.5px dashed #cdcfd9;
+			}
+		}
+	}
+}
+
+.percentNum {
+	position: absolute;
+	top: -40px;
+	width: 55px;
+	height: 30px;
+	background: #56bc44;
+	text-align: center;
+	color: #fff;
+	font-family: 'DINMitAlt';
+	font-size: 24px;
+	line-height: 40px;
+	font-weight: bold;
+	border-radius: 5px;
+	transition: all 0.3s linear;
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: -8px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-right: 8px solid transparent;
+		border-left: 8px solid transparent;
+		border-top: 8px solid #56bc44;
+	}
+}
+
+.percentDesc {
+	position: absolute;
+	font-size: 22px;
+	color: $colorSubTitle;
+	line-height: 30px;
+	right: 0;
+	bottom: -36px;
+}
+
+.result_wrap {
+  padding-top: 50px;
+  img {
+    vertical-align: top;
+  }
+	.contentWrap {
+		text-align: center;
+	}
+	.statusIco {
+		width: 150px;
+	}
+	.statusDesc {
+		font-size: 34px;
+		font-family: 'PingFangSC-Medium,PingFang SC';
+		font-weight: 500;
+		color: $colorBlack;
+		line-height: 48px;
+    margin-top: 30px;
+    margin-bottom: 162px;
+  }
+  .statusDesc2 {
+    margin-bottom: 124px;
+  }
+	.successDesc {
+		position: absolute;
+		font-size: 24px;
+		color: #56bc44;
+		line-height: 33px;
+		right: 0;
+		bottom: -43px;
+	}
+	.submitBtn {
+		width: 670px;
+		margin-left: 40px;
+		margin-top: 329px;
+	}
+}
+
+:global {
+	.loan_applying_progress {
+		position: relative;
+		margin: 0 70px;
+		.am-progress-outer {
+			border-radius: 5px;
+		}
+		.am-progress-bar {
+			border: 5px solid #56bc44;
+			border-radius: 5px;
+			background-color: #56bc44;
+			box-sizing: border-box;
+		}
+	}
+}

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-24 14:50:56
+ * @LastEditTime: 2020-04-26 18:37:01
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -229,6 +229,7 @@ export default class add_contact_page extends PureComponent {
 	// 跳转页面
 	jumpRouter = (res) => {
 		const couponInfo = res && res.popupInfo ? res.popupInfo : '';
+		// 增加标识
 		if (res.loanType === 'M') {
 			this.props.history.push({
 				pathname: '/home/loan_person_succ_page',
@@ -238,6 +239,12 @@ export default class add_contact_page extends PureComponent {
 			this.props.history.replace({
 				pathname: '/home/loan_robot_succ_page',
 				search: `?telNo=${res.rmk}&couponInfo=${JSON.stringify(couponInfo)}`
+			});
+		} else if (res.loanType === 'ING') {
+      // 预签约审核中
+			this.props.history.replace({
+				pathname: '/home/loan_applying_page',
+				search: `?advanceNum=${res.loanAdvanceNo}`
 			});
 		} else {
 			// 预约放款的标识
