@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-14 09:52:03
+ * @LastEditTime: 2020-04-27 10:51:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -283,10 +283,17 @@ export default class home_page extends PureComponent {
 			case 'LN0004': // 代还资格审核中
 				Toast.hide();
 				buriedPointEvent(home.machineAudit);
-				this.props.history.push({
-					pathname: '/home/credit_apply_succ_page',
-					search: `?autId=${homeData.dcDataInfo.autId}`
-				});
+				// switchTag 预签约开关—0:关闭（老流程），1:开启（新流程）
+				if (homeData.dcDataInfo && homeData.dcDataInfo.switchTag === '1') {
+					this.props.history.push({
+						pathname: '/home/confirm_agency'
+					});
+				} else {
+					this.props.history.push({
+						pathname: '/home/credit_apply_succ_page',
+						search: `?autId=${homeData.dcDataInfo.autId}`
+					});
+				}
 				break;
 			case 'LN0005': // 暂无代还资格
 				Toast.hide();
@@ -549,11 +556,22 @@ export default class home_page extends PureComponent {
 				disPlayData = [];
 				break;
 			case 'LN0004': // 代还资格审核中
-				basicCardData.title = homeData.dcDataInfo.bankName;
-				basicCardData.titleSub = `(${cardCode})`;
-				basicCardData.statusTitle = '预计最快90秒完成审核';
-				basicCardData.statusTitleSub = '高峰期可能5分钟左右';
-				basicCardData.btnText = '查看进度';
+				// switchTag 预签约开关—0:关闭（老流程），1:开启（新流程）
+				if (homeData.dcDataInfo && homeData.dcDataInfo.switchTag === '1') {
+					basicCardData.loanText = '可借额度(元)';
+					basicCardData.loanAmont =
+						homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt
+							? parseFloat(homeData.dcDataInfo.maxApplAmt, 10)
+							: '';
+					basicCardData.btnText = '立即签约借款';
+				} else {
+					basicCardData.title = homeData.dcDataInfo.bankName;
+					basicCardData.titleSub = `(${cardCode})`;
+					basicCardData.statusTitle = '预计最快90秒完成审核';
+					basicCardData.statusTitleSub = '高峰期可能5分钟左右';
+					basicCardData.btnText = '查看进度';
+				}
+
 				basicCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(basicCardData);
 				this.setPlusCardData(plusCardData);
@@ -593,16 +611,22 @@ export default class home_page extends PureComponent {
 				disPlayData.push(plusCardData);
 				break;
 			case 'LN0007': // 放款中
-				basicCardData.title = bankNm;
-				basicCardData.titleSub = `(${cardCode})`;
-				basicCardData.titleSubIsBankNo = true;
-				basicCardData.statusTitle =
-					dcDataInfo.repayType === '0'
-						? '预计60秒完成放款'
-						: `${dayjs(dcDataInfo.repayDt).format('YYYY年MM月DD日')}完成放款`;
-				basicCardData.statusTitleSub = dcDataInfo.repayType === '0' ? '最长不超过2个工作日' : '请耐心等待...';
-				basicCardData.bottomTip = `申请借款金额:${dcDataInfo.billAmt}元`;
-				basicCardData.bottomTip2 = `申请期数:${dcDataInfo.perdCnt}期`;
+				// basicCardData.title = bankNm;
+				// basicCardData.titleSub = `(${cardCode})`;
+				// basicCardData.titleSubIsBankNo = true;
+				// basicCardData.statusTitle =
+				// 	dcDataInfo.repayType === '0'
+				// 		? '预计60秒完成放款'
+				// 		: `${dayjs(dcDataInfo.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				// basicCardData.statusTitleSub = dcDataInfo.repayType === '0' ? '最长不超过2个工作日' : '请耐心等待...';
+				// basicCardData.bottomTip = `申请借款金额:${dcDataInfo.billAmt}元`;
+				// basicCardData.bottomTip2 = `申请期数:${dcDataInfo.perdCnt}期`;
+				// basicCardData.btnText = '查看进度';
+
+				basicCardData.statusTitle = '预计60秒完成';
+				basicCardData.statusTitleSub = '最长不超过3天';
+				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;
+				basicCardData.bottomTip2 = `申请期数：${dcDataInfo.perdCnt}期`;
 				basicCardData.btnText = '查看进度';
 				basicCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(basicCardData);
@@ -625,9 +649,9 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0011': // 人审中
 				basicCardData.statusTitle = '需要人工审核，耐心等待';
-				basicCardData.statusTitleSub = '010-86355XXX的审核电话';
-				basicCardData.bottomTip = `申请借款金额:${dcDataInfo.billAmt}元`;
-				basicCardData.bottomTip2 = `申请期数:${dcDataInfo.perdCnt}期`;
+				basicCardData.statusTitleSub = '高峰期可能5分钟左右';
+				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;
+				basicCardData.bottomTip2 = `申请期数：${dcDataInfo.perdCnt}期`;
 				basicCardData.btnText = '查看进度';
 				basicCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(basicCardData);
@@ -636,7 +660,20 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0012': // 机器人审核中
 				basicCardData.statusTitle = '需要人工审核，耐心等待';
-				basicCardData.statusTitleSub = '请保持电话畅通';
+				// basicCardData.statusTitleSub = '请保持电话畅通';
+				basicCardData.statusTitleSub = `审核电话：${homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt}`;
+				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;
+				basicCardData.bottomTip2 = `申请期数：${dcDataInfo.perdCnt}期`;
+				basicCardData.btnText = '查看进度';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0013': // 预签约放款申请提交中
+				basicCardData.statusTitle = '放款申请提交中';
+				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;
+				basicCardData.bottomTip2 = `申请期数：${dcDataInfo.perdCnt}期`;
 				basicCardData.btnText = '查看进度';
 				basicCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(basicCardData);

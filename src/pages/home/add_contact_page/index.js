@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-26 18:37:01
+ * @LastEditTime: 2020-04-27 09:34:09
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -241,7 +241,7 @@ export default class add_contact_page extends PureComponent {
 				search: `?telNo=${res.rmk}&couponInfo=${JSON.stringify(couponInfo)}`
 			});
 		} else if (res.loanType === 'ING') {
-      // 预签约审核中
+			// 预签约审核中
 			this.props.history.replace({
 				pathname: '/home/loan_applying_page',
 				search: `?advanceNum=${res.loanAdvanceNo}`
