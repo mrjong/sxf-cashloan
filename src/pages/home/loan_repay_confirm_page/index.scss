@@ -1,14 +1,13 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .page_inner_wrap {
-	padding: 50px 30px 170px;
+	padding: 0px 30px 170px;
 }
 .pageWrapper {
 	// padding-bottom: 200px;
 	input::placeholder {
-		font-size: 32px;
-		padding-top: 16px;
+		font-size: 40px;
 		// color: #999;
-		// line-height: 1.4;
+		line-height: 80px;
 		// font-size: 0.32rem;
 	}
 }
@@ -70,18 +69,11 @@
   padding: 30px 30px 0;
 	margin-top: 20px;
 
-	.top {
-		position: relative;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		height: 100px;
-		margin-top: 20px;
-		// &::after {
-		// 	@include setBottomLine(#f0f1f5);
-		// 	left: -30px;
-		// 	width: calc(100% + 60px);
-		// }
+	&.top {
+    width: 100%;
+    margin-top: 50px;
+    border-radius: 0;
+    padding: 0.4rem 0.3rem .5rem;
 	}
 
 	.billMoney {
@@ -148,7 +140,7 @@
 		.dw {
 			font-size: 40px;
 			position: absolute;
-			top: 20px;
+			top: 30px;
 			left: 0;
 			z-index: 1;
 		}
@@ -408,7 +400,7 @@
 		.am-list-item .am-input-control input {
 			font-family: 'DINMitAlt';
 			color: #394259;
-			font-size: 50px;
+			font-size: 80px;
 			line-height: 1.4;
 			padding-left: 40px;
 		}
@@ -538,9 +530,6 @@
 }
 
 .buttonWrap {
-	position: fixed;
-	z-index: 9;
-	bottom: 0;
 	padding: 30px 40px;
 	width: 100%;
 	box-sizing: border-box;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-03 14:10:20
+ * @LastEditTime: 2020-04-26 19:08:26
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -58,7 +58,7 @@ export const getTimeStr = (time) => {
  * @return:
  */
 export const updateBillInf = ({ $props, type = '', usrIndexInfo }) => {
-	const { cardBillSts, cardBinSupport, persionCheck, cardBillAmt, minApplAmt, credCardCount } = usrIndexInfo;
+	const { cardBillSts, cardBinSupport, persionCheck, credCardCount } = usrIndexInfo;
 	if (persionCheck === '00') {
 		Toast.info('非本人信用卡，请代偿其他信用卡', 2, () => {
 			$props.history.push(credCardCount > 1 ? '/mine/credit_list_page' : '/others/mpos_testB_download_page');
@@ -104,11 +104,6 @@ export const updateBillInf = ({ $props, type = '', usrIndexInfo }) => {
 					}
 				);
 			}
-		});
-		return true;
-	} else if (cardBillAmt < minApplAmt) {
-		Toast.info(`账单低于最低可借金额：${minApplAmt}元，请代偿其他信用卡`, 2, () => {
-			$props.history.push(credCardCount > 1 ? '/mine/credit_list_page' : '/others/mpos_testB_download_page');
 		});
 		return true;
 	}
