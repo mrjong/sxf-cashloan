@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-14 09:52:03
+ * @LastEditTime: 2020-04-27 14:49:23
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -614,8 +614,8 @@ export default class home_page extends PureComponent {
 				basicCardData.title = bankNm;
 				basicCardData.titleSub = `(${cardCode})`;
 				basicCardData.titleSubIsBankNo = true;
-				basicCardData.loanText = '信用卡账单金额(元)';
-				basicCardData.loanAmont = this.getCardBillAmtData();
+				basicCardData.loanText = '账单金额(元)';
+				basicCardData.loanAmont = dcDataInfo.billAmt;
 				basicCardData.bottomTip = `还款日：${cardBillDtData}`;
 				basicCardData.btnText = '查看代偿账单';
 				basicCardData.handleClick = this.handleSmartClick;
