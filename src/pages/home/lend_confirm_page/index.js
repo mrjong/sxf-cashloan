@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-23 18:35:26
+ * @LastEditTime: 2020-04-27 19:20:29
  */
 import React, { PureComponent } from 'react';
 import { Icon } from 'antd-mobile';
@@ -28,11 +28,7 @@ import { thousandFormatNum } from 'utils/common';
 @connect(
 	(state) => ({
 		userInfo: state.staticState.userInfo,
-		withholdCardData: state.commonState.withholdCardData,
-		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
-		couponData: state.commonState.couponData,
-		cacheContact: state.staticState.cacheContact,
-		saveContact: state.commonState.saveContact,
+		credictInfo: state.commonState.credictInfo,
 		authId: state.staticState.authId
 	}),
 	{
@@ -51,7 +47,24 @@ export default class lend_confirm_page extends PureComponent {
 
 	componentWillUnmount() {}
 
+	// 查看详情
+	checkDetail = () => {
+    // 跳转标识存入redux
+		this.props.history.push({
+			pathname: '/home/confirm_agency',
+			search: '?routerType=loanConfirm'
+		});
+	};
+
+	// 保留额度稍后借款
+	savaCredict = () => {
+		this.props.history.push('/home/home');
+	};
+
+	// 立即放款至信用卡
+
 	render() {
+		const { credictInfo = {} } = this.props;
 		return (
 			<div className={style.lend_confirm}>
 				<div className={style.lend_confirm_cont}>
@@ -61,12 +74,12 @@ export default class lend_confirm_page extends PureComponent {
 						本次借款审批成功金额
 					</h2>
 					<p className={style.realAmt}>
-						¥<span>{thousandFormatNum(6000)}</span>
+						¥<span>{thousandFormatNum(credictInfo && credictInfo.credAmt)}</span>
 					</p>
 					<p className={style.applyAmt}>
-						本次申请金额(元)：<span>{thousandFormatNum(16000)}</span>
+						本次申请金额(元)：<span>{thousandFormatNum(credictInfo && credictInfo.applyAmt)}</span>
 					</p>
-					<div className={style.detailWrap}>
+					<div className={style.detailWrap} onClick={this.checkDetail}>
 						<span>借款详情</span>
 						<div className={style.detailRight}>
 							<span>查看</span>
@@ -86,7 +99,7 @@ export default class lend_confirm_page extends PureComponent {
 						outlinecolor="#FFBC00"
 						color="#FFBC00"
 						className={style.saveBtn}
-						// onClick={}
+						onClick={this.savaCredict}
 					>
 						保留额度稍后借款
 					</ButtonCustom>

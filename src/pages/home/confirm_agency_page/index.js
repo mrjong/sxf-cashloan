@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-24 14:12:09
+ * @LastEditTime: 2020-04-27 19:19:58
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -179,14 +179,25 @@ export default class confirm_agency_page extends PureComponent {
 							}
 						});
 					} else {
-						this.props.history.push('/home/home');
+
 					}
 				})
 				.catch(() => {
 					this.props.history.push('/home/home');
 				});
 		}
-	};
+  };
+
+  jumpRouter = () => {
+    // 返回到首页还是放款确认页面
+    let { navigation } = this.props;
+    const { routerType } = navigation.state.params;
+    if (routerType && routerType === 'loanConfirm') {
+      this.props.history.goBack();
+    } else {
+      this.props.history.push('/home/home');
+    }
+  };
 
 	// 数据回显
 	recoveryPageData = (confirmAgencyInfo) => {

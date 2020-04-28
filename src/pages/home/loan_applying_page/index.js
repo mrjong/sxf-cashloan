@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-26 18:33:57
+ * @LastEditTime: 2020-04-27 15:14:51
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -16,6 +16,7 @@ import Images from 'assets/image';
 import { connect } from 'react-redux';
 import { setCredictInfoAction } from 'reduxes/actions/commonActions';
 import { loan_queryLoanAdvanceSts } from 'fetch/api';
+import { store } from 'utils/store';
 
 let queryData = {};
 let timer = null;
@@ -60,7 +61,13 @@ export default class loan_applying_page extends PureComponent {
 				status: 'timeout'
 			});
 		} else {
-			this.startStep(150);
+			if (queryData.apptoken) {
+				//如果从APP过来
+				store.setToken(queryData.apptoken);
+				this.startStep(150);
+			} else {
+				this.startStep(150);
+			}
 		}
 	}
 	componentWillUnmount() {
@@ -94,9 +101,10 @@ export default class loan_applying_page extends PureComponent {
 				loanAdvanceNo: (queryData && queryData.advanceNum) || ''
 			})
 			.then((res) => {
+				// loanType 订单类型,A:自动放款，M:人工审核，H:机器审核，ING:授信审核中，MIM:金额不匹配
 				if (res && res.code === '000000' && res.data !== null) {
-					// 00：处理中；01：处理成功；02：处理失败
-					if (res.data && res.data.res === '01') {
+					// loanType
+					if (res.data && res.data.loanType !== 'ING') {
 						this.clearCountDown();
 						// 返回结果
 						this.setState(
@@ -106,7 +114,7 @@ export default class loan_applying_page extends PureComponent {
 							() => {
 								// 注意测试与app交互
 								if (isAppOpen) {
-									this.sendMsgToApp(res.data);
+									this.sendMsgToApp(res.data, 'resultPage');
 								} else {
 									setTimeout(() => {
 										this.jumpResultPage(res.data);
@@ -115,9 +123,38 @@ export default class loan_applying_page extends PureComponent {
 							}
 						);
 					}
+				} else if (res && res.code === '100020') {
+					// LOAN_CRED_ERROR("100020", "授信拒绝"),
+					this.clearCountDown();
+					// 返回结果
+					this.setState(
+						{
+							status: 'success'
+						},
+						() => {
+							// 注意测试与app交互
+							if (isAppOpen) {
+								this.sendMsgToApp(res.data, 'refusePage');
+							} else {
+								setTimeout(() => {
+									this.props.history.push('/home/home');
+								}, 2000);
+							}
+						}
+					);
+				} else if (res && res.code === '100021') {
+					// LOAN_ADV_ERROR("100021", "预签约订单提交失败"),
+					this.clearCountDown();
+					this.props.toast.info(res.message, 3, () => {
+						this.props.history.push('/home/home');
+					});
 				} else {
+					this.clearCountDown();
 					this.props.toast.info(res.message);
 				}
+			})
+			.catch(() => {
+				this.clearCountDown();
 			});
 	};
 
@@ -137,21 +174,21 @@ export default class loan_applying_page extends PureComponent {
 	};
 
 	// 与app交互
-	sendMsgToApp = (msg) => {
+	sendMsgToApp = (msg, desc) => {
 		const { isPlus } = this.state;
 		setTimeout(() => {
 			if (isPlus) {
 				window.ReactNativeWebView.postMessage(
 					JSON.stringify({
 						resMsg: msg,
-						resDesc: 'resultPage'
+						resDesc: desc
 					})
 				);
 			} else {
 				window.postMessage(
 					JSON.stringify({
 						resMsg: msg,
-						resDesc: 'resultPage'
+						resDesc: desc
 					}),
 					() => {}
 				);
@@ -161,33 +198,30 @@ export default class loan_applying_page extends PureComponent {
 
 	// 跳转到对应状态页面
 	jumpResultPage = (res) => {
-		switch (res.code) {
-			case '00':
+		// loanType 订单类型,A:自动放款，M:人工审核，H:机器审核，ING:授信审核中，MIM:金额不匹配
+		switch (res.loanType) {
+			case 'A':
 				// 正常放款中
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
 					search: `?title=预计60秒完成放款`
 				});
 				break;
-			case '01':
+			case 'M':
 				// 人审
 				this.props.history.push({
 					pathname: '/home/loan_person_succ_page',
 					search: `?creadNo=${res.credNo}`
 				});
 				break;
-			case '02':
+			case 'H':
 				// 机审
 				this.props.history.push({
 					pathname: '/home/loan_robot_succ_page',
 					search: `?telNo=${res.telNo}`
 				});
 				break;
-			case '03':
-				// 被拒
-				this.props.history.push('/home/home');
-				break;
-			case '04':
+			case 'MIM':
 				// 额度不满足
 				this.props.setCredictInfoAction(res);
 				this.props.history.push({
@@ -212,7 +246,7 @@ export default class loan_applying_page extends PureComponent {
 				() => {
 					// todo 掉用接口查询
 					if (percent % 20 === 0) {
-						// this.checkStatus();
+						this.checkStatus();
 					}
 					if (percent > 100) {
 						this.clearCountDown();

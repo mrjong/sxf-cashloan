@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-26 14:34:12
+ * @LastEditTime: 2020-04-27 14:39:33
  */
 /*eslint-disable */
 import React from 'react';
@@ -80,8 +80,8 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/home/loan_robot_succ_page', // 因为app直接跳转到h5的webview，所以放开
 			'/common/middle_page',
 			'/mine/help_center_page',
-      '/mine/question_category_page',
-      '/home/loan_applying_page',
+			'/mine/question_category_page',
+			'/home/loan_applying_page'
 		];
 		if (isWXOpen()) {
 			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
@@ -192,9 +192,11 @@ const interceptRouteArr = [
 	'/home/loan_fenqi',
 	'/home/addInfo',
 	'/common/crash_page',
-  '/others/mpos_testB_download_page',
+	'/others/mpos_testB_download_page',
 	'/home/pre_add_contact_page',
-  '/home/pre_loan',
+	'/home/pre_loan',
+	'/home/loan_applying_page',
+	'/home/lend_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState

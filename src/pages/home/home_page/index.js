@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-27 10:51:03
+ * @LastEditTime: 2020-04-27 15:19:15
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -359,6 +359,21 @@ export default class home_page extends PureComponent {
 					search: `?telNo=${homeData.dcDataInfo.telNo}`
 				});
 				break;
+			case 'LN0013': // 预签约放款申请提交中
+				Toast.hide();
+				// var showType =
+				// 	homeData.dcDataInfo &&
+				// 	homeData.dcDataInfo.loanAdvanceTime &&
+				// 	new Date().getTime() - new Date(homeData.dcDataInfo.loanAdvanceTime).getTime() > 90 * 1000
+				// 		? 'timeout'
+				// 		: 'applying';
+				this.props.history.push({
+					pathname: '/home/loan_applying_page',
+					// search: `?advanceNum=${homeData.dcDataInfo.loanAdvanceNo}&showType=${showType}`
+					search: `?advanceNum=${homeData.dcDataInfo.loanAdvanceNo}&showType=applying`
+				});
+
+				break;
 			case 'CN0003':
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				getNextStatus({
@@ -560,8 +575,8 @@ export default class home_page extends PureComponent {
 				if (homeData.dcDataInfo && homeData.dcDataInfo.switchTag === '1') {
 					basicCardData.loanText = '可借额度(元)';
 					basicCardData.loanAmont =
-						homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt
-							? parseFloat(homeData.dcDataInfo.maxApplAmt, 10)
+						homeData.dcDataInfo && homeData.dcDataInfo.applyAmt
+							? parseFloat(homeData.dcDataInfo.applyAmt, 10)
 							: '';
 					basicCardData.btnText = '立即签约借款';
 				} else {
