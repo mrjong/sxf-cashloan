@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-27 15:14:51
+ * @LastEditTime: 2020-04-28 15:03:40
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -146,7 +146,12 @@ export default class loan_applying_page extends PureComponent {
 					// LOAN_ADV_ERROR("100021", "预签约订单提交失败"),
 					this.clearCountDown();
 					this.props.toast.info(res.message, 3, () => {
-						this.props.history.push('/home/home');
+						// 注意测试与app交互
+						if (isAppOpen) {
+							this.sendMsgToApp(res.data, 'submitFail');
+						} else {
+							this.props.history.push('/home/home');
+						}
 					});
 				} else {
 					this.clearCountDown();

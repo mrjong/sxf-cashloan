@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-13 16:13:46
+ * @LastEditTime: 2020-04-28 16:24:18
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -81,6 +81,7 @@ const home = {
 	warningTips: `${prefix}_HOME_WARNING_TIPS`, // 签约借款-警示-继续申请借款-提示
 	warningProtoClick: `${prefix}_HOME_WARNING_PROTOCOL_CLICK`, // 签约借款-警示-勾选协议
 	loanBtnClick: `${prefix}_HOME_BORROWING_SUBMIT_BTN_CLICK`, // 签约借款-点击签约借款按钮 (只有代偿)
+	loanApplyingClick: `${prefix}_HOME_LOAN_APPLYING_CLICK`, // 点击-首页-查看进度 放款申请提交中状态下首页卡片按钮点击
 
 	dialogInformation: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION`,
 	dialogInformation_wait: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CONTINUE`,

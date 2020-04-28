@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-28 11:01:44
+ * @LastEditTime: 2020-04-28 16:25:19
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -361,16 +361,17 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0013': // 预签约放款申请提交中
 				Toast.hide();
-				// var showType =
-				// 	homeData.dcDataInfo &&
-				// 	homeData.dcDataInfo.loanAdvanceTime &&
-				// 	new Date().getTime() - new Date(homeData.dcDataInfo.loanAdvanceTime).getTime() > 90 * 1000
-				// 		? 'timeout'
-				// 		: 'applying';
+				buriedPointEvent(home.loanApplyingClick);
+				var showType =
+					homeData.dcDataInfo &&
+					homeData.dcDataInfo.loanAdvanceTime &&
+					new Date().getTime() - new Date(homeData.dcDataInfo.loanAdvanceTime).getTime() > 90 * 1000
+						? 'timeout'
+						: 'applying';
 				this.props.history.push({
 					pathname: '/home/loan_applying_page',
-					// search: `?advanceNum=${homeData.dcDataInfo.loanAdvanceNo}&showType=${showType}`
-					search: `?advanceNum=${homeData.dcDataInfo.loanAdvanceNo}&showType=applying`
+					search: `?advanceNum=${homeData.dcDataInfo.loanAdvanceNo}&showType=${showType}`
+					// search: `?advanceNum=${homeData.dcDataInfo.loanAdvanceNo}&showType=applying`
 				});
 
 				break;
@@ -597,7 +598,7 @@ export default class home_page extends PureComponent {
 					homeData.dcDataInfo.netAppyDate &&
 					differDays <= 60 &&
 					`${dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')}可再次申请`;
-				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
+				basicCardData.statusTitle = '非常抱歉，本次审核未通过';
 				basicCardData.statusTitleSub = '去试试其他借款平台';
 				basicCardData.btnText = '去试试';
 				basicCardData.handleClick = this.handleSmartClick;
@@ -626,18 +627,6 @@ export default class home_page extends PureComponent {
 				disPlayData.push(plusCardData);
 				break;
 			case 'LN0007': // 放款中
-				// basicCardData.title = bankNm;
-				// basicCardData.titleSub = `(${cardCode})`;
-				// basicCardData.titleSubIsBankNo = true;
-				// basicCardData.statusTitle =
-				// 	dcDataInfo.repayType === '0'
-				// 		? '预计60秒完成放款'
-				// 		: `${dayjs(dcDataInfo.repayDt).format('YYYY年MM月DD日')}完成放款`;
-				// basicCardData.statusTitleSub = dcDataInfo.repayType === '0' ? '最长不超过2个工作日' : '请耐心等待...';
-				// basicCardData.bottomTip = `申请借款金额:${dcDataInfo.billAmt}元`;
-				// basicCardData.bottomTip2 = `申请期数:${dcDataInfo.perdCnt}期`;
-				// basicCardData.btnText = '查看进度';
-
 				basicCardData.statusTitle = '预计60秒完成';
 				basicCardData.statusTitleSub = '最长不超过3天';
 				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;
@@ -674,7 +663,7 @@ export default class home_page extends PureComponent {
 				disPlayData.push(plusCardData);
 				break;
 			case 'LN0012': // 机器人审核中
-				basicCardData.statusTitle = '需要人工审核，耐心等待';
+				basicCardData.statusTitle = '需要电话审核，耐心等待';
 				// basicCardData.statusTitleSub = '请保持电话畅通';
 				basicCardData.statusTitleSub = `审核电话：${homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt}`;
 				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;

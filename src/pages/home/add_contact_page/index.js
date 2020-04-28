@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-27 09:34:09
+ * @LastEditTime: 2020-04-28 15:04:33
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -14,7 +14,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { connect } from 'react-redux';
 import { setCacheContactAction } from 'reduxes/actions/staticActions';
-import { setSaveContactAction } from 'reduxes/actions/commonActions';
+import { setSaveContactAction, setCredictInfoAction } from 'reduxes/actions/commonActions';
 import { StepTitle } from 'components';
 import { Modal, Progress } from 'antd-mobile';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
@@ -38,7 +38,8 @@ let queryData = {};
 	}),
 	{
 		setCacheContactAction,
-		setSaveContactAction
+		setSaveContactAction,
+		setCredictInfoAction
 	}
 )
 export default class add_contact_page extends PureComponent {
@@ -201,7 +202,15 @@ export default class add_contact_page extends PureComponent {
 								is_success: false,
 								fail_cause: result.message
 							});
-							this.props.toast.info(result.message);
+							if (result && (result.code === '100021' || result.code === '100020')) {
+								// LOAN_CRED_ERROR("100020", "授信拒绝"),
+								// LOAN_ADV_ERROR("100021", "预签约订单提交失败"),
+								this.props.toast.info(result.message, 3, () => {
+									this.props.history.push('/home/home');
+								});
+							} else {
+								this.props.toast.info(result.message);
+							}
 						}
 					}
 				);
@@ -246,7 +255,7 @@ export default class add_contact_page extends PureComponent {
 				pathname: '/home/loan_applying_page',
 				search: `?advanceNum=${res.loanAdvanceNo}`
 			});
-		} else {
+		} else if (res.loanType === 'A') {
 			// 预约放款的标识
 			let title =
 				res.repayType === '1'
@@ -256,6 +265,12 @@ export default class add_contact_page extends PureComponent {
 			this.props.history.push({
 				pathname: '/home/loan_apply_succ_page',
 				search: `?title=${title}&desc=${desc}&couponInfo=${JSON.stringify(couponInfo)}`
+			});
+		} else if (res.loanType === 'MIM') {
+			// 额度不满足
+			this.props.setCredictInfoAction(res);
+			this.props.history.push({
+				pathname: '/home/lend_confirm_page'
 			});
 		}
 	};

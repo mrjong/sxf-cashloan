@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-28 10:55:12
+ * @LastEditTime: 2020-04-28 13:24:25
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -130,9 +130,9 @@ export default class confirm_agency_page extends PureComponent {
 
 	componentWillMount() {
 		this.props.toast.loading('加载中...', 10);
-		const { withholdCardData, confirmAgencyInfo } = this.props;
+		const { withholdCardData, confirmAgencyInfo, routerType } = this.props;
 		this.checkBtnAble();
-		if (confirmAgencyInfo) {
+		if (confirmAgencyInfo && !(routerType && routerType === 'lendConfirm')) {
 			if (withholdCardData && JSON.stringify(withholdCardData) !== '{}') {
 				// 如果存在 bankInfo 并且弹框缓存数据存在 则更新弹框缓存的数据
 				confirmAgencyInfo.repayInfo.withholdBankName = withholdCardData.bankName;
@@ -193,7 +193,8 @@ export default class confirm_agency_page extends PureComponent {
 		// 返回到首页还是放款确认页面
 		let { routerType } = this.props;
 		if (routerType && routerType === 'lendConfirm') {
-			this.props.history.goBack();
+			// this.props.history.goBack();
+			this.props.history.push('/home/lend_confirm_page');
 		} else {
 			this.props.history.push('/home/home');
 		}
