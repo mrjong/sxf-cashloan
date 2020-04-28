@@ -2,7 +2,7 @@
 .noselect {
 	color: $colorInputPlaceholder;
 	font-size: 28px;
-  font-family: 'PingFangSC-Regular';
+	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
 	position: relative;
 	line-height: 1.4;
@@ -15,12 +15,13 @@
 		vertical-align: middle;
 		position: absolute;
 		right: -40px;
-  }
-  span {
-    display: inline-block;
-    margin-top: 2px;
-  }
+	}
+	span {
+		display: inline-block;
+		margin-top: 2px;
+	}
 }
 .selectText {
-	color: #121c32;
+	color: #394259;
+	font-weight: 700;
 }

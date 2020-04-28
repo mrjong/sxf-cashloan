@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-27 15:39:36
+ * @LastEditTime: 2020-04-27 11:04:02
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -18,15 +18,11 @@ import Image from 'assets/image';
 import { activeConfigSts } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import { TimeoutPayModal, SelectList, ButtonCustom, FixedTopTip } from 'components';
+import { SelectList, ButtonCustom, FixedTopTip } from 'components';
 import {
 	loanMoneyRiskBury,
-	maxApplAmtRiskBury,
-	minApplAmtRiskBury,
 	isShowCreditModalInRiskBury,
 	isShowCreditModalOutRiskBury,
-	freeServiceInRiskBury,
-	freeServiceOutRiskBury,
 	moneyCreditCardConfirmBtnRiskBury
 } from './riskBuryconfig';
 
@@ -194,8 +190,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	buttonDisabled = () => {
-		const { selectedLoanDate = {} } = this.state;
-		if (!this.props.form.getFieldValue('loanMoney') || !selectedLoanDate.prodCnt) {
+		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
+		const { bankName } = usrIndexInfo;
+		if (!this.props.form.getFieldValue('loanMoney') || !selectedLoanDate.prodCnt || !bankName) {
 			return true;
 		}
 		return false;
@@ -205,7 +202,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		sxfburiedPointEvent(moneyCreditCardConfirmBtnRiskBury.key);
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
 		const { selectedLoanDate = {}, usrIndexInfo = {} } = this.state;
-		const { minApplAmt, maxApplAmt } = usrIndexInfo;
+		const { minApplAmt, maxApplAmt, bankName } = usrIndexInfo;
 		let repayMoney = this.props.form.getFieldValue('loanMoney');
 
 		if (
@@ -236,6 +233,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 		if (!selectedLoanDate.prodCnt) {
 			this.props.toast.info('请选择借款期限');
+			return;
+		}
+		if (!bankName) {
+			Toast.info('请添加收款银行卡');
 			return;
 		}
 		const params = {
@@ -417,11 +418,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}
 	};
 	render() {
-		const { usrIndexInfo = {}, selectedLoanDate, perdRateList, showTimeoutPayModal } = this.state;
-		const { bankNo, bankName, minApplAmt, maxApplAmt, lastNo } = usrIndexInfo;
+		const { usrIndexInfo = {}, selectedLoanDate, perdRateList } = this.state;
+		const { bankName, lastNo } = usrIndexInfo;
 
 		const { getFieldProps } = this.props.form;
-		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 
 		// let cardBillAmtData = '';
 		// if (cardBillSts === '02' || cardBillSts === '00') {
@@ -443,134 +443,54 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
 				<FixedTopTip />
+				<div className={[style.bankCard, style.top, style.heightMoney, 'modal_l_r2'].join(' ')}>
+					<div className={style.inputBox}>
+						<div className={style.dw}>￥</div>
+						<InputItem
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: loanMoneyRiskBury.key,
+								actContain: loanMoneyRiskBury.actContain
+							})}
+							maxLength={15}
+							{...getFieldProps('loanMoney', {
+								rules: [{ required: true, message: '请输入还款金额' }]
+							})}
+							type="number"
+							placeholder={placeholderText}
+							ref={(el) => (this.inputRef = el)}
+							onBlur={(v) => {
+								this.calcLoanMoney(v);
+							}}
+							onFocus={(v) => {
+								this.setState({
+									repayType: tagList[0],
+									activeTag: 0,
+									fullMinAmt: ''
+								});
+								if (
+									updateBillInf({
+										$props: this.props,
+										usrIndexInfo: this.state.usrIndexInfo,
+										type: 'LoanRepayConfirm'
+									})
+								) {
+									return;
+								}
+								this.props.form.setFieldsValue({
+									loanMoney: v ? v : ''
+								});
+							}}
+						/>
+						<i
+							className={style.edit_icon}
+							onClick={() => {
+								this.inputRef.focus();
+							}}
+						/>
+					</div>
+				</div>
 				<div className={[style.page_inner_wrap].join(' ')}>
-					<div className={style.bankCard}>
-						<div className={style.titleBg}>收款信用卡</div>
-						{usrIndexInfo && usrIndexInfo.credCardCount > 0 ? (
-							<div
-								className={style.cardNumBox}
-								onClick={() => {
-									this.repayForOtherBank();
-								}}
-							>
-								<span>更换信用卡</span>
-								<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
-							</div>
-						) : null}
-						<div className={style.top}>
-							<div className={style.bankBox}>
-								<span className={['bank_ico', iconClass, `${style.bankLogo}`].join(' ')} />
-								<span className={style.name}>{!bankName ? '****' : bankName}</span>
-								<span className={style.lastNo}>({!lastNo ? '****' : lastNo.slice(-4)})</span>
-							</div>
-						</div>
-						{/* <div className={style.center}>
-							<strong className={style.billMoney}>
-								{(isNaN(cardBillAmtData) && <span style={{ fontSize: '.6rem' }}>{cardBillAmtData}</span>) ||
-									cardBillAmtData}
-							</strong>
-							<div className={style.billInfo}>
-								<div className={style.item}>
-									<p className={`${style.name} ${style.moneyTit}`}>账单金额(元)</p>
-								</div>
-								<div className={style.item}>
-									<span className={style.name}>还款日：{usrIndexInfo.cardRepayDt || '----/--/--'}</span>
-								</div>
-							</div>
-						</div> */}
-					</div>
-
-					<div className={[style.bankCard, style.heightMoney, 'modal_l_r2'].join(' ')}>
-						<div>
-							<div className={style.titleBg}>借多少钱</div>
-						</div>
-						<div className={style.inputBox}>
-							<div className={style.dw}>￥</div>
-							<InputItem
-								data-sxf-props={JSON.stringify({
-									type: 'input',
-									name: loanMoneyRiskBury.key,
-									actContain: loanMoneyRiskBury.actContain
-								})}
-								maxLength={15}
-								{...getFieldProps('loanMoney', {
-									rules: [{ required: true, message: '请输入还款金额' }]
-								})}
-								type="number"
-								placeholder={placeholderText}
-								ref={(el) => (this.inputRef = el)}
-								onBlur={(v) => {
-									this.calcLoanMoney(v);
-								}}
-								onFocus={(v) => {
-									this.setState({
-										repayType: tagList[0],
-										activeTag: 0,
-										fullMinAmt: ''
-									});
-									if (
-										updateBillInf({
-											$props: this.props,
-											usrIndexInfo: this.state.usrIndexInfo,
-											type: 'LoanRepayConfirm'
-										})
-									) {
-										return;
-									}
-									this.props.form.setFieldsValue({
-										loanMoney: v ? v : ''
-									});
-								}}
-							/>
-							<i
-								className={style.edit_icon}
-								onClick={() => {
-									this.inputRef.focus();
-								}}
-							/>
-						</div>
-						<div className={style.repayTypeBox}>
-							<div
-								className={[style.item, style.item1].join(' ')}
-								onClick={() => {
-									this.toggleTag(2, 'click');
-								}}
-								data-sxf-props={JSON.stringify({
-									type: 'btn',
-									name: maxApplAmtRiskBury.key,
-									actContain: []
-								})}
-							>
-								<div>
-									<span className={style.title}>借全额 ¥</span>
-									<span className={style.money}>
-										{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '-.--'}
-									</span>
-								</div>
-								<div className={style.desc}>一键结清账单，释放卡额度</div>
-							</div>
-							<div
-								className={[style.item, style.item2].join(' ')}
-								data-sxf-props={JSON.stringify({
-									type: 'btn',
-									name: minApplAmtRiskBury.key,
-									actContain: []
-								})}
-								onClick={() => {
-									this.toggleTag(1, 'click');
-								}}
-							>
-								<div>
-									<span className={style.title}>借最低 ¥</span>
-									<span className={style.money}>
-										{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) || '-.--'}
-									</span>
-								</div>
-								<div className={style.desc}>信用卡免逾期，还款无压力</div>
-							</div>
-						</div>
-					</div>
-
 					<div className={[style.bankCard, style.heightSelect].join(' ')}>
 						<div>
 							<div className={[style.titleBg, style.titleBgLong].join(' ')}>借多久</div>
@@ -620,7 +540,28 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</List.Item>
 						</div>
 					</div>
-					<div
+
+					<div className={[style.bankCard, style.heightSelect].join(' ')}>
+						<div>
+							<div className={[style.titleBg, style.titleBgLong].join(' ')}>收款银行卡</div>
+						</div>
+						<div className={style.border_bottom}>
+							<List.Item
+								onClick={() => {
+									this.repayForOtherBank();
+								}}
+								extra={
+									<SelectList
+										selectText={bankName ? `${bankName}(${lastNo})` : ''}
+										defaultText={'添加信用卡'}
+									/>
+								}
+							>
+								&nbsp;
+							</List.Item>
+						</div>
+					</div>
+					{/* <div
 						onClick={() => {
 							sxfburiedPointEvent(freeServiceInRiskBury.key);
 							this.setState({
@@ -634,11 +575,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<i />
 						</div>
 						<div className={style.desc}>50元免息券</div>
-					</div>
+					</div> */}
 				</div>
 				<div className={style.buttonWrap}>
 					<ButtonCustom type={this.buttonDisabled() ? 'default' : 'yellow'} onClick={this.handleSubmit}>
-						提交申请
+						提交资料
 					</ButtonCustom>
 				</div>
 
@@ -697,15 +638,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 					</div>
 				</Modal>
-				<TimeoutPayModal
-					visible={showTimeoutPayModal}
-					closeModal={() => {
-						sxfburiedPointEvent(freeServiceOutRiskBury.key);
-						this.setState({
-							showTimeoutPayModal: false
-						});
-					}}
-				/>
 			</div>
 		);
 	}

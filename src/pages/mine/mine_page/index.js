@@ -190,7 +190,7 @@ export default class mine_page extends PureComponent {
 								Hi,
 								{telNoHid || '欢迎使用还到'}
 							</p>
-							<p className={styles.bannerHaaderTitleSub}>借钱还信用卡</p>
+							<p className={styles.bannerHaaderTitleSub}>随行付旗下信贷产品</p>
 						</div>
 						<div className={styles.bannerHaaderBtn} onClick={this.goPage}>
 							{telNoHid ? '关注得免息' : '登录'}
