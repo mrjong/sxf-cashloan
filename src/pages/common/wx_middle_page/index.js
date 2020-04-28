@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 16:19:52
+ * @LastEditTime: 2020-04-28 10:28:25
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -14,6 +14,8 @@ import { TFDLogin } from 'utils/getTongFuDun';
 import { signup_wx_authcb, signup_wx_auth } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { buriedPointEvent, pageView } from 'utils/analytins';
+import { H5CHANNEL_TEST } from 'utils/analytinsType';
 
 @connect(
 	(state) => state,
@@ -28,6 +30,11 @@ export default class wx_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		pageView();
+		buriedPointEvent(H5CHANNEL_TEST.href, {
+			test_href: location.href,
+			test_h5Channel: getH5Channel()
+		});
 		// 移除cookie中的token
 		Cookie.remove('FIN-HD-AUTH-TOKEN');
 		// 从url截取数据
@@ -35,6 +42,9 @@ export default class wx_middle_page extends Component {
 		const osType = getDeviceType();
 		setH5Channel();
 		if (query && query.code) {
+			buriedPointEvent(H5CHANNEL_TEST.auth, {
+				test_h5Channel: getH5Channel()
+			});
 			this.props.$fetch
 				.post(
 					signup_wx_authcb,
@@ -56,7 +66,6 @@ export default class wx_middle_page extends Component {
 					}
 				)
 				.then((res) => {
-					debugger;
 					if (res.code == '000000' && res.data.wxFlag === '0') {
 						//请求成功,跳到登录页(前提是不存在已登录未注册的情况)
 						let NoLoginUrl = store.getNoLoginUrl();
@@ -83,6 +92,9 @@ export default class wx_middle_page extends Component {
 					});
 				});
 		} else {
+			buriedPointEvent(H5CHANNEL_TEST.noauth, {
+				test_h5Channel: getH5Channel()
+			});
 			this.props.$fetch
 				.post(signup_wx_auth, {
 					code: '',
@@ -108,7 +120,6 @@ export default class wx_middle_page extends Component {
 					if (res.code == '000000' && res.data.wxFlag === '1') {
 						//没有授权
 						Cookie.set('FIN-HD-WECHAT-TOKEN', res.data.wxToken, { expires: 365 });
-						debugger;
 						window.location.href = decodeURIComponent(res.data.wxUrl);
 					} else if (res.code == '000000' && res.data.wxFlag === '2') {
 						//已授权未登录 (静默授权为7天，7天后过期）
@@ -150,6 +161,9 @@ export default class wx_middle_page extends Component {
 			URL = jumpUrl ? NoLoginUrl + `?jumpUrl=${jumpUrl}` : NoLoginUrl;
 			// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
 			if (window.globalConfig && window.globalConfig.wxTest) {
+				buriedPointEvent(H5CHANNEL_TEST.loginhref, {
+					test_h5Channel: getH5Channel()
+				});
 				if (jumpUrl) {
 					this.props.history.replace(URL + '&wxTestFrom=wx_middle_page');
 				} else {

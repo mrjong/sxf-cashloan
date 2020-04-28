@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-13 16:13:46
+ * @LastEditTime: 2020-04-28 10:30:40
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -439,8 +439,17 @@ const preLoan = {
 	// 内/外-预授信-签约结果
 	loanSignResult: `${prefix}_YSX_LOAN_SIGN_RESULT`
 };
+const H5CHANNEL_TEST = {
+	href: `${prefix}_H5CHANNEL_TEST_HREF`,
+	auth: `${prefix}_H5CHANNEL_TEST_auth`,
+	noauth: `${prefix}_H5CHANNEL_TEST_noauth`,
+	loginhref: `${prefix}_H5CHANNEL_TEST_loginhref`,
+	loginWillS: `${prefix}_H5CHANNEL_TEST_loginWillS`,
+	loginWillE: `${prefix}_H5CHANNEL_TEST_loginWillE`
+};
 
 export {
+	H5CHANNEL_TEST,
 	login,
 	home,
 	mine,

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-07 09:54:49
+ * @LastEditTime: 2020-04-28 10:31:32
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -36,7 +36,7 @@ import {
 	sxfDataPv,
 	sxfburiedPointEvent
 } from 'utils/analytins';
-import { login, wxTest } from 'utils/analytinsType';
+import { login, wxTest, H5CHANNEL_TEST } from 'utils/analytinsType';
 import { domListen } from 'utils/domListen';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
@@ -104,7 +104,9 @@ export default class login_page extends PureComponent {
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		let wenjuan = localStorage.getItem('wenjuan');
-
+		buriedPointEvent(H5CHANNEL_TEST.loginWillS, {
+			test_h5Channel: getH5Channel()
+		});
 		logoutClearData();
 
 		// 首页弹窗要用的
@@ -183,6 +185,9 @@ export default class login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		buriedPointEvent(H5CHANNEL_TEST.loginWillE, {
+			test_h5Channel: getH5Channel()
+		});
 		const { queryData = {}, isChecked } = this.state;
 		if (queryData && queryData.wxTestFrom) {
 			buriedPointEvent(wxTest.wxTestLoginBtnClick, {
