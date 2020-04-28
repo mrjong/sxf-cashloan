@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-27 19:19:58
+ * @LastEditTime: 2020-04-28 10:55:12
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -63,7 +63,8 @@ let lendAllBtn = true;
 		couponData: state.commonState.couponData,
 		cacheContact: state.staticState.cacheContact,
 		saveContact: state.commonState.saveContact,
-		authId: state.staticState.authId
+		authId: state.staticState.authId,
+		routerType: state.commonState.routerType
 	}),
 	{
 		setCardTypeAction,
@@ -165,7 +166,7 @@ export default class confirm_agency_page extends PureComponent {
 				isShowModal: false
 			});
 		} else if (availableCoupNum) {
-			this.props.history.push('/home/home');
+			this.jumpRouter();
 		} else {
 			this.props.$fetch
 				.post(coup_sendLoanCoup)
@@ -179,25 +180,24 @@ export default class confirm_agency_page extends PureComponent {
 							}
 						});
 					} else {
-
+						this.jumpRouter();
 					}
 				})
 				.catch(() => {
-					this.props.history.push('/home/home');
+					this.jumpRouter();
 				});
 		}
-  };
+	};
 
-  jumpRouter = () => {
-    // 返回到首页还是放款确认页面
-    let { navigation } = this.props;
-    const { routerType } = navigation.state.params;
-    if (routerType && routerType === 'loanConfirm') {
-      this.props.history.goBack();
-    } else {
-      this.props.history.push('/home/home');
-    }
-  };
+	jumpRouter = () => {
+		// 返回到首页还是放款确认页面
+		let { routerType } = this.props;
+		if (routerType && routerType === 'lendConfirm') {
+			this.props.history.goBack();
+		} else {
+			this.props.history.push('/home/home');
+		}
+	};
 
 	// 数据回显
 	recoveryPageData = (confirmAgencyInfo) => {

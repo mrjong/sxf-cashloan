@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-26 17:27:13
+ * @LastEditTime: 2020-04-28 10:50:46
  */
 // 这些要求这种备注，方便reducer直接查看
 /**
@@ -139,3 +139,10 @@ export const COMMON_PRE_LOAN_DATA = 'COMMON_PRE_LOAN_DATA';
  * @return:
  */
 export const COMMON_CREDICT_INFO = 'COMMON_CREDICT_INFO';
+
+/**
+ * @description: 页面跳转类型
+ * @param {type}
+ * @return:
+ */
+export const COMMON_ROUTER_TYPE = 'COMMON_ROUTER_TYPE';

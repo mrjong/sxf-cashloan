@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-26 17:26:17
+ * @LastEditTime: 2020-04-28 10:50:18
  */
 import { createAction } from 'redux-actions';
 import {
@@ -23,7 +23,8 @@ import {
 	COMMON_PROTOCOL_SELECT_FLAG,
 	COMMON_IFRAME_PROTOCOL_SHOW,
 	COMMON_PRE_LOAN_DATA,
-	COMMON_CREDICT_INFO
+	COMMON_CREDICT_INFO,
+	COMMON_ROUTER_TYPE
 } from '../constants/commonConstants';
 
 /**
@@ -182,3 +183,10 @@ export const setPreLoanDataAction = createAction(COMMON_PRE_LOAN_DATA, (info) =>
  * @return:
  */
 export const setCredictInfoAction = createAction(COMMON_CREDICT_INFO, (info) => ({ credictInfo: info }));
+
+/**
+ * @description: 页面跳转类型
+ * @param {type}
+ * @return:
+ */
+export const setRouterTypeAction = createAction(COMMON_ROUTER_TYPE, (info) => ({ routerType: info }));

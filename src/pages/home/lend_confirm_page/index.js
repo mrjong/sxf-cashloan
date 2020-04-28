@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-27 19:20:29
+ * @LastEditTime: 2020-04-28 10:53:12
  */
 import React, { PureComponent } from 'react';
 import { Icon } from 'antd-mobile';
@@ -14,11 +14,7 @@ import { domListen } from 'utils/domListen';
 import { ButtonCustom } from 'components';
 import {} from 'fetch/api.js';
 import { connect } from 'react-redux';
-import {
-	setCardTypeAction,
-	setConfirmAgencyInfoAction,
-	setCouponDataAction
-} from 'reduxes/actions/commonActions';
+import { setRouterTypeAction } from 'reduxes/actions/commonActions';
 import { thousandFormatNum } from 'utils/common';
 
 @setBackGround('#fff')
@@ -32,9 +28,7 @@ import { thousandFormatNum } from 'utils/common';
 		authId: state.staticState.authId
 	}),
 	{
-		setCardTypeAction,
-		setConfirmAgencyInfoAction,
-		setCouponDataAction
+		setRouterTypeAction
 	}
 )
 export default class lend_confirm_page extends PureComponent {
@@ -49,10 +43,10 @@ export default class lend_confirm_page extends PureComponent {
 
 	// 查看详情
 	checkDetail = () => {
-    // 跳转标识存入redux
+		// 跳转标识存入redux
+		this.props.setRouterTypeAction('lendConfirm');
 		this.props.history.push({
-			pathname: '/home/confirm_agency',
-			search: '?routerType=loanConfirm'
+			pathname: '/home/confirm_agency'
 		});
 	};
 
