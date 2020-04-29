@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-17 15:25:46
+ * @LastEditTime: 2020-04-29 16:37:06
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -256,9 +256,9 @@ export default class real_name_page extends Component {
 		}
 		const osType = getDeviceType();
 		const params = {
-			idNo: base64Encode(idNo.toLocaleUpperCase()),
+			idNo: base64Encode(idNo.trim().toLocaleUpperCase()),
 			idNoOld: base64Encode(ocrZhengData.idNo.toLocaleUpperCase()),
-			userName: base64Encode(idName),
+			userName: base64Encode(idName.trim()),
 			userNameOld: base64Encode(ocrZhengData.idName),
 
 			idCardFrontUrl: ocrZhengData.imgUrl, //正面URL
