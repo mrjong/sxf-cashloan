@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-28 15:04:33
+ * @LastEditTime: 2020-04-28 18:33:39
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -19,7 +19,6 @@ import { StepTitle } from 'components';
 import { Modal, Progress } from 'antd-mobile';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import fetch from 'sx-fetch';
-import dayjs from 'dayjs';
 import { loan_loanSub } from 'fetch/api.js';
 import qs from 'qs';
 let timer;
@@ -256,15 +255,9 @@ export default class add_contact_page extends PureComponent {
 				search: `?advanceNum=${res.loanAdvanceNo}`
 			});
 		} else if (res.loanType === 'A') {
-			// 预约放款的标识
-			let title =
-				res.repayType === '1'
-					? `${dayjs(res.repayDate).format('YYYY年MM月DD日')}完成放款`
-					: `预计60秒完成放款`;
-			let desc = res.repayType === '1' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 			this.props.history.push({
 				pathname: '/home/loan_apply_succ_page',
-				search: `?title=${title}&desc=${desc}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?title=预计60秒完成放款`
 			});
 		} else if (res.loanType === 'MIM') {
 			// 额度不满足

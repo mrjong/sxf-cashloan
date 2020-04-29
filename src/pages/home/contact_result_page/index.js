@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-20 18:28:50
+ * @LastEditTime: 2020-04-28 18:21:45
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -226,14 +226,9 @@ export default class contact_result_page extends PureComponent {
 			});
 		} else {
 			// 预约放款的标识
-			let title =
-				res.repayType === '1'
-					? `${dayjs(res.repayDate).format('YYYY年MM月DD日')}完成放款`
-					: `预计60秒完成放款`;
-			let desc = res.repayType === '1' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 			this.props.history.push({
 				pathname: '/home/loan_apply_succ_page',
-				search: `?title=${title}&desc=${desc}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?title=预计60秒完成放款`
 			});
 		}
 	};

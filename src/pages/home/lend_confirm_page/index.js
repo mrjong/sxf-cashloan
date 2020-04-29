@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-28 15:03:57
+ * @LastEditTime: 2020-04-29 10:04:51
  */
 import React, { PureComponent } from 'react';
 import { Icon } from 'antd-mobile';
@@ -14,9 +14,8 @@ import { domListen } from 'utils/domListen';
 import { ButtonCustom } from 'components';
 import { loan_loanSub } from 'fetch/api.js';
 import { connect } from 'react-redux';
-import { setRouterTypeAction } from 'reduxes/actions/commonActions';
+import { setRouterTypeAction, setCredictInfoAction } from 'reduxes/actions/commonActions';
 import { thousandFormatNum } from 'utils/common';
-import dayjs from 'dayjs';
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -29,7 +28,8 @@ import dayjs from 'dayjs';
 		authId: state.staticState.authId
 	}),
 	{
-		setRouterTypeAction
+		setRouterTypeAction,
+		setCredictInfoAction
 	}
 )
 export default class lend_confirm_page extends PureComponent {
@@ -44,6 +44,7 @@ export default class lend_confirm_page extends PureComponent {
 
 	// 查看详情
 	checkDetail = () => {
+		buriedPointEvent(home.lendCheckDetail);
 		// 跳转标识存入redux
 		this.props.setRouterTypeAction('lendConfirm');
 		this.props.history.push({
@@ -53,11 +54,13 @@ export default class lend_confirm_page extends PureComponent {
 
 	// 保留额度稍后借款
 	savaCredict = () => {
+		buriedPointEvent(home.lendSaveBtnClick);
 		this.props.history.push('/home/home');
 	};
 
 	// 立即放款至信用卡
 	loanHandler = () => {
+		buriedPointEvent(home.lendLoanBtnClick);
 		this.props.toast.loading('加载中...', 10);
 		const { credictInfo = {} } = this.props;
 		const params = {
@@ -75,8 +78,7 @@ export default class lend_confirm_page extends PureComponent {
 		};
 		this.props.$fetch
 			.post(loan_loanSub, params, {
-				timeout: 100000,
-				hideLoading: true
+				timeout: 100000
 			})
 			.then((result) => {
 				this.props.toast.hide();
@@ -121,14 +123,9 @@ export default class lend_confirm_page extends PureComponent {
 			});
 		} else if (res.loanType === 'A') {
 			// 预约放款的标识
-			let title =
-				res.repayType === '1'
-					? `${dayjs(res.repayDate).format('YYYY年MM月DD日')}完成放款`
-					: `预计60秒完成放款`;
-			let desc = res.repayType === '1' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 			this.props.history.push({
 				pathname: '/home/loan_apply_succ_page',
-				search: `?title=${title}&desc=${desc}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?title=预计60秒完成放款`
 			});
 		} else if (res.loanType === 'MIM') {
 			// 额度不满足

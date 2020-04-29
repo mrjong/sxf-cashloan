@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-28 16:24:18
+ * @LastEditTime: 2020-04-29 10:02:07
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -126,7 +126,11 @@ const home = {
 	riskGuaranteeChangePlanText: `${prefix}_RISKGUARANTEE_CHANGE_PLAN_TEXT`, // 签约页-风险计划文本切换
 	riskGuaranteeResultTry: `${prefix}_RISKGUARANTEE_RESULT_TRY_CLICK`, // 风险保障计划结果页-try
 	riskGuaranteeResultBackHome: `${prefix}_RISKGUARANTEE_RESULT_BACKHOME_CLICK`, // 风险保障计划结果页-backhome
-	repayPlanClick: `${prefix}_REPAY_PLAN_CLICK` // 签约页-还款计划点击
+	repayPlanClick: `${prefix}_REPAY_PLAN_CLICK`, // 签约页-还款计划点击
+
+	lendLoanBtnClick: `${prefix}_HOME_LEND_CONFIRM_LOAN_BTN`, // 点击-放款确认页-【立即放款至信用卡】
+	lendSaveBtnClick: `${prefix}_HOME_LEND_CONFIRM_SAVE_BTN`, // 点击-放款确认页-【保留额度稍后借款】
+	lendCheckDetail: `${prefix}_HOME_LEND_CONFIRM_CHECK_DETAIL` // 点击-放款确认页-【查看】
 };
 
 const mine = {

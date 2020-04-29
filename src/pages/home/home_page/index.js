@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-28 16:25:19
+ * @LastEditTime: 2020-04-28 18:31:06
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -310,17 +310,9 @@ export default class home_page extends PureComponent {
 			case 'LN0007': {
 				Toast.hide();
 				// 放款中
-				let title =
-					homeData && homeData.dcDataInfo && homeData.dcDataInfo.repayType === '0'
-						? `预计60秒完成放款`
-						: `${dayjs(homeData.dcDataInfo.repayDt).format('YYYY年MM月DD日')}完成放款`;
-				let desc =
-					homeData && homeData.dcDataInfo && homeData.dcDataInfo.repayType === '0'
-						? `超过2个工作日没有放款成功，可`
-						: '如有疑问，可';
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
-					search: `?title=${title}&desc=${desc}&autId=${homeData.dcDataInfo.autId}`
+					search: `?title=预计60秒完成放款`
 				});
 				break;
 			}
@@ -402,11 +394,9 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(preLoan.homeLoaningBtn);
 				Toast.hide();
 				// 放款中
-				let title = `预计60秒完成放款`;
-				let desc = `超过2个工作日没有放款成功，可`;
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
-					search: `?title=${title}&desc=${desc}&prodType=21`
+					search: `?title=预计60秒完成放款`
 				});
 				break;
 			}
