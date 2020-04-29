@@ -12,8 +12,6 @@ import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity, home } from 'utils/analytinsType';
-import CouponModal from 'components/CouponModal';
-import { isShowCouponModal, closeCouponModal } from './common';
 import { FixedBar } from 'components';
 let queryData = {};
 @setBackGround('#fff')
@@ -28,12 +26,10 @@ export default class remit_ing_page extends PureComponent {
 			failModalShow: false,
 			time: 0,
 			isAppOpen: false,
-			isPlus: false,
-			couponModalShow: false
+			isPlus: false
 		};
 	}
 	componentWillMount() {
-		isShowCouponModal(this);
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData && queryData.prodType && queryData.prodType === '21') {
 			this.props.setTitle('快速打款中');
@@ -116,8 +112,7 @@ export default class remit_ing_page extends PureComponent {
 			failModalShow,
 			time,
 			isAppOpen,
-			isPlus,
-			couponModalShow
+			isPlus
 		} = this.state;
 		return (
 			<div className={style.remit_ing_page}>
@@ -187,14 +182,6 @@ export default class remit_ing_page extends PureComponent {
 					}}
 				/>
 
-				{/* 首贷首期用户-还款券测试 */}
-				<CouponModal
-					visible={couponModalShow}
-					onConfirm={() => {
-						closeCouponModal(this);
-					}}
-					couponData={queryData && queryData.couponInfo}
-				/>
 				<ZButton
 					onClick={() => {
 						buriedPointEvent(home.gotIt);

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-28 18:33:39
+ * @LastEditTime: 2020-04-29 17:03:47
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -236,17 +236,16 @@ export default class add_contact_page extends PureComponent {
 	};
 	// 跳转页面
 	jumpRouter = (res) => {
-		const couponInfo = res && res.popupInfo ? res.popupInfo : '';
 		// 增加标识
 		if (res.loanType === 'M') {
 			this.props.history.push({
 				pathname: '/home/loan_person_succ_page',
-				search: `?creadNo=${res.credApplNo}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?creadNo=${res.credApplNo}`
 			});
 		} else if (res.loanType === 'H') {
 			this.props.history.replace({
 				pathname: '/home/loan_robot_succ_page',
-				search: `?telNo=${res.rmk}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?telNo=${res.rmk}`
 			});
 		} else if (res.loanType === 'ING') {
 			// 预签约审核中

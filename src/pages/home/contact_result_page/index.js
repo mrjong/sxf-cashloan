@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-28 18:21:45
+ * @LastEditTime: 2020-04-29 17:04:13
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -213,16 +213,15 @@ export default class contact_result_page extends PureComponent {
 	};
 	// 跳转页面
 	jumpRouter = (res) => {
-		const couponInfo = res && res.popupInfo ? res.popupInfo : '';
 		if (res.loanType === 'M') {
 			this.props.history.push({
 				pathname: '/home/loan_person_succ_page',
-				search: `?creadNo=${res.credApplNo}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?creadNo=${res.credApplNo}`
 			});
 		} else if (res.loanType === 'H') {
 			this.props.history.replace({
 				pathname: '/home/loan_robot_succ_page',
-				search: `?telNo=${res.rmk}&couponInfo=${JSON.stringify(couponInfo)}`
+				search: `?telNo=${res.rmk}`
 			});
 		} else {
 			// 预约放款的标识

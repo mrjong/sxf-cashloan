@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-26 13:07:03
+ * @LastEditTime: 2020-04-29 17:09:27
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -16,8 +16,6 @@ import SXFButton from 'components/ButtonCustom';
 import Images from 'assets/image';
 import qs from 'qs';
 import { store } from 'utils/store';
-import CouponModal from 'components/CouponModal';
-import { isShowCouponModal, closeCouponModal } from '../loan_apply_succ_page/common';
 import { FixedBar } from 'components';
 
 import { person_appointment_info, person_appointment_sub } from 'fetch/api.js';
@@ -39,14 +37,12 @@ export default class remit_ing_page extends PureComponent {
 				day: '今日'
 			},
 			isPlus: false,
-			couponModalShow: false,
 			isAppOpen: false
 		};
 	}
 
 	componentWillMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		isShowCouponModal(this);
 		const that = this;
 		if (queryData && queryData.isPlus) {
 			this.setState({
@@ -87,7 +83,6 @@ export default class remit_ing_page extends PureComponent {
 	}
 
 	querySubscribeInfo = () => {
-		const { couponModalShow } = this.state;
 		this.props.$fetch.get(`${person_appointment_info}/${queryData.creadNo}`).then((res) => {
 			if (res && res.code === '000000') {
 				const { applyDate, applyTime, today, tomorrow, scheduledTime } = res.data || {};
@@ -104,7 +99,7 @@ export default class remit_ing_page extends PureComponent {
 							scheduledTime
 						},
 						() => {
-							!couponModalShow && this.handleClosePannel();
+							this.handleClosePannel();
 						}
 					);
 				}
@@ -264,7 +259,6 @@ export default class remit_ing_page extends PureComponent {
 			scheduledTime,
 			daySelectedItem,
 			timeSelectedItem,
-			couponModalShow,
 			isAppOpen,
 			isPlus
 		} = this.state;
@@ -441,15 +435,7 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</CopyToClipboard>
 				<div className={style.descText}>关注还到公众号 实时查看审核进度</div>
-				{/* 首贷首期用户-还款券测试 */}
-				<CouponModal
-					visible={couponModalShow}
-					onConfirm={() => {
-						closeCouponModal(this);
-						this.handleClosePannel();
-					}}
-					couponData={queryData && queryData.couponInfo}
-				/>
+
 				{/* 吸底条 */}
 				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />
 			</div>

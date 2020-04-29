@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-26 10:57:10
+ * @LastEditTime: 2020-04-29 17:09:45
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -12,8 +12,6 @@ import ZButton from 'components/ButtonCustom';
 // import { manualAudit } from 'utils/analytinsType';
 import qs from 'qs';
 import { store } from '../../../utils/store';
-import CouponModal from 'components/CouponModal';
-import { isShowCouponModal, closeCouponModal } from '../loan_apply_succ_page/common';
 import { FixedBar } from 'components';
 
 @setBackGround('#fff')
@@ -22,13 +20,11 @@ export default class loan_robot_succ_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			queryData: null,
-			couponModalShow: false
+			queryData: null
 		};
 	}
 
 	componentWillMount() {
-		isShowCouponModal(this);
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		queryData &&
 			this.setState({
@@ -93,7 +89,7 @@ export default class loan_robot_succ_page extends PureComponent {
 	};
 
 	render() {
-		const { queryData, couponModalShow, isAppOpen, isPlus } = this.state;
+		const { queryData, isAppOpen, isPlus } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -133,14 +129,7 @@ export default class loan_robot_succ_page extends PureComponent {
 					<ZButton onClick={this.handleButtonClick}>我知道了</ZButton>
 					<div className={style.descText}>关注还到公众号 实时查看审核进度</div>
 				</div>
-				{/* 首贷首期用户-还款券测试 */}
-				<CouponModal
-					visible={couponModalShow}
-					onConfirm={() => {
-						closeCouponModal(this);
-					}}
-					couponData={queryData && queryData.couponInfo}
-				/>
+
 				{/* 吸底条 */}
 				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />
 			</div>

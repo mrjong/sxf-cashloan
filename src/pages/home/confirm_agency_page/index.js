@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-29 14:37:22
+ * @LastEditTime: 2020-04-29 17:03:54
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -85,7 +85,6 @@ export default class confirm_agency_page extends PureComponent {
 			loanDate: '',
 			loanMoney: '',
 			usageList: [],
-			couponInfo: {},
 			resaveBankCardAgrNo: '',
 			resaveBankCardLastNo: '',
 			resaveBankCardName: '',
