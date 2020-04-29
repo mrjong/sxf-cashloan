@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-29 11:16:06
+ * @LastEditTime: 2020-04-29 15:49:42
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -223,7 +223,7 @@ export default class loan_applying_page extends PureComponent {
 				// 机审
 				this.props.history.push({
 					pathname: '/home/loan_robot_succ_page',
-					search: `?telNo=${res.telNo}`
+					search: `?telNo=${res.rmk}`
 				});
 				break;
 			case 'MIM':
