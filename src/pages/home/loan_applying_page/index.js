@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-28 15:03:40
+ * @LastEditTime: 2020-04-29 11:16:06
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -113,13 +113,13 @@ export default class loan_applying_page extends PureComponent {
 							},
 							() => {
 								// 注意测试与app交互
-								if (isAppOpen) {
-									this.sendMsgToApp(res.data, 'resultPage');
-								} else {
-									setTimeout(() => {
+								setTimeout(() => {
+									if (isAppOpen) {
+										this.sendMsgToApp(res.data, 'resultPage');
+									} else {
 										this.jumpResultPage(res.data);
-									}, 2000);
-								}
+									}
+								}, 2000);
 							}
 						);
 					}
@@ -133,13 +133,13 @@ export default class loan_applying_page extends PureComponent {
 						},
 						() => {
 							// 注意测试与app交互
-							if (isAppOpen) {
-								this.sendMsgToApp(res.data, 'refusePage');
-							} else {
-								setTimeout(() => {
+							setTimeout(() => {
+								if (isAppOpen) {
+									this.sendMsgToApp(res.data, 'refusePage');
+								} else {
 									this.props.history.push('/home/home');
-								}, 2000);
-							}
+								}
+							}, 2000);
 						}
 					);
 				} else if (res && res.code === '100021') {

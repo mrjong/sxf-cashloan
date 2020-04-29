@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-28 18:31:06
+ * @LastEditTime: 2020-04-29 14:59:40
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -547,11 +547,26 @@ export default class home_page extends PureComponent {
 					basicCardData.progress = homeData.dcDataInfo.credRate;
 					basicCardData.handleClick = this.handleSmartClick;
 				} else if (homeData && homeData.dcDataInfo.credRate === 0) {
-					basicCardData.btnText = homeData.dcDataInfo.credRateShow;
+					basicCardData.btnText =
+						homeData.dcDataInfo && homeData.dcDataInfo.creditAmt
+							? '更新额度'
+							: homeData.dcDataInfo.credRateShow;
+					if (homeData.dcDataInfo && homeData.dcDataInfo.creditAmt) {
+						basicCardData.loanText = '可借额度（元）';
+						basicCardData.loanAmont = homeData.dcDataInfo.creditAmt;
+					}
 					basicCardData.handleClick = this.handleApply;
 				} else if (homeData && homeData.dcDataInfo.credRate > 0) {
-					basicCardData.btnText = homeData.dcDataInfo.credRateShow;
-					basicCardData.progress = homeData.dcDataInfo.credRate;
+					basicCardData.btnText =
+						homeData.dcDataInfo && homeData.dcDataInfo.creditAmt
+							? '更新额度'
+							: homeData.dcDataInfo.credRateShow;
+					basicCardData.progress =
+						homeData.dcDataInfo && homeData.dcDataInfo.creditAmt ? '' : homeData.dcDataInfo.credRate;
+					if (homeData.dcDataInfo && homeData.dcDataInfo.creditAmt) {
+						basicCardData.loanText = '可借额度（元）';
+						basicCardData.loanAmont = homeData.dcDataInfo.creditAmt;
+					}
 					basicCardData.handleClick = this.handleSmartClick;
 				}
 				disPlayData.push(basicCardData);
@@ -588,7 +603,7 @@ export default class home_page extends PureComponent {
 					homeData.dcDataInfo.netAppyDate &&
 					differDays <= 60 &&
 					`${dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')}可再次申请`;
-				basicCardData.statusTitle = '非常抱歉，本次审核未通过';
+				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
 				basicCardData.statusTitleSub = '去试试其他借款平台';
 				basicCardData.btnText = '去试试';
 				basicCardData.handleClick = this.handleSmartClick;
@@ -655,7 +670,7 @@ export default class home_page extends PureComponent {
 			case 'LN0012': // 机器人审核中
 				basicCardData.statusTitle = '需要电话审核，耐心等待';
 				// basicCardData.statusTitleSub = '请保持电话畅通';
-				basicCardData.statusTitleSub = `审核电话：${homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt}`;
+				basicCardData.statusTitleSub = `审核电话：${homeData.dcDataInfo && homeData.dcDataInfo.telNo}`;
 				basicCardData.bottomTip = `申请借款金额(元)：${dcDataInfo.billAmt}`;
 				basicCardData.bottomTip2 = `申请期数：${dcDataInfo.perdCnt}期`;
 				basicCardData.btnText = '查看进度';
