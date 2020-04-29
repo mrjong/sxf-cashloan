@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-27 16:16:58
+ * @LastEditTime: 2020-04-29 16:02:23
  */
 import React from 'react';
 import style from './index.scss';
@@ -39,7 +39,7 @@ export default class MsgTip extends React.PureComponent {
 						</div>
 					)}
 				</div>
-				<p className={style.home_header_sub}>借钱还信用卡</p>
+				<p className={style.home_header_sub}>随行付旗下信贷服务</p>
 			</section>
 		);
 	}

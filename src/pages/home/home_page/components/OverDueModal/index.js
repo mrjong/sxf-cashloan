@@ -1,20 +1,21 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:19:18
+ * @LastEditTime: 2020-04-29 16:47:03
  */
 import React from 'react';
 import fetch from 'sx-fetch';
-import { Toast } from 'antd-mobile';
+import { Toast, Modal } from 'antd-mobile';
 import style from './index.scss';
-import overDueImg from 'assets/images/home/overDue_icon.png';
 import { getDeviceType } from 'utils';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
+import rhimg from './img/rhimg.png';
+import rhimgBig from './img/rhimgBig.png';
 @fetch.inject()
 export default class OverDueModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
+			visible: false,
 			downloadUrl: 'https://odr.qzzcwyh.com/'
 		};
 	}
@@ -34,15 +35,36 @@ export default class OverDueModal extends React.PureComponent {
 			5
 		);
 	};
-
+	show = () => {
+		this.setState({
+			visible: true
+		});
+	};
 	render() {
 		const { handleClick, overDueInf, decreaseCoupExpiryDate } = this.props;
+		const { visible } = this.state;
 		const { downloadUrl } = this.state;
 		const osType = getDeviceType();
 		return (
 			<div className={style.overDueModalWrap}>
-				<img className={style.warningImg} src={overDueImg} />
+				<Modal visible={visible} transparent className="welfareModal" maskClosable={false}>
+					<img className={style.rhimgBig} src={rhimgBig} />
+					<div
+						className={[style.closeBtn].join(' ')}
+						onClick={() => {
+							this.setState({
+								visible: false
+							});
+						}}
+					/>
+				</Modal>
+				{/* <img className={style.warningImg} src={overDueImg} /> */}
+
 				<div className={style.overDueModalBox}>
+					<div className={style.imgBoxRH}>
+						<div className={style.nexTitle}>随行付网络小贷接入中国人民银行征信中心</div>
+						<img onClick={this.show} className={style.rhimg} src={rhimg} />
+					</div>
 					<h3 className={style.overDueTit}>{overDueInf && overDueInf.progressDesc}</h3>
 					<p className={style.overDueDesc}>{overDueInf && overDueInf.progressContent}</p>
 					{decreaseCoupExpiryDate ? (
