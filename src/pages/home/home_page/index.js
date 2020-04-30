@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-29 14:59:40
+ * @LastEditTime: 2020-04-30 09:49:48
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -624,7 +624,7 @@ export default class home_page extends PureComponent {
 				basicCardData.topTip =
 					homeData.dcDataInfo.acOverDt &&
 					`额度有效期至${dayjs(homeData.dcDataInfo.acOverDt).format('YYYY/MM/DD')}`;
-				basicCardData.bottomTip = `还款日：${cardBillDtData}`;
+				// basicCardData.bottomTip = `还款日：${cardBillDtData}`;
 				basicCardData.btnText = '立即签约借款';
 				basicCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(basicCardData);
@@ -649,7 +649,7 @@ export default class home_page extends PureComponent {
 				basicCardData.titleSubIsBankNo = true;
 				basicCardData.loanText = '账单金额(元)';
 				basicCardData.loanAmont = dcDataInfo.billAmt;
-				basicCardData.bottomTip = `还款日：${cardBillDtData}`;
+				// basicCardData.bottomTip = `还款日：${cardBillDtData}`;
 				basicCardData.btnText = '查看代偿账单';
 				basicCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(basicCardData);
