@@ -22,19 +22,19 @@
 	}
 
 	.inputWrap {
-		padding-bottom: 80px;
+		padding-bottom: 70px;
 		background-color: #fff;
 	}
 	.billInpBox {
 		position: relative;
-		padding: 76px 40px 0;
+		padding: 86px 40px 0;
 		box-sizing: border-box;
 		.moneyUnit {
 			position: absolute;
 			font-size: 40px;
 			color: #394259;
 			left: 40px;
-			top: 92px;
+			top: 102px;
 			z-index: 10;
 		}
 		&::after {
@@ -52,12 +52,12 @@
 	}
 	.billInput {
 		background-color: transparent;
-    padding-left: 0;
-    :global {
-      .am-list-line::after {
-        @include setBottomLine(#394259);
-      }
-    }
+		padding-left: 0;
+		:global {
+			.am-list-line::after {
+				@include setBottomLine(#394259);
+			}
+		}
 		input {
 			font-size: 80px;
 			font-family: 'DINMitAlt';
@@ -69,7 +69,7 @@
 	.lendAllStyle {
 		position: absolute;
 		right: 40px;
-		top: 80px;
+		top: 90px;
 		font-size: 30px;
 		font-family: PingFangSC-Semibold, PingFang SC;
 		font-weight: 600;
@@ -82,7 +82,7 @@
 		margin: 20px 30px;
 		background: #fff;
 		border-radius: 10px;
-		border: 1px solid #f0f1f5;
+		box-shadow: 0px 0px 41px 0px rgba(226, 229, 247, 0.77);
 		padding: 0 30px;
 		.listItem {
 			position: relative;
@@ -149,8 +149,8 @@
 			font-size: 24px;
 			color: #394259;
 			text-align: right;
-      padding-right: 24px;
-      margin-top: 8px;
+			padding-right: 24px;
+			margin-top: 8px;
 		}
 		// 息费合计
 		.derateMoney {
@@ -161,8 +161,8 @@
 			text-align: right;
 			color: $colorSubTitle;
 			justify-content: space-between;
-      font-size: 24px;
-      margin-top: 12px;
+			font-size: 24px;
+			margin-top: 12px;
 		}
 		.moneyTit {
 			width: 150px;
@@ -214,8 +214,8 @@
 	.couNumBox {
 		display: flex;
 		height: 42px;
-		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
-		border-radius: 3px;
+		background: linear-gradient(90deg, #FE7317 0%, #FF3E15 100%);
+		border-radius: 5px;
 		padding: 0 10px;
 		align-items: center;
 		font-size: 22px;

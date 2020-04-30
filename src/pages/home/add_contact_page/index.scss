@@ -42,8 +42,11 @@
 
 :global {
 	.confirm_agency_progress {
+    .am-progress-outer {
+      background-color: #F0F1F5;
+    }
 		.am-progress-bar {
-			border: 0.04rem solid #121b33;
+			border: 0.04rem solid #56BC44;
 		}
 	}
 }
