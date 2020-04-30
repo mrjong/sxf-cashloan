@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-27 11:04:02
+ * @LastEditTime: 2020-04-30 18:09:50
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -480,12 +480,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 								this.props.form.setFieldsValue({
 									loanMoney: v ? v : ''
 								});
-							}}
-						/>
-						<i
-							className={style.edit_icon}
-							onClick={() => {
-								this.inputRef.focus();
 							}}
 						/>
 					</div>
