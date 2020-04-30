@@ -2,7 +2,6 @@
 
 .overDueModalWrap {
 	position: relative;
-	padding-top: 100px;
 }
 
 .overDueModalBox {
@@ -10,23 +9,37 @@
 	background-color: #fff;
 	margin: 0 auto;
 	border-radius: 10px;
-	padding-top: 200px;
+	padding-top: 20px;
 	box-sizing: border-box;
 }
-
+.nexTitle {
+	padding-top: 10px;
+	font-size: 26px;
+	color: #121b33;
+	font-weight: 800;
+}
+.rhimg {
+	width: 150px;
+	margin: 10px 0;
+}
 .overDueTit {
 	font-size: 36px;
 	font-weight: 500;
 	color: rgba(51, 51, 51, 1);
 	line-height: 50px;
 }
-
+.rhimgBig {
+	width: 680px;
+	height: auto;
+}
 .overDueDesc {
 	font-size: 32px;
 	font-weight: 400;
+	max-height: 115px;
+	overflow: scroll;
 	color: rgba(51, 51, 51, 1);
 	line-height: 45px;
-	margin: 50px auto 56px;
+	margin: 30px auto 36px;
 	text-align: left;
 	padding: 0 30px;
 	width: 520px;
@@ -82,4 +95,13 @@
 	&::after {
 		@include setTopLine(#f0f1f5);
 	}
+}
+
+.closeBtn {
+  text-align: center;
+  width: 80px;
+  height: 80px;
+  vertical-align: middle;
+  margin: 20px auto 0;
+  @include spriteIcon('../../../../../assets/images/common/sprite_icon.png', 0, 0);
 }

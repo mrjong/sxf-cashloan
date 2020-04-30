@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-27 16:22:29
+ * @LastEditTime: 2020-04-30 09:32:06
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -190,7 +190,7 @@ export default class mine_page extends PureComponent {
 								Hi,
 								{telNoHid || '欢迎使用还到'}
 							</p>
-							<p className={styles.bannerHaaderTitleSub}>随行付旗下信贷产品</p>
+							<p className={styles.bannerHaaderTitleSub}>随行付旗下信贷服务</p>
 						</div>
 						<div className={styles.bannerHaaderBtn} onClick={this.goPage}>
 							{telNoHid ? '关注得免息' : '登录'}
