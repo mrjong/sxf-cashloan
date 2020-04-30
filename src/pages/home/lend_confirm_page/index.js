@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-29 17:04:54
+ * @LastEditTime: 2020-04-30 11:35:40
  */
 import React, { PureComponent } from 'react';
 import { Icon } from 'antd-mobile';
@@ -14,7 +14,11 @@ import { domListen } from 'utils/domListen';
 import { ButtonCustom } from 'components';
 import { loan_loanSub } from 'fetch/api.js';
 import { connect } from 'react-redux';
-import { setRouterTypeAction, setCredictInfoAction } from 'reduxes/actions/commonActions';
+import {
+	setRouterTypeAction,
+	setCredictInfoAction,
+	setCouponDataAction
+} from 'reduxes/actions/commonActions';
 import { thousandFormatNum } from 'utils/common';
 
 @setBackGround('#fff')
@@ -29,7 +33,8 @@ import { thousandFormatNum } from 'utils/common';
 	}),
 	{
 		setRouterTypeAction,
-		setCredictInfoAction
+		setCredictInfoAction,
+		setCouponDataAction
 	}
 )
 export default class lend_confirm_page extends PureComponent {
@@ -47,6 +52,8 @@ export default class lend_confirm_page extends PureComponent {
 		buriedPointEvent(home.lendCheckDetail);
 		// 跳转标识存入redux
 		this.props.setRouterTypeAction('lendConfirm');
+		// 清空优惠劵数据, 重新选择
+		this.props.setCouponDataAction({});
 		this.props.history.push({
 			pathname: '/home/confirm_agency'
 		});
