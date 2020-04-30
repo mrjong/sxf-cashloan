@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-30 09:49:48
+ * @LastEditTime: 2020-04-30 10:42:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -510,9 +510,9 @@ export default class home_page extends PureComponent {
 		const { homeData = {} } = this.state;
 
 		const { dcDataInfo = {} } = homeData;
-		const { cardRepayDt, bankName, cardNoHid } = dcDataInfo || {};
+		const { bankName, cardNoHid } = dcDataInfo || {};
 
-		const cardBillDtData = !cardRepayDt ? '----/--/--' : dayjs(cardRepayDt).format('YYYY/MM/DD');
+		// const cardBillDtData = !cardRepayDt ? '----/--/--' : dayjs(cardRepayDt).format('YYYY/MM/DD');
 		const cardCode = !cardNoHid ? '****' : cardNoHid.slice(-4);
 		const bankNm = !bankName ? '****' : bankName;
 
