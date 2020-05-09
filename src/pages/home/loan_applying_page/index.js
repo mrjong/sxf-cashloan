@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-29 15:49:42
+ * @LastEditTime: 2020-05-09 17:38:21
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -119,7 +119,7 @@ export default class loan_applying_page extends PureComponent {
 									} else {
 										this.jumpResultPage(res.data);
 									}
-								}, 2000);
+								}, 1000);
 							}
 						);
 					}
@@ -139,7 +139,7 @@ export default class loan_applying_page extends PureComponent {
 								} else {
 									this.props.history.push('/home/home');
 								}
-							}, 2000);
+							}, 1000);
 						}
 					);
 				} else if (res && res.code === '100021') {
@@ -216,7 +216,7 @@ export default class loan_applying_page extends PureComponent {
 				// 人审
 				this.props.history.push({
 					pathname: '/home/loan_person_succ_page',
-					search: `?creadNo=${res.credNo}`
+					search: `?creadNo=${res.credApplNo}`
 				});
 				break;
 			case 'H':
