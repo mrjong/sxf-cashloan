@@ -180,8 +180,10 @@ export const loan_loanPlan = '/loan/loanPlan';
 export const loan_contractPreview = '/loan/contractPreviewH5';
 // 借款提交
 export const loan_loanSub = '/loan/loanSub';
-// 借款提交
+// 预签约订单结果查询接口
 export const loan_queryLoanAdvanceSts = '/loan/queryLoanAdvanceSts';
+// 2+5联系人查询接口
+export const loan_queryContactsList = '/loan/queryContactsList';
 
 /**
  * @description: // 优惠券相关

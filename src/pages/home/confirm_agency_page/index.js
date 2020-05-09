@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-29 17:03:54
+ * @LastEditTime: 2020-05-09 16:49:11
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -37,10 +37,8 @@ import {
 	setCouponDataAction
 } from 'reduxes/actions/commonActions';
 import { setCacheContactAction } from 'reduxes/actions/staticActions';
-import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { cardBillAmtRiskBury } from './riskBuryConfig';
-import { isMPOS } from 'utils/common';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -340,26 +338,7 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.info('当前渠道暂不支持提现申请，请进入MPOS代偿');
 					return;
 				}
-				// base64解密
-				if (result.data.contacts && result.data.contacts.length) {
-					// map 改变引用型数组,值类型数组不改变
-					result.data.contacts.map((item, index) => {
-						item.name = base64Decode(item.name);
-						item.number = base64Decode(item.number);
-						if (index < 5) {
-							item.isMarked = true;
-						} else {
-							item.isMarked = false;
-						}
-						item.uniqMark = 'uniq' + index;
-						return item;
-					});
-				}
-				if (result.data.excludedContacts && result.data.excludedContacts.length) {
-					for (let i = 0; i < result.data.excludedContacts.length; i++) {
-						result.data.excludedContacts[i] = base64Decode(result.data.excludedContacts[i]);
-					}
-				}
+
 				// 初始化数据渲染
 				if (result.data.prods && result.data.prods.length) {
 					// 适用于只有一个产品情况
@@ -844,12 +823,11 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 选择指定联系人
 	handleClickChooseContact = () => {
-		const { isBtnAble, repayInfo, isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
+		const { isBtnAble, isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		this.cacheDataHandler();
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
-		this.calculationNum();
 		// 未参加风险保障计划
 		if (isRiskGuaranteeProd && !isJoinInsurancePlan) {
 			this.setState(
@@ -863,38 +841,9 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.history.push('/home/insurance_result_page');
 			return;
 		}
-		this.props.history.push(
-			`/home/add_contact_page?contactsLength=${(repayInfo.contacts && repayInfo.contacts.length) ||
-				0}&isRiskGuaranteeProd=${isRiskGuaranteeProd ? '1' : '0'}`
-		);
+		this.props.history.push(`/home/add_contact_page?isRiskGuaranteeProd=${isRiskGuaranteeProd ? '1' : '0'}`);
 	};
-	/**
-	 * @description: 将后端联系人数据缓存起来  优先取本地 再去后端
-	 * @param {type}
-	 * @return:
-	 */
 
-	calculationNum = () => {
-		const { repayInfo } = this.state;
-		const { cacheContact } = this.props;
-		if (!cacheContact || cacheContact.length === 0 || isMPOS()) {
-			this.props.setCacheContactAction((repayInfo.contacts && repayInfo.contacts.slice(0, 5)) || []);
-			return;
-		}
-		let isNull = true;
-		for (let index = 0; index < cacheContact.length; index++) {
-			const element = cacheContact[index];
-			if (element.name) {
-				isNull = false;
-				break;
-			}
-		}
-		if (isNull) {
-			this.props.setCacheContactAction((repayInfo.contacts && repayInfo.contacts.slice(0, 5)) || []);
-		} else {
-			this.props.setCacheContactAction((cacheContact && cacheContact.slice(0, 5)) || []);
-		}
-	};
 	// 点击勾选协议
 	checkAgreement = () => {
 		this.setState({ checkBox1: !this.state.checkBox1 });
