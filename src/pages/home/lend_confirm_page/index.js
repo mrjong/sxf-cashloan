@@ -12,7 +12,7 @@ import { createForm } from 'rc-form';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
 import { ButtonCustom } from 'components';
-import { loan_loanSub } from 'fetch/api.js';
+import { loan_loanSub, coup_queyUsrLoanUsbCoup } from 'fetch/api.js';
 import { connect } from 'react-redux';
 import {
 	setRouterTypeAction,
@@ -40,10 +40,14 @@ import { thousandFormatNum } from 'utils/common';
 export default class lend_confirm_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			coupId: ''
+		};
 	}
 
-	componentWillMount() {}
+	componentWillMount() {
+		this.queryCouponCount();
+	}
 
 	componentWillUnmount() {}
 
@@ -65,6 +69,34 @@ export default class lend_confirm_page extends PureComponent {
 		this.props.history.push('/home/home');
 	};
 
+	/**
+	 * 获取可使用优惠券条数
+	 */
+	queryCouponCount = () => {
+		const { credictInfo = {} } = this.props;
+		let params = {
+			loanAmt: credictInfo.credAmt,
+			prodId: credictInfo.prodId, // 产品ID
+			prodType: '01',
+			coupSts: '00',
+			startPage: 1,
+			pageRow: 1,
+			riskGuarantee: credictInfo.riskGuarantee
+		};
+		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
+			if (res.code === '000000' && res.data) {
+				if (res.data.coups) {
+					const forceCoupons = res.data.coups.filter((coupon) => coupon.forceFlag === 'Y');
+					if (forceCoupons.length > 0) {
+						this.setState({
+							coupId: forceCoupons[0].coupId
+						});
+					}
+				}
+			}
+		});
+	};
+
 	// 立即放款至信用卡
 	loanHandler = () => {
 		buriedPointEvent(home.lendLoanBtnClick);
@@ -76,7 +108,7 @@ export default class lend_confirm_page extends PureComponent {
 			prodId: credictInfo.prodId, // 产品ID
 			autId: credictInfo.autId || '', // 信用卡账单ID
 			repayType: '0', // 还款方式
-			coupId: '', // 优惠劵id 默认不使用优惠劵,因为无法判断这次优惠劵是否可用
+			coupId: this.state.coupId, // 优惠劵id 有强制券就使用,否则就不使用
 			loanAmt: credictInfo.credAmt, // 签约金额
 			prodType: '01',
 			// contacts: selectedList, // 不需要传,因为在提交借款的时候可以传给后台

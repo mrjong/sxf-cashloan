@@ -42,6 +42,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { cardBillAmtRiskBury } from './riskBuryConfig';
 import { isMPOS } from 'utils/common';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+
 let moneyKeyboardWrapProps;
 if (isIPhone) {
 	moneyKeyboardWrapProps = {
@@ -461,7 +462,6 @@ export default class confirm_agency_page extends PureComponent {
 					? '1'
 					: '0'
 		};
-		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
 		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
@@ -491,8 +491,7 @@ export default class confirm_agency_page extends PureComponent {
 						} else {
 							this.setState({
 								repayInfo2: result.data,
-								deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
-								showInterestTotal: result.data.showFlag === '1'
+								deratePrice: result.data.deductAmount || result.data.deductRiskAmt
 							});
 						}
 
@@ -509,21 +508,31 @@ export default class confirm_agency_page extends PureComponent {
 				});
 		});
 	};
-	// 渲染优惠劵
+
+	/**
+	 * 渲染优惠券区块展示
+	 */
 	renderCoupon = () => {
 		const { deratePrice, availableCoupNum } = this.state;
-		if (deratePrice) {
-			return <span className={style.redText}>-{deratePrice}元</span>;
+		if (availableCoupNum) {
+			if (deratePrice) {
+				return <span className={style.redText}>-{deratePrice}元</span>;
+			}
+			//  可用优惠券数量
+			return (
+				<div className={style.couNumBox}>
+					<i />
+					{availableCoupNum}个可用
+				</div>
+			);
 		}
-		//  可用优惠券数量
-		return (
-			<div className={style.couNumBox}>
-				<i />
-				{availableCoupNum}个可用
-			</div>
-		);
+
+		return <span className={[style.listValue, style.greyText].join(' ')}>无可用优惠券</span>;
 	};
-	//获取可使用优惠券条数
+
+	/**
+	 * 获取可使用优惠券条数
+	 */
 	queryCouponCount = () => {
 		const { cardBillAmt, contractData = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
 		let params = {
@@ -537,6 +546,9 @@ export default class confirm_agency_page extends PureComponent {
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
+				if ((!this.props.couponData || JSON.stringify(this.props.couponData) === '{}') && res.data.coups) {
+					this.setRecommendCoupon(res.data.coups);
+				}
 				this.setState(
 					{
 						availableCoupNum: res.data.totalRow
@@ -548,8 +560,23 @@ export default class confirm_agency_page extends PureComponent {
 			}
 		});
 	};
+
+	/**
+	 * 筛选设置推荐使用的优惠券(强制/默认)
+	 */
+	setRecommendCoupon = (couponList = []) => {
+		const forceCoupons = couponList.filter((coupon) => coupon.forceFlag === 'Y');
+		const defaultCoupons = couponList.filter((coupon) => coupon.dfltFlag === 'Y');
+
+		if (forceCoupons.length > 0) {
+			this.props.setCouponDataAction(forceCoupons.length[0]);
+		} else if (defaultCoupons.length > 0) {
+			this.props.setCouponDataAction(defaultCoupons.length[0]);
+		}
+	};
+
 	// 选择优惠劵
-	selectCoupon = (useFlag) => {
+	selectCoupon = () => {
 		const {
 			repayInfo2,
 			contractData,
@@ -560,8 +587,12 @@ export default class confirm_agency_page extends PureComponent {
 			checkBox1,
 			insuranceModalChecked,
 			isJoinInsurancePlan,
-			insurancePlanText
+			insurancePlanText,
+			availableCoupNum
 		} = this.state;
+		const { couponData } = this.props;
+		//强制券禁止进入优惠券页
+		if (couponData.forceFlag === 'Y') return;
 		if (!repayInfo2 || !repayInfo2.perdLth) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -576,17 +607,10 @@ export default class confirm_agency_page extends PureComponent {
 			insuranceModalChecked,
 			insurancePlanText
 		});
-		if (useFlag) {
-			this.props.history.push({
-				pathname: '/mine/coupon_page',
-				search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`,
-				state: { nouseCoupon: true }
-			});
-			return;
-		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`
+			search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`,
+			state: { nouseCoupon: !availableCoupNum }
 		});
 	};
 	// 查看借款合同
@@ -602,6 +626,7 @@ export default class confirm_agency_page extends PureComponent {
 			isJoinInsurancePlan,
 			insurancePlanText
 		} = this.state;
+		const { couponData = {} } = this.props;
 		const billPrcpAmt = this.props.form.getFieldValue('cardBillAmt');
 		this.props.setConfirmAgencyInfoAction({
 			cardBillAmt,
@@ -615,7 +640,11 @@ export default class confirm_agency_page extends PureComponent {
 		});
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
 		const osType = getDeviceType();
-		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${repayInfo.withholdBankAgrNo}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&tokenId=${tokenId}`;
+		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${
+			item.contractNo
+		}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${
+			repayInfo.withholdBankAgrNo
+		}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&tokenId=${tokenId}&coupId=${couponData.coupId || ''}`;
 		if (item.contractType === 'FXBZ') {
 			//风险保障金合同
 			pathUrl = pathUrl + '&riskGuarantee=1';
@@ -1038,7 +1067,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	render() {
-		const { history, toast, userInfo } = this.props;
+		const { history, toast, userInfo, couponData = {} } = this.props;
 		const { getFieldProps } = this.props.form;
 		const {
 			contractData,
@@ -1052,7 +1081,6 @@ export default class confirm_agency_page extends PureComponent {
 			smsCode,
 			showCouponAlert,
 			couponAlertData,
-			showInterestTotal,
 			checkBox1,
 			cardBillAmt,
 			lendersDate,
@@ -1061,7 +1089,6 @@ export default class confirm_agency_page extends PureComponent {
 			showInsuranceModal,
 			FXBZ_contract = [],
 			insuranceModalChecked,
-			availableCoupNum,
 			isRiskGuaranteeProd,
 			riskGuaranteePlans
 		} = this.state;
@@ -1162,38 +1189,21 @@ export default class confirm_agency_page extends PureComponent {
 								<li
 									className={style.listItem}
 									onClick={() => {
-										this.selectCoupon(!availableCoupNum);
+										this.selectCoupon();
 									}}
 								>
 									<label>优惠券</label>
-									{availableCoupNum ? (
-										<div className={[style.listValue, style.hasArrow].join(' ')}>
-											{this.renderCoupon()}
-											<Icon type="right" className={style.icon} />
-										</div>
-									) : (
-										(repayInfo2 && (
-											<span className={[style.listValue, style.greyText, style.hasArrow].join(' ')}>
-												无可用优惠券
-												<Icon type="right" className={style.icon} />
-											</span>
-										)) || (
-											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
-												请选择
-												<Icon type="right" className={style.icon} />
-											</span>
-										)
-									)}
+									<div
+										className={[style.listValue, couponData.forceFlag !== 'Y' && style.hasArrow].join(' ')}
+									>
+										{this.renderCoupon()}
+										{couponData.forceFlag !== 'Y' && <Icon type="right" className={style.icon} />}
+									</div>
 								</li>
 							</ul>
 
 							<ul className={style.pannel}>
-								<li
-									className={
-										repayInfo2 && showInterestTotal ? `${style.listItem} ${style.listItem3}` : style.listItem
-									}
-									onClick={this.handleShowModal}
-								>
+								<li className={`${style.listItem} ${style.listItem3}`} onClick={this.handleShowModal}>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
 									<div>
 										{(this.getTerm() && repayInfo2 && (
@@ -1210,7 +1220,7 @@ export default class confirm_agency_page extends PureComponent {
 												)}
 											</span>
 										)) || <span className={style.listValue2}>暂无</span>}
-										{repayInfo2 && showInterestTotal && (
+										{
 											<div>
 												<div className={style.listDesc}>
 													<span className={style.moneyTit}>优惠后应还</span>
@@ -1235,7 +1245,7 @@ export default class confirm_agency_page extends PureComponent {
 													</span>
 												</div>
 											</div>
-										)}
+										}
 									</div>
 								</li>
 							</ul>

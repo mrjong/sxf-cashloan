@@ -69,6 +69,7 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCode: '',
 			resaveBankCode: '',
 			checkBox1: false,
+			deratePrice: '',
 			loanUsage: {},
 			repayCardNo: '', //借款银行卡卡号
 			repayCardLast: '', //借款银行卡后四位
@@ -340,7 +341,8 @@ export default class loan_fenqi_page extends PureComponent {
 						});
 					} else {
 						this.setState({
-							repayPlanInfo: result.data
+							repayPlanInfo: result.data,
+							deratePrice: result.data.deductAmount || result.data.deductRiskAmt
 						});
 					}
 					resolve();
@@ -373,6 +375,9 @@ export default class loan_fenqi_page extends PureComponent {
 		};
 		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
 			if (res.code === '000000' && res.data) {
+				if ((!this.props.couponData || JSON.stringify(this.props.couponData) === '{}') && res.data.coups) {
+					this.setRecommendCoupon(res.data.coups);
+				}
 				this.setState(
 					{
 						availableCoupNum: res.data.totalRow
@@ -385,11 +390,27 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	/**
+	 * 筛选设置推荐使用的优惠券(强制/默认)
+	 */
+	setRecommendCoupon = (couponList = []) => {
+		const forceCoupons = couponList.filter((coupon) => coupon.forceFlag === 'Y');
+		const defaultCoupons = couponList.filter((coupon) => coupon.dfltFlag === 'Y');
+
+		if (forceCoupons.length > 0) {
+			this.props.setCouponDataAction(forceCoupons.length[0]);
+		} else if (defaultCoupons.length > 0) {
+			this.props.setCouponDataAction(defaultCoupons.length[0]);
+		}
+	};
+
 	// 选择优惠劵
 	selectCoupon = () => {
-		const { protocolList, availableCoupNum, isJoinInsurancePlan } = this.state;
+		const { protocolList, availableCoupNum, isJoinInsurancePlan, loanMoney, loanDate = {} } = this.state;
+		const { couponData } = this.props;
+		if (couponData.forceFlag === 'Y') return;
+
 		this.storeTempData();
-		const { loanMoney, loanDate = {} } = this.state;
 		let prodId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
 		let perCont = loanDate.prodUnit === 'M' ? loanDate.prodLth : 1;
 
@@ -879,12 +900,12 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	renderListRowCouponValue() {
-		const { availableCoupNum, repayPlanInfo } = this.state;
+		const { availableCoupNum, deratePrice } = this.state;
 		if (availableCoupNum) {
-			if (repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt) {
+			if (deratePrice) {
 				return (
 					<span className={style.repayPlan} style={{ color: '#FE6666' }}>
-						{repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt}元
+						-{deratePrice}元
 					</span>
 				);
 			}
@@ -986,7 +1007,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	render() {
-		const { userInfo = {} } = this.props;
+		const { userInfo = {}, couponData = {} } = this.props;
 		const {
 			usageModal,
 			loanUsage,
@@ -1114,11 +1135,15 @@ export default class loan_fenqi_page extends PureComponent {
 							<li className={style.listItem}>
 								<label>优惠券</label>
 								<div
-									className={`${style.listValue} ${style.hasArrow} ${style.couponListValue}`}
+									className={[
+										style.listValue,
+										couponData.forceFlag !== 'Y' && style.hasArrow,
+										style.couponListValue
+									].join(' ')}
 									onClick={this.selectCoupon}
 								>
 									{this.renderListRowCouponValue()}
-									<Icon type="right" className={style.icon} />
+									{couponData.forceFlag !== 'Y' && <Icon type="right" className={style.icon} />}
 								</div>
 							</li>
 						) : null}
