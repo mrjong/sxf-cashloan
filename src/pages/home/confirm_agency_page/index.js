@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-05-09 16:49:11
+ * @LastEditTime: 2020-05-11 14:07:33
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -1249,7 +1249,7 @@ export default class confirm_agency_page extends PureComponent {
 						>
 							申请借款
 						</ButtonCustom>
-						<span className={style.bottomTip}>当借款由持牌机构放款，年化综合息费率不超36%</span>
+						<span className={style.bottomTip}>当前借款由持牌机构放款，年化综合息费率不超36%</span>
 					</div>
 
 					{isShowTipModal ? (

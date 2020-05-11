@@ -1227,7 +1227,7 @@ export default class loan_fenqi_page extends PureComponent {
 					<ButtonCustom onClick={this.loanApplySubmit} type={this.validateFn() ? 'yellow' : 'default'}>
 						签约借款
 					</ButtonCustom>
-					<span className={style.bottomTip}>当借款由持牌机构放款，年化综合息费率不超36%</span>
+					<span className={style.bottomTip}>当前借款由持牌机构放款，年化综合息费率不超36%</span>
 				</div>
 				<Modal
 					popup
