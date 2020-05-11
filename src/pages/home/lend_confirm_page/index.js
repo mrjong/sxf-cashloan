@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-30 11:35:40
+ * @LastEditTime: 2020-05-11 15:17:03
  */
 import React, { PureComponent } from 'react';
 import { Icon } from 'antd-mobile';
@@ -89,7 +89,6 @@ export default class lend_confirm_page extends PureComponent {
 			})
 			.then((result) => {
 				this.props.toast.hide();
-				console.log(result);
 				if (result && result.code === '000000') {
 					this.jumpRouter(result.data);
 					buriedPointEvent(home.borrowingSubmitResult, {
