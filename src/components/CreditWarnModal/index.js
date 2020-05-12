@@ -13,12 +13,12 @@ export default class CreditWarnModal extends React.PureComponent {
 		super(props);
 		this.state = {
 			seconds: 3,
-			showModal: true,
+			showModal: false,
 			deductionAmount: 24000
 		};
 	}
 	componentDidMount() {
-		// this.queryDeDuctionAmt();
+		this.queryDeDuctionAmt();
 	}
 
 	componentWillUnmount() {
@@ -31,10 +31,10 @@ export default class CreditWarnModal extends React.PureComponent {
 	queryDeDuctionAmt = () => {
 		fetch.post(loan_queryDeDuctionAmt).then((res) => {
 			if (res.code === '000000') {
-				console.log(res);
 				this.setState(
 					{
-						deductionAmount: res.data.deductionAmount
+						deductionAmount: res.data.deductionAmount,
+						showModal: true
 					},
 					() => {
 						this.startInterval();

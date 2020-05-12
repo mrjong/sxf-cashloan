@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
-import { Modal, InputItem, Icon } from 'antd-mobile';
-import { ButtonCustom, RepayPlanModal, ProtocolSmsModal, ProtocolRead } from 'components';
+import { Modal, InputItem, Icon, NoticeBar } from 'antd-mobile';
+import { ButtonCustom, RepayPlanModal, ProtocolSmsModal, ProtocolRead, Popover } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { preLoan, home, loan_fenqi } from 'utils/analytinsType';
@@ -259,6 +259,7 @@ export default class pre_loan_page extends PureComponent {
 		};
 
 		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((res) => {
+			this.props.toast.hide();
 			if (res.code === '000000') {
 				this.setState(
 					{
@@ -309,7 +310,6 @@ export default class pre_loan_page extends PureComponent {
 		this.props.$fetch.post(loan_loanPlan, params).then((res) => {
 			this.props.toast.hide();
 			if (res.code === '000000') {
-				this.props.toast.hide();
 				this.setState({
 					repayPlanInfo: res.data,
 					deratePrice: res.data.deductAmount || res.data.deductRiskAmt
@@ -1000,6 +1000,26 @@ export default class pre_loan_page extends PureComponent {
 									<Icon type="right" className={style.icon} />
 								</div>
 							</li>
+						</ul>
+					</div>
+					<div className={style.pannel}>
+						{loanMoney &&
+							loanDate &&
+							loanDate.prodCount &&
+							replayPlanLength &&
+							couponData.forceFlag === 'Y' && (
+								<Popover text="按时还款可享受优惠，逾期作废" popoverStyle={{ top: '-0.2rem' }} />
+							)}
+						<ul>
+							{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
+								<li className={style.listItem}>
+									<label>优惠券</label>
+									<div className={`${style.listValue} ${style.couponListValue}`} onClick={this.selectCoupon}>
+										{this.renderListRowCouponValue()}
+										{couponData.forceFlag !== 'Y' && <Icon type="right" className={style.icon} />}
+									</div>
+								</li>
+							) : null}
 							<li className={style.listItem}>
 								<label>还款计划</label>
 								<span>
@@ -1018,15 +1038,6 @@ export default class pre_loan_page extends PureComponent {
 									)}
 								</span>
 							</li>
-							{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
-								<li className={style.listItem}>
-									<label>优惠券</label>
-									<div className={`${style.listValue} ${style.couponListValue}`} onClick={this.selectCoupon}>
-										{this.renderListRowCouponValue()}
-										{couponData.forceFlag !== 'Y' && <Icon type="right" className={style.icon} />}
-									</div>
-								</li>
-							) : null}
 						</ul>
 					</div>
 					<div className={style.pannel}>
@@ -1106,6 +1117,19 @@ export default class pre_loan_page extends PureComponent {
 					>
 						签约借款
 					</ButtonCustom>
+					<span className={style.fix_bottom}>
+						<NoticeBar
+							marqueeProps={{
+								loop: true,
+								leading: 1000,
+								trailing: 1000,
+								style: { color: '#f76c5c', fontSize: '0.22rem' }
+							}}
+							icon={null}
+						>
+							履约还款年化利率不超过24%.提示:若发生逾期综合息费不超过36%
+						</NoticeBar>
+					</span>
 				</div>
 				<Modal
 					popup

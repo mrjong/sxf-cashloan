@@ -3,7 +3,7 @@
  * @LastEditTime: 2020-05-11 14:07:33
  */
 import React, { PureComponent } from 'react';
-import { InputItem, Icon } from 'antd-mobile';
+import { InputItem, Icon, NoticeBar } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, DC_PAYCARD } from 'utils/analytinsType';
@@ -15,7 +15,14 @@ import { createForm } from 'rc-form';
 import { getFirstError, handleInputBlur, getDeviceType } from 'utils';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
-import { RepayPlanModal, ButtonCustom, ProtocolSmsModal, ProtocolRead, InsuranceModal } from 'components';
+import {
+	RepayPlanModal,
+	ButtonCustom,
+	ProtocolSmsModal,
+	ProtocolRead,
+	InsuranceModal,
+	Popover
+} from 'components';
 import CouponAlert from './components/CouponAlert';
 import {
 	loan_queryLoanApplInfo,
@@ -506,6 +513,9 @@ export default class confirm_agency_page extends PureComponent {
 	 */
 	queryCouponCount = () => {
 		const { cardBillAmt, contractData = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
+		if (!parseFloat(cardBillAmt) > 0) {
+			return;
+		}
 		let params = {
 			loanAmt: cardBillAmt,
 			prodId: contractData[0].prodId,
@@ -1111,6 +1121,9 @@ export default class confirm_agency_page extends PureComponent {
 								)}
 							</ul>
 							<ul className={style.pannel}>
+								{couponData.forceFlag === 'Y' && (
+									<Popover text="按时还款可享受优惠，逾期作废" popoverStyle={{ top: '-0.2rem' }} />
+								)}
 								<li
 									className={style.listItem}
 									onClick={() => {
@@ -1235,7 +1248,19 @@ export default class confirm_agency_page extends PureComponent {
 						>
 							申请借款
 						</ButtonCustom>
-						<span className={style.bottomTip}>当前借款由持牌机构放款，年化综合息费率不超36%</span>
+						<span className={style.fix_bottom}>
+							<NoticeBar
+								marqueeProps={{
+									loop: true,
+									leading: 1000,
+									trailing: 1000,
+									style: { color: '#f76c5c', fontSize: '0.22rem' }
+								}}
+								icon={null}
+							>
+								履约还款年化利率不超过24%.提示:若发生逾期综合息费不超过36%
+							</NoticeBar>
+						</span>
 					</div>
 
 					<RepayPlanModal

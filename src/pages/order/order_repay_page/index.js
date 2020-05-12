@@ -67,7 +67,16 @@ export default class order_repay_page extends PureComponent {
 				if (!this.viewRef) return;
 				this.viewRef.showDataView();
 				if (res.code === '000000' && res.data) {
-					const { billOvduStartDt, billSts, preds, perdNum, overdueDays, perdLth, riskFlsg } = res.data;
+					const {
+						billOvduStartDt,
+						billSts,
+						preds,
+						perdNum,
+						overdueDays,
+						perdLth,
+						riskFlsg,
+						newFlsg
+					} = res.data;
 					const isShowBottomBtn = billSts === '1' || billSts === '-1'; // 主状态
 					this.setState(
 						{
@@ -77,7 +86,8 @@ export default class order_repay_page extends PureComponent {
 							isShowBottomBtn,
 							overdueDays,
 							billOvduStartDt,
-							riskFlsg: riskFlsg === '1' //为1风险保障金账单
+							riskFlsg: riskFlsg === '1', //为1风险保障金账单
+							newFlsg: newFlsg === '1' //为1(不配服务费和风险金)
 						},
 						() => {
 							this.calcPayTotalMoney();
@@ -434,7 +444,8 @@ export default class order_repay_page extends PureComponent {
 			buttonDisabled,
 			showOverdueTipModal,
 			isShowSplitOrderTip,
-			riskFlsg
+			riskFlsg,
+			newFlsg
 		} = this.state;
 		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 
@@ -469,6 +480,7 @@ export default class order_repay_page extends PureComponent {
 								}}
 								onFeesClick={this.handleFeesClick}
 								riskFlsg={riskFlsg}
+								newFlsg={newFlsg}
 							/>
 						</Card.Body>
 					</Card>

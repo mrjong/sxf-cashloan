@@ -23,9 +23,9 @@
 		}
 	}
 	.billInput {
-    // width: 583px;
-    width: 100%;
-    background-color: transparent;
+		// width: 583px;
+		width: 100%;
+		background-color: transparent;
 		input {
 			text-align: left;
 			font-size: 56px;
@@ -40,34 +40,34 @@
 	}
 
 	.pannel {
-    overflow: hidden;
-    background-color: #fff;
-    border-radius: 10px;
+		position: relative;
+		// overflow: hidden;
+		background-color: #fff;
+		border-radius: 10px;
 		.listItem {
 			position: relative;
-      display: flex;
-      flex-wrap: wrap;
+			display: flex;
+			flex-wrap: wrap;
 			min-height: 100px;
 			justify-content: space-between;
 			align-items: center;
 			box-sizing: border-box;
 			font-size: 28px;
-      color: #394259;
-      padding: 30px 30px;
-
-    }
-    .listItem + .listItem {
-      &::after {
+			color: #394259;
+			padding: 30px 30px;
+		}
+		.listItem + .listItem {
+			&::after {
 				@include setTopLine(#f0f1f5);
-        left: 40px;
-        right: 40px;
+				left: 40px;
+				right: 40px;
 			}
-    }
+		}
 
 		.listValue {
-      // font-weight: 700;
-      flex: 1;
-      text-align: right;
+			// font-weight: 700;
+			flex: 1;
+			text-align: right;
 		}
 
 		.icon {
@@ -76,13 +76,13 @@
 			height: 50px;
 			margin-bottom: 5px;
 		}
-  }
-  .pannel + .pannel {
-    margin-top: 30px;
-  }
+	}
+	.pannel + .pannel {
+		margin-top: 30px;
+	}
 
 	.protocolLink {
-    margin: 24px 0 24px;
+		margin: 24px 0 24px;
 	}
 
 	.greyText {
@@ -96,7 +96,7 @@
 	}
 
 	.highlightText {
-    color: $colorInputPlaceholder;
+		color: $colorInputPlaceholder;
 		// font-weight: 700;
 	}
 
@@ -107,18 +107,18 @@
 	}
 
 	.tagListWrap {
-    margin-top: 20px;
-    width: 100%;
-    margin-bottom: -20px;
+		margin-top: 20px;
+		width: 100%;
+		margin-bottom: -20px;
 	}
 
 	.tagButton {
 		min-width: 150px;
-  }
-  .tagButton {
-    margin-right: 30px;
-    margin-bottom: 20px;
-  }
+	}
+	.tagButton {
+		margin-right: 30px;
+		margin-bottom: 20px;
+	}
 
 	.tagButtonActive {
 		color: #fe6666;
@@ -127,28 +127,29 @@
 
 	.buttonWrap {
 		width: 100%;
-		padding: 30px 40px;
 		position: fixed;
 		bottom: 0;
-    left: 0;
-    box-sizing: border-box;
-    background-color: $colorBg;
+		left: 0;
+		box-sizing: border-box;
+		background-color: #fff;
+		padding: 16px 40px 0 40px;
+		text-align: center;
 	}
 	// 优惠劵金额展示
 	.couponListValue {
 		.icon {
 			margin-bottom: 0;
 		}
-  }
+	}
 
-  .repayPlan {
-    font-size: 30px;
-    color: #B2B6BF;
-  }
-  .couponBtn {
-    background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+	.repayPlan {
+		font-size: 30px;
+		color: #b2b6bf;
+	}
+	.couponBtn {
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
 		color: #fff;
-  }
+	}
 	.couNumBox {
 		display: flex;
 		height: 42px;
@@ -168,22 +169,34 @@
 			background-size: 100%;
 			margin-right: 10px;
 		}
-  }
+	}
 }
 
 :global {
-  .loan_fenqi_page{
-    .am-list-line {
-      padding-right: 0;
-    }
-  }
-  .purpose_modal {
-    .am-modal-content {
-      border-radius: 10px 10px 0 0;
-    }
-  }
+	.loan_fenqi_page {
+		.am-list-line {
+			padding-right: 0;
+		}
+	}
+	.purpose_modal {
+		.am-modal-content {
+			border-radius: 10px 10px 0 0;
+		}
+	}
 }
 
+.fix_bottom {
+	:global {
+		.am-notice-bar {
+			height: 50px;
+			line-height: 50px;
+			background-color: #fff;
+		}
+		.am-notice-bar-content {
+			margin: 0 15px;
+		}
+	}
+}
 .modalTitle {
 	font-size: 36px;
 	color: $colorBlack;
@@ -203,14 +216,14 @@
 	line-height: 110px;
 	width: 100%;
 	font-size: 32px;
-  color: #121c32;
+	color: #121c32;
 	&::after {
 		@include setBottomLine(#f0f1f5);
 		left: 0;
 	}
 }
 .modalItemActive {
-  color: $colorGolden;
+	color: $colorGolden;
 }
 
 .modal_content {

@@ -35,7 +35,7 @@ import FixedBar from './FixedBar';
 import ExamineComponents from './ExamineComponents';
 import ACTipAlert from './ACTipAlert';
 import CreditWarnModal from './CreditWarnModal';
-
+import Popover from './Popover';
 export {
 	FooterBar,
 	LoadingView,
@@ -69,5 +69,6 @@ export {
 	FixedBar,
 	ExamineComponents,
 	ACTipAlert,
-	CreditWarnModal
+	CreditWarnModal,
+	Popover
 };

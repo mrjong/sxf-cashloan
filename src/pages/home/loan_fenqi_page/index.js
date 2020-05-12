@@ -1,8 +1,15 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
-import { Modal, InputItem, Icon } from 'antd-mobile';
-import { ButtonCustom, RepayPlanModal, ProtocolSmsModal, ProtocolRead, InsuranceModal } from 'components';
+import { Modal, InputItem, Icon, NoticeBar } from 'antd-mobile';
+import {
+	ButtonCustom,
+	RepayPlanModal,
+	ProtocolSmsModal,
+	ProtocolRead,
+	InsuranceModal,
+	Popover
+} from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
@@ -266,6 +273,7 @@ export default class loan_fenqi_page extends PureComponent {
 		};
 
 		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((result) => {
+			this.props.toast.hide();
 			if (result.code === '000000' && result.data) {
 				let { contracts = [], riskGuarantee } = result.data;
 				let FXBZ_contract = {};
@@ -363,6 +371,9 @@ export default class loan_fenqi_page extends PureComponent {
 	//获取可使用优惠券条数
 	queryCouponCount = () => {
 		const { loanMoney, protocolList = [], isJoinInsurancePlan, isRiskGuaranteeProd } = this.state;
+		if (!parseFloat(loanMoney) > 0) {
+			return;
+		}
 		let params = {
 			loanAmt: loanMoney,
 			prodId: protocolList[0].prodId,
@@ -1115,7 +1126,15 @@ export default class loan_fenqi_page extends PureComponent {
 								<Icon type="right" className={style.icon} />
 							</div>
 						</li>
-
+					</ul>
+					<ul className={style.pannel}>
+						{loanMoney &&
+							loanDate &&
+							loanDate.prodCount &&
+							replayPlanLength &&
+							couponData.forceFlag === 'Y' && (
+								<Popover text="按时还款可享受优惠，逾期作废" popoverStyle={{ top: '-0.2rem' }} />
+							)}
 						{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
 							<li className={style.listItem}>
 								<label>优惠券</label>
@@ -1132,8 +1151,6 @@ export default class loan_fenqi_page extends PureComponent {
 								</div>
 							</li>
 						) : null}
-					</ul>
-					<ul className={style.pannel}>
 						{isRiskGuaranteeProd && (
 							<li className={style.listItem} onClick={this.handleInsuranceModal}>
 								<div className={style.labelBox}>
@@ -1237,7 +1254,19 @@ export default class loan_fenqi_page extends PureComponent {
 					<ButtonCustom onClick={this.loanApplySubmit} type={this.validateFn() ? 'yellow' : 'default'}>
 						签约借款
 					</ButtonCustom>
-					<span className={style.bottomTip}>当前借款由持牌机构放款，年化综合息费率不超36%</span>
+					<span className={style.fix_bottom}>
+						<NoticeBar
+							marqueeProps={{
+								loop: true,
+								leading: 1000,
+								trailing: 1000,
+								style: { color: '#f76c5c', fontSize: '0.22rem' }
+							}}
+							icon={null}
+						>
+							履约还款年化利率不超过24%.提示:若发生逾期综合息费不超过36%
+						</NoticeBar>
+					</span>
 				</div>
 				<Modal
 					popup
