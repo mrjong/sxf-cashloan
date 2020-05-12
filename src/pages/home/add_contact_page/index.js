@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-04-29 17:03:47
+ * @LastEditTime: 2020-05-09 16:47:47
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -17,10 +17,12 @@ import { setCacheContactAction } from 'reduxes/actions/staticActions';
 import { setSaveContactAction, setCredictInfoAction } from 'reduxes/actions/commonActions';
 import { StepTitle } from 'components';
 import { Modal, Progress } from 'antd-mobile';
-import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import fetch from 'sx-fetch';
-import { loan_loanSub } from 'fetch/api.js';
+import { loan_loanSub, loan_queryContactsList } from 'fetch/api.js';
 import qs from 'qs';
+import { isMPOS } from 'utils/common';
+
 let timer;
 let timerOut;
 let queryData = {};
@@ -46,36 +48,101 @@ export default class add_contact_page extends PureComponent {
 		super(props);
 		this.state = {
 			percent: 0,
-			progressLoading: false
+			progressLoading: false,
+			contactInfo: {} // 联系人相关信息
 		};
 	}
 	componentWillMount() {
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 
-		const { cacheContact } = this.props;
-		if (cacheContact && cacheContact.length > 0) {
-			return;
-		}
-		this.props.setCacheContactAction([
-			{ name: '', number: '' },
-			{ name: '', number: '' },
-			{ name: '', number: '' },
-			{ name: '', number: '' },
-			{ name: '', number: '' }
-		]);
+		this.queryContactList();
 	}
 	componentDidMount() {}
 	componentWillUnmount() {}
 
+	queryContactList = () => {
+		this.props.toast.loading('加载中...', 10);
+		this.props.$fetch.post(loan_queryContactsList).then((result) => {
+			this.props.toast.hide();
+			if (result && result.code === '000000' && result.data !== null) {
+				// base64解密
+				if (result.data.contacts && result.data.contacts.length) {
+					// map 改变引用型数组,值类型数组不改变
+					result.data.contacts.map((item, index) => {
+						item.name = base64Decode(item.name);
+						item.number = base64Decode(item.number);
+						if (index < 5) {
+							item.isMarked = true;
+						} else {
+							item.isMarked = false;
+						}
+						item.uniqMark = 'uniq' + index;
+						return item;
+					});
+				}
+				if (result.data.excludedContacts && result.data.excludedContacts.length) {
+					for (let i = 0; i < result.data.excludedContacts.length; i++) {
+						result.data.excludedContacts[i] = base64Decode(result.data.excludedContacts[i]);
+					}
+				}
+				this.setState({
+					contactInfo: result.data
+				});
+				this.calculationNum(result.data.contacts);
+			} else {
+				this.props.toast.info(result.message);
+			}
+		});
+	};
+
+	/**
+	 * @description: 将后端联系人数据缓存起来  优先取本地 再去后端
+	 * @param {type}
+	 * @return:
+	 */
+
+	calculationNum = (contactList) => {
+		const { cacheContact } = this.props;
+		const emptyList = [
+			{ name: '', number: '', uniqMark: 'uniq0' },
+			{ name: '', number: '', uniqMark: 'uniq1' },
+			{ name: '', number: '', uniqMark: 'uniq2' },
+			{ name: '', number: '', uniqMark: 'uniq3' },
+			{ name: '', number: '', uniqMark: 'uniq4' }
+		];
+		if (!cacheContact || cacheContact.length === 0 || isMPOS()) {
+			this.props.setCacheContactAction((contactList && contactList.slice(0, 5)) || emptyList);
+			return;
+		}
+		let isNull = true;
+		for (let index = 0; index < cacheContact.length; index++) {
+			const element = cacheContact[index];
+			if (element.name) {
+				isNull = false;
+				break;
+			}
+		}
+		if (isNull) {
+			this.props.setCacheContactAction((contactList && contactList.slice(0, 5)) || emptyList);
+		} else {
+			this.props.setCacheContactAction((cacheContact && cacheContact.slice(0, 5)) || emptyList);
+		}
+	};
+
 	// 确认按钮点击
 	confirmHandler = () => {
+		const { contactInfo } = this.state;
 		buriedPointEvent(home.speContactConfirmClick, {
 			contactsLength:
-				queryData.contactsLength && Number(queryData.contactsLength) >= 5 ? '大于等于5' : '小于5'
+				contactInfo &&
+				contactInfo.contacts &&
+				contactInfo.contacts.length &&
+				Number(contactInfo.contacts.length) >= 5
+					? '大于等于5'
+					: '小于5'
 		});
-		const { cacheContact, confirmAgencyInfo = {} } = this.props;
-		const excConatactList =
-			(confirmAgencyInfo.repayInfo && confirmAgencyInfo.repayInfo.excludedContacts) || [];
+		const { cacheContact } = this.props;
+		const excConatactList = (contactInfo && contactInfo.excludedContacts) || [];
 		let filterList = cacheContact.filter((item) => !item.name || !item.number);
 		const inValidNmList = cacheContact.filter((item) => item.name.length > 15);
 		if (filterList.length) {
