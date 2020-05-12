@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-27 11:04:02
+ * @LastEditTime: 2020-05-11 20:11:04
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -447,6 +447,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					<div className={style.inputBox}>
 						<div className={style.dw}>￥</div>
 						<InputItem
+							clear
 							data-sxf-props={JSON.stringify({
 								type: 'input',
 								name: loanMoneyRiskBury.key,
@@ -480,12 +481,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 								this.props.form.setFieldsValue({
 									loanMoney: v ? v : ''
 								});
-							}}
-						/>
-						<i
-							className={style.edit_icon}
-							onClick={() => {
-								this.inputRef.focus();
 							}}
 						/>
 					</div>
