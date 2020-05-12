@@ -17,7 +17,6 @@ import style from './index.scss';
 import { domListen } from 'utils/domListen';
 import { RepayPlanModal, ButtonCustom, ProtocolSmsModal, ProtocolRead, InsuranceModal } from 'components';
 import CouponAlert from './components/CouponAlert';
-import WarningModal from './components/WarningModal';
 import {
 	loan_queryLoanApplInfo,
 	loan_loanPlan,
@@ -98,10 +97,8 @@ export default class confirm_agency_page extends PureComponent {
 			},
 			disabledBtn: true,
 			deratePrice: '',
-			isShowTipModal: false,
 			cardBillAmt: 0,
 			isShowModal: false,
-
 			repayInfo: {},
 			repayInfo2: {},
 			repaymentDate: '',
@@ -284,6 +281,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 获取合同列表和产品id
 	getFundInfo = () => {
+		this.props.toast.loading('', 10);
 		const { lendersDate, repaymentDate, cardBillAmt, repayInfo } = this.state;
 		const { authId } = this.props;
 		this.props.$fetch
@@ -410,12 +408,6 @@ export default class confirm_agency_page extends PureComponent {
 		} else {
 			callback();
 		}
-	};
-	// 关闭弹框
-	handleCloseTipModal = (type) => {
-		this.setState({
-			[type]: false
-		});
 	};
 
 	//计算该显示的还款金额
@@ -569,9 +561,9 @@ export default class confirm_agency_page extends PureComponent {
 		const defaultCoupons = couponList.filter((coupon) => coupon.dfltFlag === 'Y');
 
 		if (forceCoupons.length > 0) {
-			this.props.setCouponDataAction(forceCoupons.length[0]);
+			this.props.setCouponDataAction(forceCoupons[0]);
 		} else if (defaultCoupons.length > 0) {
-			this.props.setCouponDataAction(defaultCoupons.length[0]);
+			this.props.setCouponDataAction(defaultCoupons[0]);
 		}
 	};
 
@@ -590,7 +582,7 @@ export default class confirm_agency_page extends PureComponent {
 			insurancePlanText,
 			availableCoupNum
 		} = this.state;
-		const { couponData } = this.props;
+		const { couponData = {} } = this.props;
 		//强制券禁止进入优惠券页
 		if (couponData.forceFlag === 'Y') return;
 		if (!repayInfo2 || !repayInfo2.perdLth) {
@@ -704,12 +696,6 @@ export default class confirm_agency_page extends PureComponent {
 			}
 		);
 	};
-	handleShowTipModal = () => {
-		this.props.toast.hide();
-		this.setState({
-			isShowTipModal: true
-		});
-	};
 
 	handleButtonClick = () => {
 		const { checkBox1, repayInfo, insurancePlanText, isRiskGuaranteeProd } = this.state;
@@ -726,7 +712,7 @@ export default class confirm_agency_page extends PureComponent {
 			return;
 		}
 		if (insurancePlanText === '暂不考虑') {
-			this.handleShowTipModal();
+			this.handleClickChooseContact();
 			return;
 		}
 		// 埋点
@@ -746,7 +732,7 @@ export default class confirm_agency_page extends PureComponent {
 					actionMsg: '放款'
 				}).then((res) => {
 					if (res === 'LOAN') {
-						this.handleShowTipModal();
+						this.handleClickChooseContact();
 					}
 				});
 			} else if (result && result.code === '999974') {
@@ -881,14 +867,7 @@ export default class confirm_agency_page extends PureComponent {
 		this.calculationNum();
 		// 未参加风险保障计划
 		if (isRiskGuaranteeProd && !isJoinInsurancePlan) {
-			this.setState(
-				{
-					isShowTipModal: false
-				},
-				() => {
-					this.cacheDataHandler();
-				}
-			);
+			this.cacheDataHandler();
 			this.props.history.push('/home/insurance_result_page');
 			return;
 		}
@@ -950,7 +929,6 @@ export default class confirm_agency_page extends PureComponent {
 			repaymentDate,
 			lendersDate,
 			checkBox1,
-			isShowTipModal,
 			repayInfo2,
 			contractData,
 			insurancePlanText,
@@ -965,7 +943,6 @@ export default class confirm_agency_page extends PureComponent {
 			repaymentDate,
 			lendersDate,
 			checkBox1,
-			isShowTipModal,
 			repayInfo2,
 			contractData,
 			insurancePlanText,
@@ -1067,13 +1044,12 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	render() {
-		const { history, toast, userInfo, couponData = {} } = this.props;
+		const { userInfo, couponData = {} } = this.props;
 		const { getFieldProps } = this.props.form;
 		const {
 			contractData,
 			repayInfo,
 			disabledBtn,
-			isShowTipModal,
 			repayInfo2,
 			repaymentDate,
 			isShowModal,
@@ -1312,19 +1288,6 @@ export default class confirm_agency_page extends PureComponent {
 						</ButtonCustom>
 						<span className={style.bottomTip}>当借款由持牌机构放款，年化综合息费率不超36%</span>
 					</div>
-
-					{isShowTipModal ? (
-						<WarningModal
-							history={history}
-							handleConfirm={this.handleClickChooseContact}
-							closeWarningModal={() => {
-								this.handleCloseTipModal('isShowTipModal');
-							}}
-							prodType="代偿"
-							toast={toast}
-							cacheData={this.cacheDataHandler}
-						/>
-					) : null}
 
 					<RepayPlanModal
 						visible={isShowModal}

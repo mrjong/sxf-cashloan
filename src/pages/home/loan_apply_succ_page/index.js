@@ -104,6 +104,8 @@ export default class remit_ing_page extends PureComponent {
 		});
 	};
 
+	ren;
+
 	render() {
 		const {
 			queryData,
@@ -133,7 +135,8 @@ export default class remit_ing_page extends PureComponent {
 					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							{queryData && queryData.prodType && queryData.prodType === '21'
+
+							{queryData && queryData.prodType && (queryData.prodType === '21' || queryData.prodType === '11')
 								? '借款打入银行卡'
 								: '自动放款信用卡'}
 						</div>

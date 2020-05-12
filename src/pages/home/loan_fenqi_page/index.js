@@ -17,7 +17,6 @@ import {
 	setCouponDataAction
 } from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
-import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
 import Images from 'assets/image';
 import style from './index.scss';
 import {
@@ -398,9 +397,9 @@ export default class loan_fenqi_page extends PureComponent {
 		const defaultCoupons = couponList.filter((coupon) => coupon.dfltFlag === 'Y');
 
 		if (forceCoupons.length > 0) {
-			this.props.setCouponDataAction(forceCoupons.length[0]);
+			this.props.setCouponDataAction(forceCoupons[0]);
 		} else if (defaultCoupons.length > 0) {
-			this.props.setCouponDataAction(defaultCoupons.length[0]);
+			this.props.setCouponDataAction(defaultCoupons[0]);
 		}
 	};
 
@@ -520,10 +519,16 @@ export default class loan_fenqi_page extends PureComponent {
 	//阅读合同详情
 	readContract = (item) => {
 		const { loanMoney, resaveCardNo, repayCardNo, loanUsage, isJoinInsurancePlan } = this.state;
+		const { couponData } = this.props;
 		this.storeTempData();
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
 		const osType = getDeviceType();
-		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`;
+		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${
+			item.contractType
+		}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${
+			item.prodId
+		}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}&coupId=${couponData.coupId ||
+			''}`;
 		if (item.contractType === 'FXBZ') {
 			//风险保障金合同
 			pathUrl = pathUrl + '&riskGuarantee=1';
@@ -567,7 +572,6 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal,
 			showInsuranceModal,
 			insurancePlanText,
 			isJoinInsurancePlan,
@@ -595,7 +599,6 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal,
 			showInsuranceModal,
 			insurancePlanText,
 			isJoinInsurancePlan,
@@ -664,7 +667,7 @@ export default class loan_fenqi_page extends PureComponent {
 			return;
 		}
 		if (insurancePlanText === '暂不考虑') {
-			this.handleShowTipModal();
+			this.submitHandler();
 			return;
 		}
 
@@ -709,7 +712,7 @@ export default class loan_fenqi_page extends PureComponent {
 					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.code}-${res.message}` });
 					break;
 				case '999973': // 银行卡已经绑定 直接继续往下走
-					this.handleShowTipModal();
+					this.submitHandler();
 					break;
 				case '999968':
 					this.props.toast.info(res.message);
@@ -735,14 +738,7 @@ export default class loan_fenqi_page extends PureComponent {
 		} = this.state;
 		// 未参加风险保障计划
 		if (isRiskGuaranteeProd && !isJoinInsurancePlan) {
-			this.setState(
-				{
-					isShowTipModal: false
-				},
-				() => {
-					this.storeTempData();
-				}
-			);
+			this.storeTempData();
 			this.props.history.push('/home/insurance_result_page');
 			return;
 		}
@@ -774,7 +770,10 @@ export default class loan_fenqi_page extends PureComponent {
 				if (res.code === '000000') {
 					this.props.toast.info('签约成功，请留意放款通知！');
 					setTimeout(() => {
-						this.props.history.push('/home/home');
+						this.props.history.replace({
+							pathname: '/home/loan_apply_succ_page',
+							search: `?title=预计60秒完成放款&prodType=11`
+						});
 					}, 2000);
 					buriedPointEvent(loan_fenqi.submitResult, {
 						is_success: true
@@ -840,7 +839,7 @@ export default class loan_fenqi_page extends PureComponent {
 				smsCode: ''
 			},
 			() => {
-				this.handleShowTipModal();
+				this.submitHandler();
 			}
 		);
 	};
@@ -856,20 +855,6 @@ export default class loan_fenqi_page extends PureComponent {
 	// 点击勾选协议
 	checkAgreement = () => {
 		this.setState({ checkBox1: !this.state.checkBox1 });
-	};
-
-	handleShowTipModal = () => {
-		this.props.toast.hide();
-		this.setState({
-			isShowTipModal: true
-		});
-	};
-
-	// 关闭弹框
-	handleCloseTipModal = (type) => {
-		this.setState({
-			[type]: false
-		});
 	};
 
 	renderProductListDom = () => {
@@ -1028,7 +1013,6 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveCardLast,
 			resaveCardName,
 			protocolList,
-			isShowTipModal,
 			buttonDisabled,
 			isShowDetail,
 			showInsuranceModal,
@@ -1327,19 +1311,6 @@ export default class loan_fenqi_page extends PureComponent {
 						});
 					}}
 				/>
-
-				{isShowTipModal ? (
-					<WarningModal
-						history={this.props.history}
-						handleConfirm={this.submitHandler}
-						closeWarningModal={() => {
-							this.handleCloseTipModal('isShowTipModal');
-						}}
-						prodType="现金分期"
-						toast={this.props.toast}
-						cacheData={this.storeTempData}
-					/>
-				) : null}
 
 				{isShowSmsModal && (
 					<ProtocolSmsModal

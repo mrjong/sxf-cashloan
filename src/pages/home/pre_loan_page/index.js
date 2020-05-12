@@ -17,7 +17,6 @@ import {
 	setPreLoanDataAction
 } from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
-import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
 import Images from 'assets/image';
 import style from './index.scss';
 import {
@@ -334,6 +333,9 @@ export default class pre_loan_page extends PureComponent {
 	 */
 	queryCouponCount = () => {
 		const { loanMoney, protocolList = [] } = this.state;
+		if (!parseFloat(loanMoney) > 0) {
+			return;
+		}
 		let params = {
 			loanAmt: loanMoney, //签约金额
 			prodId: protocolList[0].prodId, //产品ID 合同的productId
@@ -368,9 +370,9 @@ export default class pre_loan_page extends PureComponent {
 		const defaultCoupons = couponList.filter((coupon) => coupon.dfltFlag === 'Y');
 
 		if (forceCoupons.length > 0) {
-			this.props.setCouponDataAction(forceCoupons.length[0]);
+			this.props.setCouponDataAction(forceCoupons[0]);
 		} else if (defaultCoupons.length > 0) {
-			this.props.setCouponDataAction(defaultCoupons.length[0]);
+			this.props.setCouponDataAction(defaultCoupons[0]);
 		}
 	};
 
@@ -512,11 +514,16 @@ export default class pre_loan_page extends PureComponent {
 	//阅读合同详情
 	readContract = (item) => {
 		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
+		const { couponData } = this.props;
 		this.storeTempData();
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
-
 		const osType = getDeviceType();
-		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`;
+		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${
+			item.contractType
+		}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${
+			item.prodId
+		}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}&coupId=${couponData.coupId ||
+			''}`;
 		if (osType === 'IOS') {
 			store.setHrefFlag(true);
 			window.location.href = pathUrl;
@@ -552,7 +559,6 @@ export default class pre_loan_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal,
 			productListCopy
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
@@ -574,7 +580,6 @@ export default class pre_loan_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal,
 			productListCopy
 		});
 	};
@@ -677,7 +682,7 @@ export default class pre_loan_page extends PureComponent {
 					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.code}-${res.message}` });
 					break;
 				case '999973': // 银行卡已经绑定 直接继续往下走
-					this.handleShowTipModal();
+					this.submitHandler();
 					break;
 				case '999968':
 					this.props.toast.info(res.message);
@@ -692,8 +697,6 @@ export default class pre_loan_page extends PureComponent {
 	};
 
 	submitHandler = () => {
-		// 关闭弹框,防止补实名和人脸的弹框盖在上面
-		this.handleCloseTipModal('isShowTipModal');
 		this.props.toast.loading('', 10);
 		this.storeTempData();
 		const { couponData } = this.props;
@@ -774,7 +777,7 @@ export default class pre_loan_page extends PureComponent {
 				smsCode: ''
 			},
 			() => {
-				this.handleShowTipModal();
+				this.submitHandler();
 			}
 		);
 	};
@@ -792,20 +795,6 @@ export default class pre_loan_page extends PureComponent {
 		buriedPointEvent(preLoan.loanProtocolSelect);
 		sxfburiedPointEvent(preCheckboxClickRiskBury.key);
 		this.setState({ checkBox1: !this.state.checkBox1 });
-	};
-
-	handleShowTipModal = () => {
-		this.props.toast.hide();
-		this.setState({
-			isShowTipModal: true
-		});
-	};
-
-	// 关闭弹框
-	handleCloseTipModal = (type) => {
-		this.setState({
-			[type]: false
-		});
 	};
 
 	renderProductListDom = () => {
@@ -912,7 +901,6 @@ export default class pre_loan_page extends PureComponent {
 			resaveCardLast,
 			resaveCardName,
 			protocolList,
-			isShowTipModal,
 			buttonDisabled,
 			isShowDetail
 		} = this.state;
@@ -1163,19 +1151,6 @@ export default class pre_loan_page extends PureComponent {
 						this.props.history.push('/home/payment_notes');
 					}}
 				/>
-
-				{isShowTipModal ? (
-					<WarningModal
-						history={this.props.history}
-						handleConfirm={this.submitHandler}
-						closeWarningModal={() => {
-							this.handleCloseTipModal('isShowTipModal');
-						}}
-						prodType="预授信"
-						toast={this.props.toast}
-						cacheData={this.storeTempData}
-					/>
-				) : null}
 
 				{isShowSmsModal && (
 					<ProtocolSmsModal
