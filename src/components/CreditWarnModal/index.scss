@@ -1,0 +1,43 @@
+.title {
+	font-size: 46px;
+	color: #121b33;
+	font-weight: bold;
+}
+
+.subTitle {
+	color: #868f9e;
+	font-size: 28px;
+	margin-top: 10px;
+}
+
+.buttonWrap {
+	display: flex;
+	justify-content: space-between;
+}
+
+.button {
+	width: 320px;
+	background-color: #f0f1f5;
+	border: 1px solid #dddfe6;
+}
+
+.activeButton {
+	background-color: #ffd210;
+	border-color: #ffd210;
+}
+
+
+.modalInner {
+	padding: 55px 40px 80px;
+}
+
+.antModal {
+	:global {
+		.am-modal-content {
+			border-radius: 10px 10px 0 0;
+			position: relative;
+			box-sizing: border-box;
+			text-align: left;
+		}
+	}
+}

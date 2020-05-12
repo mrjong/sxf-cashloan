@@ -32,6 +32,9 @@ import InsuranceModal from './InsuranceModal';
 import TipConfirmModal from './TipConfirmModal';
 import ProtocolRead from './ProtocolRead';
 import FixedBar from './FixedBar';
+import ExamineComponents from './ExamineComponents';
+import ACTipAlert from './ACTipAlert';
+import CreditWarnModal from './CreditWarnModal';
 
 export {
 	FooterBar,
@@ -63,5 +66,8 @@ export {
 	InsuranceModal,
 	TipConfirmModal,
 	ProtocolRead,
-	FixedBar
+	FixedBar,
+	ExamineComponents,
+	ACTipAlert,
+	CreditWarnModal
 };
