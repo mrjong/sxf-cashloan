@@ -90,7 +90,7 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</div>
 
-				<CreditWarnModal toast={this.props.toast} />
+				<CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} />
 
 				<ButtonCustom
 					onClick={() => {

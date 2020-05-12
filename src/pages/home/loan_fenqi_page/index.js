@@ -680,6 +680,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
+		this.props.toast.loading('', 10);
 		const { resaveCardNo, resaveBankCode } = this.state;
 		let params = {
 			agrNo: resaveCardNo,

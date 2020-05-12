@@ -55,7 +55,9 @@ export default {
 		no_card: require('./bg/no_card.png'),
 		no_coupon: require('./bg/no_coupon.png'),
 		no_message: require('./bg/no_message.png'),
-		no_money: require('./bg/no_money.png')
+		no_money: require('./bg/no_money.png'),
+		credit_warn_bg: require('./bg/credit_warn_bg.png'),
+		dunpai: require('./bg/dunpai.png')
 	},
 
 	// 按钮

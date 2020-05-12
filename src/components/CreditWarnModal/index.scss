@@ -1,13 +1,21 @@
 .title {
 	font-size: 46px;
 	color: #121b33;
-	font-weight: bold;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.money {
+	font-family: 'DINMitAlt';
+	font-size: 80px;
+	color: #121b33;
 }
 
 .subTitle {
-	color: #868f9e;
-	font-size: 28px;
-	margin-top: 10px;
+	color: #394259;
+  font-size: 28px;
+  position: relative;
+  top: -20px;
 }
 
 .buttonWrap {
@@ -16,7 +24,7 @@
 }
 
 .button {
-	width: 320px;
+	width: 670px;
 	background-color: #f0f1f5;
 	border: 1px solid #dddfe6;
 }
@@ -26,11 +34,71 @@
 	border-color: #ffd210;
 }
 
-
 .modalInner {
-	padding: 55px 40px 80px;
+	padding: 20px 40px 10px;
+	position: relative;
+}
+.dunpai {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 530px;
+	height: 650px;
+}
+.list_title {
+	font-size: 24px;
+	font-weight: bold;
+  color: #121b33;
+  margin-bottom: 10px;
 }
 
+.list_wrap {
+	font-size: 24px;
+	color: #394259;
+	margin-bottom: 40px;
+	margin-left: 30px;
+	li {
+		list-style: disc;
+		margin-bottom: 10px;
+	}
+}
+
+.credit_warn_bg {
+	position: relative;
+  z-index: 10;
+	width: 554px;
+	height: 554px;
+	margin: 0 auto;
+	display: block;
+}
+
+.top_wrap {
+	position: relative;
+  top: 30px;
+}
+
+.white_mask_wrap {
+	position: relative;
+	top: -30px;
+	z-index: 100;
+	background-color: #fff;
+}
+
+.bigImgModal {
+	width: 100%;
+	:global {
+		.am-modal-content {
+			background-color: transparent;
+			position: relative;
+			box-sizing: border-box;
+			text-align: left;
+			padding: 0;
+			.am-modal-body {
+				padding: 0;
+			}
+		}
+	}
+}
 .antModal {
 	:global {
 		.am-modal-content {
