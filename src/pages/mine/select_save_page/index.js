@@ -151,6 +151,13 @@ export default class select_save_page extends PureComponent {
 		}
 	};
 
+	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
+		if (bankIcon) {
+			return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon} />;
+		}
+		return <span className={`bank_ico bank_ico_${bankCode}`} />;
+	}
+
 	render() {
 		const { cardType } = this.props;
 		const { cardList } = this.state;
@@ -184,7 +191,7 @@ export default class select_save_page extends PureComponent {
 													})
 												}
 											>
-												<span className={`bank_ico bank_ico_${item.bankCode}`} />
+												{this.renderBankIcon(item.bankIcon, item.bankCode)}
 												<span className={styles.bank_name}>{item.bankName}</span>
 												<span>···· {item.cardNoLast}</span>
 												{isSelected ? (
@@ -195,7 +202,7 @@ export default class select_save_page extends PureComponent {
 									}
 									return (
 										<li key={index}>
-											<span className={`bank_ico bank_ico_${item.bankCode}`} />
+											{this.renderBankIcon(item.bankIcon, item.bankCode)}
 											<span className={styles.bank_name}>{item.bankName}</span>
 											<span>···· {item.cardNoLast}</span>
 										</li>

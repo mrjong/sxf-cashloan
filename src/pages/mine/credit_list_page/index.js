@@ -32,10 +32,7 @@ const errorData = {
 };
 @setBackGround('#F7F8FA')
 @fetch.inject()
-@connect(
-	() => ({}),
-	{ setAuthId }
-)
+@connect(() => ({}), { setAuthId })
 export default class credit_list_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -137,6 +134,7 @@ export default class credit_list_page extends PureComponent {
 			autId: obj.autId
 		});
 	};
+
 	renderItem = (item) => {
 		let tipText = '';
 		let tipDesc = '';
@@ -160,7 +158,14 @@ export default class credit_list_page extends PureComponent {
 			>
 				<div className={styles.newCardBox}>
 					<div className={styles.newCardLeftBox}>
-						<span className={`${icoClass} ${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`} />
+						{item.bankIcon ? (
+							<img
+								src={item.bankIcon}
+								className={`${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`}
+							/>
+						) : (
+							<span className={`${icoClass} ${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`} />
+						)}
 						<div className={styles.leftTextBox}>
 							<span className={[styles.leftTextTop, isDisable ? styles.isDisable : ''].join(' ')}>
 								{item.bankName}(<span className={styles.leftTextTopNum}>{item.lastNo}</span>)

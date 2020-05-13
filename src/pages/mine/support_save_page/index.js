@@ -77,6 +77,13 @@ export default class support_save_page extends PureComponent {
 		this.props.history.goBack();
 	};
 
+	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
+		if (bankIcon) {
+			return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon} />;
+		}
+		return <span className={`bank_ico bank_ico_${bankCode}`} />;
+	}
+
 	render() {
 		return (
 			<LoadingView
@@ -98,7 +105,7 @@ export default class support_save_page extends PureComponent {
 											this.handleItemSelect(item.bankName);
 										}}
 									>
-										<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+										{this.renderBankIcon(item.bankIcon, item.bankCode)}
 										<span className={styles.bank_name}>{item.bankName}</span>
 									</li>
 								);

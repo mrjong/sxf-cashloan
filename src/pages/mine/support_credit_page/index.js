@@ -33,6 +33,13 @@ export default class support_credit_page extends PureComponent {
 		);
 	};
 
+	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
+		if (bankIcon) {
+			return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon} />;
+		}
+		return <span className={`bank_ico bank_ico_${bankCode}`} />;
+	}
+
 	render() {
 		return (
 			<div className={styles.support_credit_page}>
@@ -41,7 +48,7 @@ export default class support_credit_page extends PureComponent {
 						{this.state.cardList.map((item, index) => {
 							return (
 								<li key={index}>
-									<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+									{this.renderBankIcon(item.bankIcon, item.bankCode)}
 									<span className={styles.bank_name}>{item.bankName}</span>
 								</li>
 							);
