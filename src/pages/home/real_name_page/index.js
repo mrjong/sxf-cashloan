@@ -6,19 +6,28 @@ import React, { Component } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import { createForm } from 'rc-form';
-import { InputItem, List, Toast } from 'antd-mobile';
+import { InputItem, List, Toast, Modal } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
+import linkConf from 'config/link.conf';
+
 import { domListen } from 'utils/domListen';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getDeviceType, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
-import { auth_ocrIdChk, auth_idChk, signup_refreshClientUserInfo } from 'fetch/api';
+import {
+	auth_ocrIdChk,
+	auth_idChk,
+	signup_refreshClientUserInfo,
+	download_queryDownloadUrl
+} from 'fetch/api';
 import ButtonCustom from 'components/ButtonCustom';
+import PopUp from 'components/PopUp';
+import Dialog from 'components/Dialogs';
 import StepTitle from 'components/StepTitle';
 import FEZipImage from 'components/FEZIpImage';
 import FixedHelpCenter from 'components/FixedHelpCenter';
@@ -44,6 +53,7 @@ const isEquipment = window.navigator.userAgent.match(
 	/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
 );
 let urlQuery = '';
+let obj = {};
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -68,14 +78,11 @@ export default class real_name_page extends Component {
 		rightUploaded: false,
 		footerUploaded: false,
 		showState: false,
-		disabledupload: 'false'
+		disabledupload: 'false',
+		downloadUrl: ''
 	};
 
 	componentWillMount() {
-		if (store.getBackFlag()) {
-			store.removeBackFlag(); // 清除返回的flag
-		}
-
 		urlQuery = qs.parse(location.search, { ignoreQueryPrefix: true });
 		let { userInfo } = this.props;
 		if (urlQuery.newTitle) {
@@ -92,8 +99,40 @@ export default class real_name_page extends Component {
 				showState: true
 			});
 		}
+		this.getDownloadUrl();
 	}
-
+	initDialog = (message) => {
+		obj = new PopUp(
+			(
+				<Dialog
+					open
+					options={{ content: message, sureBtnText: '去下载', cancleBtnText: '关闭' }}
+					onRequestClose={(res) => {
+						obj.close();
+						if (res) {
+							//
+							this.downloadClick();
+						}
+					}}
+				/>
+			)
+		);
+		obj.show();
+	};
+	getDownloadUrl = () => {
+		this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
+			(res) => {
+				if (res.code === '000000') {
+					this.setState({
+						downloadUrl: res.data.downloadUrl
+					});
+				}
+			},
+			(error) => {
+				error.message && this.props.toast.info(error.message);
+			}
+		);
+	};
 	handleNameChange = (value) => {
 		this.setState({ idName: value });
 	};
@@ -227,7 +266,18 @@ export default class real_name_page extends Component {
 		}
 		return true;
 	};
-
+	showHBAlert = () => {
+		Modal.alert('', '12121', [
+			{
+				text: '',
+				onPress: () => {}
+			},
+			{
+				text: '去下载',
+				onPress: () => {}
+			}
+		]);
+	};
 	handleSubmit = () => {
 		const { leftUploaded, rightUploaded, idName, idNo, ocrZhengData = {}, ocrFanData = {} } = this.state;
 		if (!leftUploaded) {
@@ -314,6 +364,9 @@ export default class real_name_page extends Component {
 						this.props.history.goBack();
 					}
 					this.confirmBuryPoint(false, result.message);
+				} else if (result.code === '000042') {
+					Toast.hide();
+					this.initDialog(result.message);
 				} else {
 					this.confirmBuryPoint(false, result.message);
 					Toast.info(result.message);
@@ -322,6 +375,17 @@ export default class real_name_page extends Component {
 			.catch(() => {
 				Toast.hide();
 			});
+	};
+	downloadClick = () => {
+		const { downloadUrl } = this.state;
+		const phoneType = getDeviceType();
+
+		if (phoneType === 'IOS') {
+			window.location.href = linkConf.APPSTORE_URL;
+		} else {
+			this.props.toast.info('安全下载中');
+			window.location.href = downloadUrl;
+		}
 	};
 	/**
 	 * @description: 刷新用户登录信息

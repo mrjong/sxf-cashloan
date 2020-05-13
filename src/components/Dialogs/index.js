@@ -161,6 +161,12 @@ class Dialog extends Component {
 		}
 	};
 	render() {
+		const { options = {} } = this.props;
+		const {
+			content = '即将获得50000元，确定放弃吗？',
+			sureBtnText = '再等等',
+			cancleBtnText = '放弃'
+		} = options;
 		return (
 			<div className={style.dialog_container}>
 				{this.state.menuList.length > 0 ? (
@@ -192,24 +198,24 @@ class Dialog extends Component {
 				) : (
 					<div className={style.weui_dialog_default}>
 						<div className={style.content_box}>
-							<div>即将获得50000元，确定放弃吗？</div>
+							<div>{content}</div>
 						</div>
 						<div className={style.btn_container}>
 							<div
 								onClick={() => {
-									this.requestClose(false, '放弃');
+									this.requestClose(false, cancleBtnText);
 								}}
 								className={`${style.btn_one} ${style.btn_one_new}`}
 							>
-								放弃{' '}
+								{cancleBtnText}
 							</div>
 							<div
 								onClick={() => {
-									this.requestClose(true, '再等等');
+									this.requestClose(true, sureBtnText);
 								}}
 								className={`${style.btn_two} ${style.btn_two_new}`}
 							>
-								再等等
+								{sureBtnText}
 							</div>
 						</div>
 					</div>
