@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-05-13 10:30:26
+ * @LastEditTime: 2020-05-13 17:56:41
  */
 import { guid } from 'utils';
 import fetch from 'sx-fetch';
@@ -84,9 +84,7 @@ function jspCallBack(res) {
  * @return:
  */
 export const TFDInit = () => {
-	buriedPointEvent(other.tfdInitStart, {
-		tfdId: sessionId
-	});
+	buriedPointEvent(other.tfdInitStart);
 	if (store.getTFDBack1() && store.getToken() && !store.getTFDBack2()) {
 		if (!timer) {
 			timer = setInterval(() => {
@@ -106,9 +104,7 @@ export const TFDInit = () => {
  * @return:
  */
 export const TFDLogin = () => {
-	buriedPointEvent(other.tfdStart, {
-		tfdId: sessionId
-	});
+	buriedPointEvent(other.tfdStart);
 	store.removeTFDBack1();
 	store.removeTFDBack2();
 	store.setTFDBack1(true);
