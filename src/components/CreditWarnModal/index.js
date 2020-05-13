@@ -29,7 +29,7 @@ export default class CreditWarnModal extends React.PureComponent {
 	 * 查询优惠券减免的金额展示
 	 */
 	queryDeDuctionAmt = () => {
-		fetch.post(loan_queryDeDuctionAmt).then((res) => {
+		this.props.fetch.post(loan_queryDeDuctionAmt).then((res) => {
 			if (res.code === '000000') {
 				this.setState(
 					{

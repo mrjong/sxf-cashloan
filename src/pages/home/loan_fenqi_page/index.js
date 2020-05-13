@@ -1039,7 +1039,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
 		const replayPlanLength =
-			repayPlanInfo && repayPlanInfo.perds && repayPlanInfo.perds.length ? repayPlanInfo.perds.length : 0;
+			repayPlanInfo && repayPlanInfo.perds && repayPlanInfo.perds.length ? repayPlanInfo.perds.length : '';
 
 		return (
 			<div className={[style.fenqi_page, 'loan_fenqi_page'].join(' ')}>
