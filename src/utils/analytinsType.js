@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-04-30 09:32:15
+ * @LastEditTime: 2020-05-13 10:30:10
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -309,7 +309,12 @@ const other = {
 	previewMaintenance: `${prefix}_MAINTENANCE_PAGE`, //进入系统维护页面
 	weixinDownloadPage: `${prefix}_WEIXIN_DOWNLOAD_PAGE`, //微信下载页pv
 	weixinDownloadBtnClick: `${prefix}_WEIXIN_DOWNLOAD_BTN_CLICK`, //微信下载页按钮点击事件
-	productIntroduceBtnClick: `${prefix}_PRODUCT_INTRODUCE_BTN_CLICK` //产品介绍页按钮点击事件
+	productIntroduceBtnClick: `${prefix}_PRODUCT_INTRODUCE_BTN_CLICK`, //产品介绍页按钮点击事件
+
+	tfdStart: `${prefix}_TFD_START`, // 开始调用通付盾
+	tfdInitStart: `${prefix}_TFD_INIT_START`, // 通付盾开始加载js
+	tfdInit: `${prefix}_TFD_INIT`, // 通付盾加载js
+	tfdCallback: `${prefix}_TFD_CALLBACK` // 通付盾回调执行
 };
 
 const daicao = {

@@ -1,12 +1,14 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 14:05:53
+ * @LastEditTime: 2020-05-13 10:30:26
  */
 import { guid } from 'utils';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { signup_device, signup_getUsrRqpInf } from 'fetch/api';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/analytins';
+import { other } from 'utils/analytinsType';
 const { PROJECT_ENV } = process.env;
 let elementId, sessionId;
 let timer = null;
@@ -26,6 +28,9 @@ function getTongFuDun() {
 	console.log('222');
 	element.src = `https://pws.tongfudun.com/did/js/dp.js?appId=${appId}&sessionId=${sessionId}&ts=${ts}&callback=OnngFuDunCallBack`;
 	document.body.appendChild(element);
+	buriedPointEvent(other.tfdInit, {
+		tfdId: sessionId
+	});
 }
 
 // 通付盾验证成功后向后端报备下
@@ -65,6 +70,10 @@ function requestBackReport() {
 
 // 请求通付盾接口 执行的回调
 function jspCallBack(res) {
+	buriedPointEvent(other.tfdCallback, {
+		tfdId: sessionId,
+		callbackRes: JSON.stringify(res)
+	});
 	if (res.success) {
 		requestBackReport();
 	}
@@ -75,6 +84,9 @@ function jspCallBack(res) {
  * @return:
  */
 export const TFDInit = () => {
+	buriedPointEvent(other.tfdInitStart, {
+		tfdId: sessionId
+	});
 	if (store.getTFDBack1() && store.getToken() && !store.getTFDBack2()) {
 		if (!timer) {
 			timer = setInterval(() => {
@@ -94,6 +106,9 @@ export const TFDInit = () => {
  * @return:
  */
 export const TFDLogin = () => {
+	buriedPointEvent(other.tfdStart, {
+		tfdId: sessionId
+	});
 	store.removeTFDBack1();
 	store.removeTFDBack2();
 	store.setTFDBack1(true);
