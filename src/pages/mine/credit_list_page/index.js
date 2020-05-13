@@ -32,7 +32,10 @@ const errorData = {
 };
 @setBackGround('#F7F8FA')
 @fetch.inject()
-@connect(() => ({}), { setAuthId })
+@connect(
+	() => ({}),
+	{ setAuthId }
+)
 export default class credit_list_page extends PureComponent {
 	constructor(props) {
 		super(props);
