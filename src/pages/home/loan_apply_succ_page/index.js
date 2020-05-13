@@ -4,6 +4,7 @@ import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import { store } from 'utils/store';
 import { FixedBar, CreditWarnModal, ButtonCustom, ExamineComponents } from 'components';
 import style from './index.scss';
 
@@ -23,6 +24,10 @@ export default class remit_ing_page extends PureComponent {
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData && queryData.prodType && queryData.prodType === '21') {
 			this.props.setTitle('快速打款中');
+		}
+		if (queryData && queryData.apptoken) {
+			//如果从APP过来
+			store.setToken(queryData.apptoken);
 		}
 		this.setState({
 			queryData
