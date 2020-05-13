@@ -143,6 +143,16 @@ export default class CreditWarnModal extends React.PureComponent {
 								className={styles.credit_warn_bg}
 								style={{ width: '100%', height: '10rem' }}
 							/>
+							<img
+								onClick={() => {
+									this.setState({
+										modal1: false
+									});
+								}}
+								className={styles.close_btn}
+								src={Image.icon.modal_close}
+								alt="关闭"
+							/>
 						</div>
 					)}
 				</Modal>

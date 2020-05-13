@@ -375,7 +375,12 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'CN0004':
-				this.props.toast.info('正在放款中，马上到账');
+				Toast.hide();
+				// 放款中
+				this.props.history.push({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?title=预计60秒完成放款&prodType=11`
+				});
 				break;
 			case 'CN0005':
 				this.props.history.push({
@@ -396,7 +401,7 @@ export default class home_page extends PureComponent {
 				// 放款中
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
-					search: `?title=预计60秒完成放款`
+					search: `?title=预计60秒完成放款&prodType=21`
 				});
 				break;
 			}

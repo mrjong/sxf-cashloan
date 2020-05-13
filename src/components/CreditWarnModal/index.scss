@@ -93,6 +93,7 @@
 	height: 100%;
 	z-index: 1000;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
@@ -105,6 +106,12 @@
 	bottom: 0;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.close_btn {
+	z-index: 1000;
+	width: 50px;
+	height: 50px;
 }
 
 .bigImgModal {

@@ -39,8 +39,7 @@ export default class loan_applying_page extends PureComponent {
 			isPlus: false,
 			percent: 0,
 			status: 'waiting',
-			retryNum: 0,
-			showCreditWarnModal: false
+			retryNum: 0
 		};
 	}
 	componentWillMount() {
@@ -255,8 +254,7 @@ export default class loan_applying_page extends PureComponent {
 					if (percent > 100) {
 						this.clearCountDown();
 						this.setState({
-							status: retryNum >= 2 ? 'timeout' : 'fail',
-							showCreditWarnModal: true
+							status: retryNum >= 2 ? 'timeout' : 'fail'
 						});
 					}
 				}
@@ -269,7 +267,7 @@ export default class loan_applying_page extends PureComponent {
 	};
 
 	render() {
-		const { isAppOpen, isPlus, percent, status, showCreditWarnModal } = this.state;
+		const { isAppOpen, isPlus, percent, status } = this.state;
 		return (
 			<div className={style.loan_applying_page}>
 				{status === 'waiting' && (
@@ -361,7 +359,7 @@ export default class loan_applying_page extends PureComponent {
 					</div>
 				)}
 
-				{showCreditWarnModal ? <CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} /> : null}
+				{status === 'timeout' ? <CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} /> : null}
 
 				{/* 吸底条 */}
 				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />
