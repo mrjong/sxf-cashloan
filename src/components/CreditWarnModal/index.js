@@ -88,24 +88,12 @@ export default class CreditWarnModal extends React.PureComponent {
 		return (
 			<div>
 				<Modal
-					visible={modal1}
-					transparent
-					maskClosable={true}
-					onClose={() => {
-						this.setState({
-							modal1: false
-						});
-					}}
-					className={styles.bigImgModal}
+					popup
+					visible={showModal}
+					className={styles.antModal}
+					animationType="slide-up"
+					style={{ zIndex: '1000' }}
 				>
-					<img
-						src={Image.bg.credit_warn_bg}
-						alt=""
-						className={styles.credit_warn_bg}
-						style={{ width: '100%', height: '10rem' }}
-					/>
-				</Modal>
-				<Modal popup visible={showModal} className={styles.antModal} animationType="slide-up">
 					<div className={styles.modalInner}>
 						<img src={Image.bg.dunpai} alt="" className={styles.dunpai} />
 						<div className={styles.top_wrap}>
@@ -124,23 +112,39 @@ export default class CreditWarnModal extends React.PureComponent {
 							<ul className={styles.list_wrap}>
 								<li>还款金额会增加，逾期账单的优惠将失效</li>
 								<li>
-									随行付会将您的逾期不良信息上报至{' '}
+									随行付会将您的逾期不良信息上报至
 									<span style={{ color: '#EC4747' }}>人行征信、百行征信</span>
 								</li>
-								<li>
-									征信上报后一定会影响您的个人信用、信用卡办理、房贷出行、免押租赁等信用生活 出行、及正常生活
-								</li>
+								<li>征信上报后一定会影响您的个人信用、信用卡办理、房贷出行、免押租赁等信用生活</li>
 							</ul>
 							<div className={styles.buttonWrap}>
 								<ButtonCustom
 									className={[styles.button, seconds < 1 && styles.activeButton].join(' ')}
 									onClick={this.handleButtonClick}
 								>
-									{`关闭(${seconds}s)`}
+									{`关闭${seconds > 0 ? `(${seconds}s)` : ''}`}
 								</ButtonCustom>
 							</div>
 						</div>
 					</div>
+					{modal1 && (
+						<div className={styles.big_img_wrap}>
+							<div
+								className={styles.big_img_mask}
+								onClick={() => {
+									this.setState({
+										modal1: false
+									});
+								}}
+							></div>
+							<img
+								src={Image.bg.credit_warn_bg}
+								alt=""
+								className={styles.credit_warn_bg}
+								style={{ width: '100%', height: '10rem' }}
+							/>
+						</div>
+					)}
 				</Modal>
 			</div>
 		);

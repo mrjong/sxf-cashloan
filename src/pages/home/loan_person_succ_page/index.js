@@ -33,7 +33,8 @@ export default class remit_ing_page extends PureComponent {
 				day: '今日'
 			},
 			isPlus: false,
-			isAppOpen: false
+			isAppOpen: false,
+			showCreditWarnModal: false
 		};
 	}
 
@@ -168,7 +169,8 @@ export default class remit_ing_page extends PureComponent {
 			});
 		} else {
 			this.setState({
-				visibleModal: !this.state.visibleModal
+				visibleModal: !this.state.visibleModal,
+				showCreditWarnModal: this.state.visibleModal
 			});
 		}
 	};
@@ -257,7 +259,8 @@ export default class remit_ing_page extends PureComponent {
 			daySelectedItem,
 			timeSelectedItem,
 			isAppOpen,
-			isPlus
+			isPlus,
+			showCreditWarnModal
 		} = this.state;
 
 		const dayList = [
@@ -330,7 +333,7 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</div>
 
-				<CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} />
+				{showCreditWarnModal ? <CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} /> : null}
 
 				<Modal popup className="examine_modal" visible={visibleModal} animationType="slide-up">
 					<Icon type="cross" className={style.close_icon} onClick={this.handleClosePannel} />
