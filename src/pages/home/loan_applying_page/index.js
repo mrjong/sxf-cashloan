@@ -53,19 +53,17 @@ export default class loan_applying_page extends PureComponent {
 		} else {
 			document.addEventListener('message', that.checkAppOpen);
 		}
+		if (queryData.apptoken) {
+			//如果从APP过来
+			store.setToken(queryData.apptoken);
+		}
 		if (queryData && queryData.showType === 'timeout') {
 			this.clearCountDown();
 			this.setState({
 				status: 'timeout'
 			});
 		} else {
-			if (queryData.apptoken) {
-				//如果从APP过来
-				store.setToken(queryData.apptoken);
-				this.startStep(150);
-			} else {
-				this.startStep(150);
-			}
+			this.startStep(150);
 		}
 	}
 	componentWillUnmount() {
