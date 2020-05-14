@@ -86,7 +86,8 @@ export default class remit_ing_page extends PureComponent {
 				if (res.data.existFlag === '1') {
 					this.setState({
 						applyDate,
-						applyTime
+						applyTime,
+						showCreditWarnModal: true
 					});
 				} else {
 					this.setState(

@@ -77,7 +77,11 @@ class PerdList extends Component {
 									extra={
 										<div className={styles.extraWrap}>
 											<span className={styles.perdTotAmt}>
-												{newFlsg ? item.perdWaitRepAmt.toFixed(2) : item.perdTotAmt.toFixed(2)}
+												{newFlsg
+													? item.perdSts === '4'
+														? item.perdActualRepAmt.toFixed(2)
+														: item.perdWaitRepAmt.toFixed(2)
+													: item.perdTotAmt.toFixed(2)}
 											</span>
 											{newFlsg ? (
 												<span>
