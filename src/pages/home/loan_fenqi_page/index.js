@@ -383,21 +383,28 @@ export default class loan_fenqi_page extends PureComponent {
 			pageRow: 1,
 			riskGuarantee: isRiskGuaranteeProd && isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
 		};
-		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
-			if (res.code === '000000' && res.data) {
-				if ((!this.props.couponData || JSON.stringify(this.props.couponData) === '{}') && res.data.coups) {
-					this.setRecommendCoupon(res.data.coups);
-				}
-				this.setState(
-					{
-						availableCoupNum: res.data.totalRow
-					},
-					() => {
-						this.requestLoanPlan();
+		this.props.toast.loading('', 10);
+		this.props.$fetch
+			.post(coup_queyUsrLoanUsbCoup, params)
+			.then((res) => {
+				this.props.toast.hide();
+				if (res.code === '000000' && res.data) {
+					if ((!this.props.couponData || JSON.stringify(this.props.couponData) === '{}') && res.data.coups) {
+						this.setRecommendCoupon(res.data.coups);
 					}
-				);
-			}
-		});
+					this.setState(
+						{
+							availableCoupNum: res.data.totalRow
+						},
+						() => {
+							this.requestLoanPlan();
+						}
+					);
+				}
+			})
+			.catch(() => {
+				this.props.toast.hide();
+			});
 	};
 
 	/**
