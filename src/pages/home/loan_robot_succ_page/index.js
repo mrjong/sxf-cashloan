@@ -3,16 +3,12 @@
  * @LastEditTime: 2020-04-29 17:09:45
  */
 import React, { PureComponent } from 'react';
-import style from './index.scss';
+import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import ExamineComponents from 'components/ExamineComponents';
-import ZButton from 'components/ButtonCustom';
-// import { buriedPointEvent } from 'utils/analytins';
-// import { manualAudit } from 'utils/analytinsType';
-import qs from 'qs';
+import { FixedBar, CreditWarnModal, ButtonCustom, ExamineComponents } from 'components';
 import { store } from '../../../utils/store';
-import { FixedBar } from 'components';
+import style from './index.scss';
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -126,9 +122,11 @@ export default class loan_robot_succ_page extends PureComponent {
 				</div>
 
 				<div className={style.submitBtnWrap}>
-					<ZButton onClick={this.handleButtonClick}>我知道了</ZButton>
+					<ButtonCustom onClick={this.handleButtonClick}>我知道了</ButtonCustom>
 					<div className={style.descText}>关注还到公众号 实时查看审核进度</div>
 				</div>
+
+				<CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} />
 
 				{/* 吸底条 */}
 				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />

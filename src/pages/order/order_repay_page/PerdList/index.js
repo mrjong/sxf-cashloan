@@ -60,7 +60,7 @@ class PerdList extends Component {
 	};
 
 	render() {
-		const { perdList, perdLth, onCheckboxClick, onFeesClick, riskFlsg } = this.props;
+		const { perdList, perdLth, onCheckboxClick, onFeesClick, riskFlsg, newFlsg } = this.props;
 		return (
 			<List className={styles.antListItem}>
 				{perdList &&
@@ -69,14 +69,36 @@ class PerdList extends Component {
 							<div key={index}>
 								<List.Item
 									className={!item.isShowCheck && styles.noCheckItem}
-									arrow={item.showDetail ? 'up' : 'down'}
+									arrow={newFlsg ? '' : item.showDetail ? 'up' : 'down'}
 									onClick={() => {
+										if (newFlsg) return;
 										this.togglePerdDetailShow(index);
 									}}
 									extra={
 										<div className={styles.extraWrap}>
-											<span className={styles.perdTotAmt}>{item.perdTotAmt.toFixed(2)}</span>
-											<span style={{ color: item.color, fontSize: '0.24rem' }}>{item.perdStsNm}</span>
+											<span className={styles.perdTotAmt}>
+												{newFlsg
+													? item.perdSts === '4'
+														? item.perdActualRepAmt.toFixed(2)
+														: item.perdWaitRepAmt.toFixed(2)
+													: item.perdTotAmt.toFixed(2)}
+											</span>
+											{newFlsg ? (
+												<span>
+													{item.perdSts !== '4' ? (
+														<span>
+															<span style={{ color: '#868E9E', fontSize: '0.24rem' }}>{item.perdTotAmt}</span>
+															<span style={{ color: '#fe6666', fontSize: '0.24rem' }}>
+																-优惠{item.deductionAmt}
+															</span>
+														</span>
+													) : (
+														<span style={{ height: '.48rem', display: 'block' }}></span>
+													)}
+												</span>
+											) : (
+												<span style={{ color: item.color, fontSize: '0.24rem' }}>{item.perdStsNm}</span>
+											)}
 										</div>
 									}
 									thumb={
@@ -93,6 +115,17 @@ class PerdList extends Component {
 									}
 								>
 									{`${item.perdNum}/${perdLth}期`}
+									{newFlsg && (
+										<span
+											style={{
+												color: item.color,
+												fontSize: '0.28rem',
+												marginLeft: '0.2rem'
+											}}
+										>
+											{item.perdStsNm}
+										</span>
+									)}
 									<List.Item.Brief>{`应支付日：${item.perdDueDt}`}</List.Item.Brief>
 								</List.Item>
 								{item.showDetail ? (

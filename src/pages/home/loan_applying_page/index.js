@@ -4,19 +4,17 @@
  * @LastEditTime: 2020-05-09 17:38:21
  */
 import React, { PureComponent } from 'react';
-import style from './index.scss';
-import fetch from 'sx-fetch';
-import { setBackGround } from 'utils/background';
-import ExamineComponents from 'components/ExamineComponents';
-import ZButton from 'components/ButtonCustom';
+import { connect } from 'react-redux';
 import { Progress } from 'antd-mobile';
 import qs from 'qs';
-import { FixedBar } from 'components';
+import fetch from 'sx-fetch';
+import { setBackGround } from 'utils/background';
+import { FixedBar, CreditWarnModal, ButtonCustom, ExamineComponents } from 'components';
 import Images from 'assets/image';
-import { connect } from 'react-redux';
 import { setCredictInfoAction } from 'reduxes/actions/commonActions';
 import { loan_queryLoanAdvanceSts } from 'fetch/api';
 import { store } from 'utils/store';
+import style from './index.scss';
 
 let queryData = {};
 let timer = null;
@@ -55,19 +53,17 @@ export default class loan_applying_page extends PureComponent {
 		} else {
 			document.addEventListener('message', that.checkAppOpen);
 		}
+		if (queryData.apptoken) {
+			//如果从APP过来
+			store.setToken(queryData.apptoken);
+		}
 		if (queryData && queryData.showType === 'timeout') {
 			this.clearCountDown();
 			this.setState({
 				status: 'timeout'
 			});
 		} else {
-			if (queryData.apptoken) {
-				//如果从APP过来
-				store.setToken(queryData.apptoken);
-				this.startStep(150);
-			} else {
-				this.startStep(150);
-			}
+			this.startStep(150);
 		}
 	}
 	componentWillUnmount() {
@@ -312,9 +308,9 @@ export default class loan_applying_page extends PureComponent {
 							/>
 							<span className={style.successDesc}>已完成100%</span>
 						</div>
-						<ZButton onClick={this.checkResult} className={style.submitBtn}>
+						<ButtonCustom onClick={this.checkResult} className={style.submitBtn}>
 							查看结果
-						</ZButton>
+						</ButtonCustom>
 					</div>
 				)}
 
@@ -360,6 +356,8 @@ export default class loan_applying_page extends PureComponent {
 						</div>
 					</div>
 				)}
+
+				{status === 'timeout' ? <CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} /> : null}
 
 				{/* 吸底条 */}
 				<FixedBar isAppOpen={isAppOpen} isPlus={isPlus} />

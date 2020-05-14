@@ -3,22 +3,18 @@
  * @LastEditTime: 2020-04-29 17:09:27
  */
 import React, { PureComponent } from 'react';
-import style from './index.scss';
 import { Modal, Icon } from 'antd-mobile';
+import qs from 'qs';
 import fetch from 'sx-fetch';
-import { setBackGround } from 'utils/background';
-import ExamineComponents from 'components/ExamineComponents';
-import ZButton from 'components/ButtonCustom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { manualAudit } from 'utils/analytinsType';
-import SXFButton from 'components/ButtonCustom';
+import { FixedBar, CreditWarnModal, ButtonCustom, ExamineComponents } from 'components';
 import Images from 'assets/image';
-import qs from 'qs';
 import { store } from 'utils/store';
-import { FixedBar } from 'components';
-
 import { person_appointment_info, person_appointment_sub } from 'fetch/api.js';
+import style from './index.scss';
 
 let queryData = null;
 
@@ -37,7 +33,8 @@ export default class remit_ing_page extends PureComponent {
 				day: '今日'
 			},
 			isPlus: false,
-			isAppOpen: false
+			isAppOpen: false,
+			showCreditWarnModal: false
 		};
 	}
 
@@ -89,7 +86,8 @@ export default class remit_ing_page extends PureComponent {
 				if (res.data.existFlag === '1') {
 					this.setState({
 						applyDate,
-						applyTime
+						applyTime,
+						showCreditWarnModal: true
 					});
 				} else {
 					this.setState(
@@ -172,7 +170,8 @@ export default class remit_ing_page extends PureComponent {
 			});
 		} else {
 			this.setState({
-				visibleModal: !this.state.visibleModal
+				visibleModal: !this.state.visibleModal,
+				showCreditWarnModal: this.state.visibleModal
 			});
 		}
 	};
@@ -190,6 +189,7 @@ export default class remit_ing_page extends PureComponent {
 		console.log(`${y}${m}${d}`);
 		return `${y}${m}${d}`;
 	};
+
 	handleButtonClick = (type, item) => {
 		if (this.state.daySelectedItem.code === '0' && !item.availiable) return; //为今日且不可用时
 		if (type === 'day') {
@@ -260,7 +260,8 @@ export default class remit_ing_page extends PureComponent {
 			daySelectedItem,
 			timeSelectedItem,
 			isAppOpen,
-			isPlus
+			isPlus,
+			showCreditWarnModal
 		} = this.state;
 
 		const dayList = [
@@ -333,6 +334,8 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</div>
 
+				{showCreditWarnModal ? <CreditWarnModal toast={this.props.toast} fetch={this.props.$fetch} /> : null}
+
 				<Modal popup className="examine_modal" visible={visibleModal} animationType="slide-up">
 					<Icon type="cross" className={style.close_icon} onClick={this.handleClosePannel} />
 					<div className={style.title_wrap}>
@@ -368,7 +371,7 @@ export default class remit_ing_page extends PureComponent {
 							<div>
 								<div className={style.options_day}>
 									{dayList.map((item) => (
-										<SXFButton
+										<ButtonCustom
 											outline="true"
 											outlinecolor={item.code === daySelectedItem.code ? '#3A7AE5' : '#B2B6BF'}
 											color={item.code === daySelectedItem.code ? '#3A7AE5' : '#394259'}
@@ -382,7 +385,7 @@ export default class remit_ing_page extends PureComponent {
 											long="false"
 										>
 											{item.day}
-										</SXFButton>
+										</ButtonCustom>
 									))}
 								</div>
 								<div className={style.options_time}>
@@ -392,7 +395,7 @@ export default class remit_ing_page extends PureComponent {
 												<h3 className={style.opts_title}>{item.name}</h3>
 												<div className={style.opts_button_wrap}>
 													{item.timeItems.map((item) => (
-														<SXFButton
+														<ButtonCustom
 															key={item.code}
 															className={style.opts_button}
 															shape="radius"
@@ -410,7 +413,7 @@ export default class remit_ing_page extends PureComponent {
 															long="false"
 														>
 															{item.time}
-														</SXFButton>
+														</ButtonCustom>
 													))}
 												</div>
 											</div>
@@ -420,18 +423,18 @@ export default class remit_ing_page extends PureComponent {
 						</div>
 					)}
 					{!showRulesPannel && (
-						<SXFButton
+						<ButtonCustom
 							className={timeSelectedItem.code ? style.submitBtn : style.submitBtnDisabled}
 							onClick={this.handleSubmitOrder}
 						>
 							确定预约
-						</SXFButton>
+						</ButtonCustom>
 					)}
 				</Modal>
 
 				<CopyToClipboard text={this.state.copyText} onCopy={() => this.copyOperation()}>
 					<div className={style.submitBtnWrap}>
-						<ZButton>关注“还到”公众号</ZButton>
+						<ButtonCustom>关注“还到”公众号</ButtonCustom>
 					</div>
 				</CopyToClipboard>
 				<div className={style.descText}>关注还到公众号 实时查看审核进度</div>

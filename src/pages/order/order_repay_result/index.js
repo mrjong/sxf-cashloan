@@ -9,7 +9,7 @@ import { setHomeModalAction } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
-import { repay_payNotify, repay_queryCashRegisterDetail, msg_popup_list } from 'fetch/api.js';
+import { repay_payNotify, msg_popup_list } from 'fetch/api.js';
 import Images from 'assets/image';
 import { isWXOpen } from 'utils';
 
@@ -130,23 +130,6 @@ export default class order_repay_result_page extends React.PureComponent {
 			});
 	};
 
-	//查询本期减免金额
-	queryPlain = () => {
-		const { state = {} } = this.props.history.location;
-		this.props.$fetch
-			.post(repay_queryCashRegisterDetail, state)
-			.then((res) => {
-				if (res.code === '000000' && res.data) {
-					this.setState({
-						exceedingAmt: res.data.exceedingAmt
-					});
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
-
 	queryPayStatus = () => {
 		const { state = {} } = this.props.history.location;
 		const { repayOrdNo } = state;
@@ -174,7 +157,6 @@ export default class order_repay_result_page extends React.PureComponent {
 								});
 								if (this.state.status === 'success') {
 									this.queryFudaiReward();
-									this.queryPlain();
 									clearInterval(timer);
 								}
 							}
@@ -239,12 +221,11 @@ export default class order_repay_result_page extends React.PureComponent {
 			repayOrdAmt,
 			crdOrdAmt,
 			failMsg,
-			exceedingAmt,
 			showRewardLoading,
 			percent
 		} = this.state;
 		const { state = {} } = this.props.history.location;
-		const { bankName, bankNo } = state;
+		const { bankName, bankNo, exceedingAmt } = state;
 
 		return (
 			<div>
@@ -336,7 +317,7 @@ export default class order_repay_result_page extends React.PureComponent {
 						</div>
 					)}
 				</div>
-				{exceedingAmt ? (
+				{status === 'success' && exceedingAmt ? (
 					<div className={styles.discount_box}>
 						<span>为您下期账单减免</span>
 						<span className={styles.discount}>

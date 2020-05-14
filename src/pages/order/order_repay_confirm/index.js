@@ -141,9 +141,10 @@ export default class order_repay_confirm extends PureComponent {
 				if (!this.viewRef) return;
 				this.viewRef.showDataView();
 				if (res.code === '000000' && res.data) {
-					const { disDisRepayAmt, totalAmt, totalList = [], payTypes } = res.data;
+					const { disDisRepayAmt, exceedingAmt, totalAmt, totalList = [], payTypes } = res.data;
 					this.setState({
 						disDisRepayAmt,
+						exceedingAmt,
 						totalAmt,
 						payTypes: this.convertPayTypes(payTypes)
 					});
@@ -306,7 +307,7 @@ export default class order_repay_confirm extends PureComponent {
 			riskFlsg
 		} = this.props.history.location.state;
 
-		const { totalAmt, payType, cardAgrNo, bankNo, bankName, couponInfo } = this.state;
+		const { totalAmt, payType, cardAgrNo, bankNo, bankName, couponInfo, exceedingAmt } = this.state;
 
 		let couponId = '';
 		if (couponInfo && couponInfo.coupId && couponInfo.coupId !== 'null') {
@@ -421,7 +422,8 @@ export default class order_repay_confirm extends PureComponent {
 										overdueDays,
 										billDesc,
 										bankName,
-										bankNo
+										bankNo,
+										exceedingAmt
 									}
 								});
 							}

@@ -55,7 +55,9 @@ export default {
 		no_card: require('./bg/no_card.png'),
 		no_coupon: require('./bg/no_coupon.png'),
 		no_message: require('./bg/no_message.png'),
-		no_money: require('./bg/no_money.png')
+		no_money: require('./bg/no_money.png'),
+		credit_warn_bg: require('./bg/credit_warn_bg.png'),
+		dunpai: require('./bg/dunpai.png')
 	},
 
 	// 按钮
@@ -73,7 +75,8 @@ export default {
 		icon_close: require('./icon/icon_close.png'),
 		icon_arrow_right: require('./icon/icon_arrow_right.png'),
 		order_detail_checked: require('./icon/order_detail_checked.png'),
-		order_detail_checked_no: require('./icon/order_detail_checked_no.png')
+		order_detail_checked_no: require('./icon/order_detail_checked_no.png'),
+		modal_close: require('./icon/modal_close.png')
 	},
 
 	// 标志性的图片

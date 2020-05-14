@@ -141,7 +141,7 @@ module.exports = function(options) {
 			proxy: {
 				'/front': {
 					target: 'https://lns-api-test.vbillbank.com/wap', //目标接口域名
-					// target: 'http://172.18.40.173:8080/wap',
+					// target: 'http://172.18.40.151:8080/wap',
 					pathRewrite: { '^/front': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},

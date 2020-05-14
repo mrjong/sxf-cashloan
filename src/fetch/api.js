@@ -345,3 +345,6 @@ export const loan_loanSubPreAppr = '/loan/loanSubPreAppr';
 
 // 补充信息页面——用户分流接口
 export const auth_userShunt = '/auth/userShunt';
+
+//签约之后警示弹窗查询优惠券金额
+export const loan_queryDeDuctionAmt = '/loan/queryDeDuctionAmt';

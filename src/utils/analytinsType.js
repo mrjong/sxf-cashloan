@@ -240,19 +240,12 @@ const activity = {
 	jd618BtnClick: `${prefix}_ACTIVITY_JD618_BTN`,
 	jd618ModalBtnClick: `${prefix}_ACTIVITY_JD618_MODAL_BTN`,
 	freeBillBtnClick: `${prefix}_ACTIVITY_FREEBILL_BTN`,
-	freeBillModalBtnClick: `${prefix}_ACTIVITY_FREEBILL_MODAL_BTN`,
-	yhq7ModalBtnClick: `${prefix}_ACTIVITY_YHQ7_MODAL_BTN`,
-	yhq50ModalBtnClick: `${prefix}_ACTIVITY_YHQ50_MODAL_BTN`,
-	jd618ResultModalClick: `${prefix}_JD618_RESULT_MODAL_CLICK`,
-	jd618HomeModalClose: `${prefix}_JD618HOMEMODALCLOSE`,
 	freeBillHomeModalClose: `${prefix}_FREEBILLHOMEMODALCLOSE`,
 	mianxi715Entry: `${prefix}_ACTIVITY_MIANXI_715_ENTRY`, // 七月活动 活动入口
 	mianxi715NewBtn: `${prefix}_ACTIVITY_MIANXI_715_NEW_GET_BTN`, // 七月活动 首贷用户领取按钮
 	mianxi715OldBtn: `${prefix}_ACTIVITY_MIANXI_715_OLD_GET_BTN`, // 七月活动 复贷用户领取按钮
 	mianxi715NewPrizeBtn: `${prefix}_ACTIVITY_MIANXI_715_NEW_PRIZE_BTN`, // 七月活动 首贷用户奖品弹框按钮点击
 	mianxi715OldPrizeBtn: `${prefix}_ACTIVITY_MIANXI_715_OLD_PRIZE_BTN`, // 七月活动 复贷用户奖品弹框按钮点击
-	mianxiModalBtnClick: `${prefix}_ACTIVITY_MIANXI_715_MODAL_BTN`, // 七月活动 首页弹窗按钮点击
-	mianxi726ModalBtnClick: `${prefix}_ACTIVITY_MIANXI_726_MODAL_BTN`, // 七月26活动 首页弹窗按钮点击
 	MposH5Channel: `${prefix}_MPOS_H5CHANNEL`, // 七月26活动 首页弹窗按钮点击
 	mianxi822Entry: `${prefix}_ACTIVITY_MIANXI_822_ENTRY`, // 100元利息红包限时领活动 活动入口
 	mianxi822UseBtn: `${prefix}_ACTIVITY_MIANXI_822_USE_BTN`, // 100元利息红包限时领活动 领取按钮

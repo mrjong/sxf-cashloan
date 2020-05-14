@@ -1,0 +1,27 @@
+.popover_wrap {
+	position: absolute;
+}
+
+.popover_inner_wrap {
+	border-radius: 6px;
+	padding: 0 8px;
+	background-color: #fe6666;
+	height: 40px;
+	line-height: 34px;
+}
+
+.popover_text {
+	font-size: 24px;
+	color: #fff;
+}
+
+.arrow {
+	position: absolute;
+	right: 15%;
+	top: 100%;
+	width: 0;
+	height: 0;
+	border-width: 10px;
+	border-style: solid;
+	border-color: #fe6666 transparent transparent transparent;
+}
