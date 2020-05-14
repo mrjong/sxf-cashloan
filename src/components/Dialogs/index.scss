@@ -29,7 +29,7 @@
 	position: fixed;
 	z-index: 1200;
 	width: 580px;
-	height: 303px;
+	min-height: 303px;
 	border-radius: 6px;
 	top: 50%;
 	left: 50%;
@@ -76,10 +76,11 @@
 	position: relative;
 	font-size: 30px;
 	width: 100%;
-	text-align: center;
+	text-align: left;
 	line-height: 42px;
 	color: #868e9e;
-	padding: 80px 0;
+  padding: 80px 30px;
+  box-sizing: border-box;
 	&::after {
 		@include setBottomLine(#f0f1f5);
 		left: 0;
