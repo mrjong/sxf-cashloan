@@ -10,6 +10,8 @@ import { bank_card_list, my_card_unbind } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setWithholdCardDataAction, setWithdrawCardDataAction } from 'reduxes/actions/commonActions';
 import card_select_yellow from './img/card_select_yellow.png';
+import logo from 'assets/images/logo/black_logo.png';
+console.log(logo, 'logo');
 const noData = {
 	img: Image.bg.no_order,
 	text: '暂无银行卡',
@@ -151,6 +153,10 @@ export default class select_save_page extends PureComponent {
 		}
 	};
 
+	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
+		return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon || logo} />;
+	}
+
 	render() {
 		const { cardType } = this.props;
 		const { cardList } = this.state;
@@ -184,7 +190,7 @@ export default class select_save_page extends PureComponent {
 													})
 												}
 											>
-												<span className={`bank_ico bank_ico_${item.bankCode}`} />
+												{this.renderBankIcon(item.bankIcon, item.bankCode)}
 												<span className={styles.bank_name}>{item.bankName}</span>
 												<span>···· {item.cardNoLast}</span>
 												{isSelected ? (
@@ -195,7 +201,7 @@ export default class select_save_page extends PureComponent {
 									}
 									return (
 										<li key={index}>
-											<span className={`bank_ico bank_ico_${item.bankCode}`} />
+											{this.renderBankIcon(item.bankIcon, item.bankCode)}
 											<span className={styles.bank_name}>{item.bankName}</span>
 											<span>···· {item.cardNoLast}</span>
 										</li>

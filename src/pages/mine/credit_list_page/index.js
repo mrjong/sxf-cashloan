@@ -19,6 +19,7 @@ import { cred_queryCredCard, cred_cacheCredCard } from 'fetch/api';
 import mark_question from './img/mark_question@3x.png';
 import card_select_yellow from './img/card_select_yellow.png';
 import Image from 'assets/image';
+import logo from 'assets/images/logo/black_logo.png';
 
 const noData = {
 	img: Image.bg.no_order,
@@ -137,6 +138,7 @@ export default class credit_list_page extends PureComponent {
 			autId: obj.autId
 		});
 	};
+
 	renderItem = (item) => {
 		let tipText = '';
 		let tipDesc = '';
@@ -148,7 +150,6 @@ export default class credit_list_page extends PureComponent {
 			tipDesc = '暂不支持该类型信用卡，请添加其他收款信用卡。';
 		}
 		let cardBillSts = item.cardBillSts === '01'; // 00 || 02 需要更新，01:无需更新
-		const icoClass = `bank_ico bank_ico_${item.bankNo}`;
 		const isSelected = this.state.autId === item.autId;
 		const isDisable = tipText || !cardBillSts;
 		return (
@@ -160,7 +161,10 @@ export default class credit_list_page extends PureComponent {
 			>
 				<div className={styles.newCardBox}>
 					<div className={styles.newCardLeftBox}>
-						<span className={`${icoClass} ${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`} />
+						<img
+							src={item.bankIcon || logo}
+							className={`${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`}
+						/>
 						<div className={styles.leftTextBox}>
 							<span className={[styles.leftTextTop, isDisable ? styles.isDisable : ''].join(' ')}>
 								{item.bankName}(<span className={styles.leftTextTopNum}>{item.lastNo}</span>)
