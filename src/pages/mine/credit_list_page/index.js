@@ -19,6 +19,7 @@ import { cred_queryCredCard, cred_cacheCredCard } from 'fetch/api';
 import mark_question from './img/mark_question@3x.png';
 import card_select_yellow from './img/card_select_yellow.png';
 import Image from 'assets/image';
+import logo from 'assets/images/logo/black_logo.png';
 
 const noData = {
 	img: Image.bg.no_order,
@@ -161,14 +162,10 @@ export default class credit_list_page extends PureComponent {
 			>
 				<div className={styles.newCardBox}>
 					<div className={styles.newCardLeftBox}>
-						{item.bankIcon ? (
-							<img
-								src={item.bankIcon}
-								className={`${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`}
-							/>
-						) : (
-							<span className={`${icoClass} ${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`} />
-						)}
+						<img
+							src={item.bankIcon || logo}
+							className={`${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`}
+						/>
 						<div className={styles.leftTextBox}>
 							<span className={[styles.leftTextTop, isDisable ? styles.isDisable : ''].join(' ')}>
 								{item.bankName}(<span className={styles.leftTextTopNum}>{item.lastNo}</span>)

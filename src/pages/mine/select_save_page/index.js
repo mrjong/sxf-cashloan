@@ -10,6 +10,8 @@ import { bank_card_list, my_card_unbind } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setWithholdCardDataAction, setWithdrawCardDataAction } from 'reduxes/actions/commonActions';
 import card_select_yellow from './img/card_select_yellow.png';
+import logo from 'assets/images/logo/black_logo.png';
+console.log(logo, 'logo');
 const noData = {
 	img: Image.bg.no_order,
 	text: '暂无银行卡',
@@ -152,10 +154,7 @@ export default class select_save_page extends PureComponent {
 	};
 
 	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
-		if (bankIcon) {
-			return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon} />;
-		}
-		return <span className={`bank_ico bank_ico_${bankCode}`} />;
+		return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon || logo} />;
 	}
 
 	render() {

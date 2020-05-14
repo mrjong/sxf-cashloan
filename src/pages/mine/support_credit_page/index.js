@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import { bank_card_valid } from 'fetch/api.js';
+import logo from 'assets/images/logo/black_logo.png';
 
 @fetch.inject()
 export default class support_credit_page extends PureComponent {
@@ -34,10 +35,7 @@ export default class support_credit_page extends PureComponent {
 	};
 
 	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
-		if (bankIcon) {
-			return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon} />;
-		}
-		return <span className={`bank_ico bank_ico_${bankCode}`} />;
+		return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon || logo} />;
 	}
 
 	render() {

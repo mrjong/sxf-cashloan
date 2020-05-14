@@ -13,6 +13,8 @@ import { LoadingView } from 'components';
 import { connect } from 'react-redux';
 import { setBindDepositInfoAction } from 'reduxes/actions/commonActions';
 import { setBackGround } from 'utils/background';
+import logo from 'assets/images/logo/black_logo.png';
+
 const noData = {
 	img: Image.bg.no_order,
 	text: '暂无账单',
@@ -78,10 +80,7 @@ export default class support_save_page extends PureComponent {
 	};
 
 	renderBankIcon(bankIcon, bankCode, size = '0.6rem') {
-		if (bankIcon) {
-			return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon} />;
-		}
-		return <span className={`bank_ico bank_ico_${bankCode}`} />;
+		return <img style={{ width: size, height: size, verticalAlign: 'middle' }} src={bankIcon || logo} />;
 	}
 
 	render() {
