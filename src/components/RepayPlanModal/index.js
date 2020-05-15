@@ -146,12 +146,10 @@ export default class RepayPlanModal extends React.PureComponent {
 						<a
 							className={style.link_bar}
 							onClick={() => {
-								this.setState({
-									openDrawer: !this.state.openDrawer
-								});
+								goPage();
 							}}
 						>
-							<span>利息如何计算的？</span>
+							<span>借款须知</span>
 							<span>查看详情</span>
 							<Icon type="right" className={style.link_bar_close} />
 						</a>
