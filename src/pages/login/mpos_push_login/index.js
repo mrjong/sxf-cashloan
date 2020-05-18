@@ -440,7 +440,7 @@ export default class login_page extends PureComponent {
 							url: 'register_agreement_page'
 						},
 						{
-							label: '用户隐私权政策',
+							label: '随行付用户隐私权政策',
 							url: 'user_privacy_page'
 						}
 					]}

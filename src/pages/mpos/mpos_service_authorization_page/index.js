@@ -19,7 +19,6 @@ import { TFDLogin } from 'utils/getTongFuDun';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-
 import { connect } from 'react-redux';
 import { signup_mpos_auth, index_queryPLPShowSts } from 'fetch/api';
 import logo from './img/logo.png';
@@ -36,7 +35,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectFlag: true
+			selectFlag: false
 		};
 	}
 	componentWillMount() {
@@ -46,6 +45,11 @@ export default class mpos_service_authorization_page extends PureComponent {
 	}
 
 	goSubmit = () => {
+		if (BtnDisabled) return;
+		if (!this.state.selectFlag) {
+			this.props.toast.info('请勾选并认真阅读协议');
+			return;
+		}
 		BtnDisabled = true;
 		Toast.loading('加载中...', 10);
 		this.props.$fetch
@@ -100,6 +104,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 					}
 				},
 				(err) => {
+					BtnDisabled = false;
 					this.props.toast.info(err.msgInfo);
 				}
 			)
@@ -142,26 +147,16 @@ export default class mpos_service_authorization_page extends PureComponent {
 		const { selectFlag } = this.state;
 		return (
 			<div className={styles.mpos_service_authorization_page}>
-				<img src={logo} alt="" className={styles.logoWrap} />
-				<p className={styles.text}>
-					随行付金融提供 <em className={styles.highlight}>借钱还信用卡</em>服务 <br /> 众多信用卡用户新选择{' '}
-				</p>
-				<div className={styles.btn_fixed}>
-					<div className={styles.btn_box}>
-						<ButtonCustom
-							type={selectFlag && !BtnDisabled ? 'blue' : 'default'}
-							onClick={selectFlag && !BtnDisabled ? () => this.goSubmit() : null}
-						>
-							授权并登录
-						</ButtonCustom>
-					</div>
-					{query.mblNoHid && query.mblNoHid !== 'undefined' && query.mblNoHid.substr(-4) && (
-						<p className={styles.bold_text}>
-							还到将获取您尾号{query.mblNoHid && query.mblNoHid.substr(-4)}的手机号用于登录
-						</p>
-					)}
+				<div className={styles.logoWrap}>
+					<img src={logo} alt="" className={styles.logo} />
 				</div>
-
+				<p className={styles.rule_title}>登录后应用将获得以下权限</p>
+				<ul className={styles.rule_list}>
+					<li>获得您尾号{(query.mblNoHid && query.mblNoHid.substr(-4)) || ''}的手机号</li>
+				</ul>
+				<ButtonCustom onClick={this.goSubmit} className={styles.sureBtn}>
+					授权并登录
+				</ButtonCustom>
 				<div className={styles.agreement_box}>
 					<ProtocolRead
 						tip="点击授权并登录视为您阅读并同意签署"

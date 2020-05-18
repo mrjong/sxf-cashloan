@@ -1,14 +1,10 @@
 @import '../../../assets/styles/scss/base/fn';
 
-.dc_landing_page_wrap {
-	height: 100%;
-}
-
 .dc_landing_page {
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	height: 100%;
-	background: linear-gradient(0deg, rgba(80, 197, 252, 1), rgba(0, 132, 255, 1));
+	background: #fff;
 	:global {
 		.am-list-item .am-input-clear {
 			width: 30px;
@@ -30,158 +26,163 @@
 		}
 	}
 
-	.img_wrap {
-		position: relative;
-		padding-left: 30px;
+	.banner {
+		width: 100%;
+		display: block;
 	}
-
-	.login_bg1 {
-		position: relative;
-		z-index: 2;
-		width: 344px;
-		height: 43px;
-		margin: 20px 0 70px;
-	}
-	.login_bg2 {
-		position: relative;
-		z-index: 2;
-		width: 567px;
-		height: 180px;
-		margin-bottom: 78px;
-	}
-	.login_bg3 {
-		position: relative;
-		z-index: 2;
-		width: 420px;
-		height: 50px;
-		margin-bottom: 20px;
-	}
-	.login_bg4 {
-		position: absolute;
-		right: 0;
-		top: 100px;
-		z-index: 1;
-		width: 750px;
-		height: 534px;
-	}
-
 	.content {
 		position: relative;
-		z-index: 3;
-		width: 690px;
+		top: -60px;
 		text-align: center;
-		padding: 50px 30px 20px;
-		border-radius: 20px;
-		background-color: #fff;
+		width: 666px;
+		background: #fff;
+		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
+		border-radius: 10px;
+		margin: 0 auto 15px;
+		padding: 23px;
 		box-sizing: border-box;
-		margin: 0 auto;
 
-		.hegui_bg {
-			width: 545px;
-			height: 124px;
-			margin: 0 auto 50px;
-			display: block;
-		}
-
-		.loginInput {
-			height: 88px;
-			line-height: 88px;
-			padding-left: 30px;
-			border-radius: 44px;
-			background-color: #eff1f2;
-			margin-bottom: 24px;
+		.loginContentBox {
+			position: relative;
+			border: 1px solid #4370d0;
+			padding: 30px;
 			:global {
-				.am-list-line::after {
-					background-color: #f0f1f5 !important;
+				.am-list-line .am-input-control input {
+					font-size: 30px;
 				}
 			}
 		}
 
+		.title {
+			position: relative;
+			font-size: 26px;
+			font-family: PingFangSC-Regular;
+			font-weight: bold;
+			color: #121c32;
+			top: -10px;
+		}
+		.moneyText {
+			position: relative;
+			top: -55px;
+			font-size: 120px;
+			font-family: 'DINMitAlt';
+			font-weight: bold;
+			color: #121c32;
+			height: 91px;
+			margin-top: 32px;
+			margin-bottom: 34px;
+		}
+
+		.commonLine {
+			position: absolute;
+			display: inline-block;
+			height: 18px;
+			width: 18px;
+			border-color: #4370d0;
+			border-style: solid;
+			box-sizing: border-box;
+		}
+		.leftTopLine {
+			top: -1px;
+			left: -1px;
+			border-width: 4px 0 0 4px;
+		}
+		.rightTopLine {
+			top: -1px;
+			right: -1px;
+			border-width: 4px 4px 0 0;
+		}
+		.leftBottomLine {
+			bottom: -1px;
+			left: -1px;
+			border-width: 0 0 4px 4px;
+		}
+		.rightBottomLine {
+			bottom: -1px;
+			right: -1px;
+			border-width: 0 4px 4px 0;
+		}
+
+		.loginInput {
+			height: 91px;
+			line-height: 91px;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+			border: 2px solid #c9cdd5;
+			border-radius: 8px;
+			background-color: rgba(38, 28, 117, 0);
+			:global {
+				.am-list-line::after {
+					background-color: transparent !important;
+				}
+			}
+		}
 		input::placeholder {
-			color: #cecece;
-			font-size: 32px;
+			color: #c9cdd5;
+			font-size: 30px;
+			font-weight: normal;
+		}
+		input:-webkit-autofill {
+			box-shadow: 0 0 0 1000px white inset !important;
 		}
 
 		.smsBox {
-			display: flex;
-			justify-content: space-between;
+			position: relative;
 		}
-
 		.smsCode {
-			color: #fff;
-			background-color: #1898fe;
+			position: absolute;
+			right: 0;
+			top: 1px;
 			font-size: 30px;
-			width: 240px;
-			height: 88px;
-			line-height: 88px;
+			width: 235px;
+			height: 91px;
+			line-height: 91px;
 			text-align: center;
-			border-radius: 44px;
+			color: #4370d0;
+			.leftBorder {
+				position: absolute;
+				left: 0;
+				top: 18px;
+				width: 2px;
+				height: 52px;
+				background: #c9cdd5;
+			}
 		}
 		.smsCode2 {
-			background-color: #eff1f2;
-			color: #cecece;
+			color: #c9cdd5;
 		}
 
 		.sureBtn {
+			position: relative;
 			display: block;
-			box-sizing: border-box;
-			background-color: #0084ff;
-			font-size: 36px;
-			height: 88px;
-			line-height: 88px;
-			border-radius: 44px;
-			border: none;
-			font-family: 'PingFangSC-Medium';
-			font-weight: 500;
+			height: 90px;
+			line-height: 90px;
+			background: #3484f7;
+			border-radius: 12px;
+			font-size: 30px;
 			color: #fff;
-
+			margin-top: 60px;
 			span {
 				display: inline-block;
 				width: 100%;
 			}
-		}
-		.sureDisableBtn {
-			background-color: #b2daff;
-			color: #fff;
-		}
-		// 图片验证码
-		.imgCodeBox {
-			position: relative;
-		}
-		.imgCode {
-			position: absolute;
-			top: 50%;
-			right: 30px;
-			height: 50px;
-			margin-top: -25px;
-			.getCode {
-				width: 152px;
-				height: 50px;
-				transform: scale(1.2);
+			.sureBtn_tooltip {
+				display: inline-block;
+				width: 278px;
+				position: absolute;
+				right: -20px;
+				top: -20px;
 			}
 		}
-		.errMsgBox {
-			font-size: 24px;
-			color: #fe6666;
-			text-align: left;
-			padding-left: 10px;
-			line-height: 33px;
-		}
-		.operateBox {
-			position: relative;
-			padding-top: 30px;
-		}
-
-		.bottom_tip {
-			color: #f66;
-			font-size: 22px;
-			text-align: center;
-			margin-top: 20px;
+		.sureDisableBtn {
+			background-color: #dcdfe6;
+			color: #fff;
 		}
 	}
 	.agreement {
-		margin-top: 20px;
-		line-height: 38px;
+		position: relative;
+		top: -57px;
+		margin: 0 58px;
 	}
 
 	:global {
@@ -240,8 +241,6 @@
 			width: 100%;
 			position: relative;
 			top: -87px;
-			// position: absolute;
-			// top: 60px;
 		}
 		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
 			padding: 0;

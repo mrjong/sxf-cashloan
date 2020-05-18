@@ -12,7 +12,6 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { TFDLogin } from 'utils/getTongFuDun';
-
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import {
 	getDeviceType,
@@ -23,7 +22,6 @@ import {
 	queryUsrSCOpenId,
 	recordContract
 } from 'utils';
-
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
@@ -42,11 +40,8 @@ import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
 import { ProtocolRead } from 'components';
 import { setBackGround } from 'utils/background';
-import hegui_bg from './img/hegui_bg.png';
-import login_bg1 from './img/login_bg1.png';
-import login_bg2 from './img/login_bg2.png';
-import login_bg3 from './img/login_bg3.png';
-import login_bg4 from './img/login_bg4.png';
+import bannerImg from './img/login_bg.png';
+import tooltip from './img/tooltip.png';
 import loginModalBg from './img/login_modal.png';
 import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
@@ -64,7 +59,7 @@ let entryPageTime = '';
 @fetch.inject()
 @createForm()
 @domListen()
-@setBackGround('#50C5FC')
+@setBackGround('#fff')
 @connect(
 	(state) => state,
 	{ setUserInfoAction, setIframeProtocolShow }
@@ -558,16 +553,12 @@ export default class login_page extends PureComponent {
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
-			<div className={styles.dc_landing_page_wrap}>
-				<div className={styles.dc_landing_page}>
-					<div className={styles.img_wrap}>
-						<img src={login_bg1} alt="" className={styles.login_bg1} />
-						<img src={login_bg2} alt="" className={styles.login_bg2} />
-						<img src={login_bg3} alt="" className={styles.login_bg3} />
-						<img src={login_bg4} alt="" className={styles.login_bg4} />
-					</div>
-					<div className={styles.content}>
-						<img src={hegui_bg} alt="" className={styles.hegui_bg} />
+			<div className={styles.dc_landing_page}>
+				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
+				<div className={styles.content}>
+					<div className={styles.loginContentBox}>
+						<p className={styles.title}>最高可借额度(元)</p>
+						<p className={styles.moneyText}>50000</p>
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
@@ -627,43 +618,46 @@ export default class login_page extends PureComponent {
 								}}
 							>
 								{this.state.timers}
+								<i className={styles.leftBorder} />
 							</div>
 						</div>
-						<div className={styles.operateBox}>
-							<div
-								className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
-								onClick={this.goLogin}
-								data-sxf-props={JSON.stringify({
-									type: loginBtnRiskBury.type,
-									name: loginBtnRiskBury.key,
-									actContain: loginBtnRiskBury.actContain
-								})}
-							>
-								<span>立即申请</span>
-							</div>
+						<div
+							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
+							onClick={this.goLogin}
+							data-sxf-props={JSON.stringify({
+								type: loginBtnRiskBury.type,
+								name: loginBtnRiskBury.key,
+								actContain: loginBtnRiskBury.actContain
+							})}
+						>
+							<span>查看我的额度</span>
+							<img className={styles.sureBtn_tooltip} src={tooltip} />
 						</div>
-						<ProtocolRead
-							className={styles.agreement}
-							tip="阅读并接受"
-							isSelect={this.state.isChecked}
-							protocolList={[
-								{
-									label: '用户注册协议',
-									url: 'register_agreement_page'
-								},
-								{
-									label: '用户隐私权政策',
-									url: 'user_privacy_page'
-								}
-							]}
-							clickRadio={this.checkAgreement}
-							clickProtocol={this.go}
-							offsetH="0"
-							radioActiveBg="#4c7afd"
-						/>
-						<p className={styles.bottom_tip}>温馨提示：如您是老用户，请前往还到app操作并还款</p>
+
+						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
 				</div>
+				<ProtocolRead
+					className={styles.agreement}
+					tip="阅读并接受"
+					isSelect={this.state.isChecked}
+					protocolList={[
+						{
+							label: '随行付金融用户注册协议',
+							url: 'register_agreement_page'
+						},
+						{
+							label: '随行付用户隐私权政策',
+							url: 'user_privacy_page'
+						}
+					]}
+					clickRadio={this.checkAgreement}
+					clickProtocol={this.go}
+					offsetH="0"
+				/>
 				{showSlideModal && (
 					<ImageCode
 						imageUrl={slideImageUrl}
